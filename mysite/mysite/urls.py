@@ -22,5 +22,6 @@ from my_codes import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.register_page),
-    path('mainsss/', views.niknem_page)
+    path('mainsss/', views.niknem_page),
+    path('login_pages/', views.login_page)
 ]

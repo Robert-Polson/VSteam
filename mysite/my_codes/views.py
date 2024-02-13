@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
 from .models import Account, NIKNEM
 import re
 
@@ -38,3 +38,18 @@ def niknem_page(request):
         table_item1=NIKNEM(niknem=niknem)
         table_item1.save()
     return render(request,'mainssss.html',context)
+
+def login_page(request):
+    context={}
+    if request.method=="POST":
+        email=request.POST.get("email")
+        password=request.POST.get("password")
+        try:
+            account=Account.objects.get(email=email)
+            if check_password(password,account.password):
+                context["good"]="Вы успешно зашли в аккаунт"
+            else:
+                context["error"]="Попробуйте ввести другой пароль"
+        except Account.DoesNotExist:
+            context["error"]="Такого пользователя нет"
+    return render(request,'login.html', context)
