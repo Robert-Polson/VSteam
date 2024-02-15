@@ -53,3 +53,7 @@ def login_page(request):
         except Account.DoesNotExist:
             context["error"]="Такого пользователя нет"
     return render(request,'login.html', context)
+
+
+def open_page(request):
+    return render(request, 'open_page.html')
