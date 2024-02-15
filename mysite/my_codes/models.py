@@ -9,3 +9,11 @@ class Account(models.Model):
     password = models.CharField(max_length=30)
 class NIKNEM(models.Model):
     niknem=models.CharField(max_length=30,null=True)
+    account=models.ForeignKey(to=Account,on_delete=models.CASCADE, null=True)
+
+class Avatar(models.Model):
+    image = models.ImageField()
+    account = models.ForeignKey(to=Account,on_delete=models.CASCADE,null=True)
+
+    def __str__(self):
+        return f'Avatar for {self.account.name}'

@@ -23,5 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.register_page),
     path('mainsss/', views.niknem_page),
-    path('login_pages/', views.login_page)
+    path('login_pages/', views.login_page),
+    path('account_pages/',views.account_page)
 ]
