@@ -10,8 +10,8 @@ def register_page(request):
     if request.method == "POST":
         name = request.POST.get('name')
         second_name = request.POST.get('second_name')
-        email = request.POST.get('email')  # Исправлено на 'email'
-        password = request.POST.get('password')  # Исправлено на 'password'
+        email = request.POST.get('email')
+        password = request.POST.get('password')
         hashed_password = make_password(password)
 
         if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
