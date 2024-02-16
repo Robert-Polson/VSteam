@@ -62,6 +62,10 @@ def login_page(request):
     return render(request, 'login.html', context)
 
 
+def open_page(request):
+    return render(request, 'open_page.html')
+
+
 
 def account_page(request):
     name = request.session.get('username')
