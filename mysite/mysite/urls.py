@@ -24,7 +24,8 @@ urlpatterns = [
     path('',views.register_page),
     path('mainsss/', views.niknem_page),
     path('login_pages/', views.login_page),
-    path('open_page', views.open_page)
+    path('open_page', views.open_page),
     path('login_pages/', views.login_page),
-    path('account_pages/',views.account_page)
+    path('account_pages/',views.account_page),
+    path('remember_password/',views.remember_password)
 ]

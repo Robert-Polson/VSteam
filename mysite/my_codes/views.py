@@ -96,3 +96,10 @@ def account_page(request):
         return render(request, 'account_page.html', context)
 
 
+def remember_password(request):
+    context={}
+    if request.method=="POST":
+        name=request.POST.get("name")
+        second_name=request.POST.get("user_seconds")
+        email=request.POST.get("email")
+    return render(request,"remember_password.html",context)
