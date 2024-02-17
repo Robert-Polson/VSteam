@@ -21,10 +21,10 @@ from my_codes import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',views.register_page),
+    path('',views.open_page),
     path('mainsss/', views.niknem_page),
     path('login_pages/', views.login_page),
-    path('open_page', views.open_page),
+    path('register_page/', views.register_page),
     path('login_pages/', views.login_page),
     path('account_pages/',views.account_page),
     path('remember_password/',views.remember_password)

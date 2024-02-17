@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password, check_password
 from .models import Account, NIKNEM, Avatar
@@ -30,16 +30,29 @@ def register_page(request):
 
 
 def niknem_page(request):
-    context={}
-    niknem=request.POST.get("niknem")
-    s=str()
-    if niknem=="":
-        context['error']="введите никнейм"
-    else:
-        context['good']=""
-        table_item1=NIKNEM(niknem=niknem)
-        table_item1.save()
-    return render(request,'mainssss.html',context)
+    name = request.session.get('username')
+    second_name = request.session.get('user_seconds')
+    email = request.session.get('email')
+
+    try:
+        account = Account.objects.get(name=name, second_name=second_name, email=email)
+    except Account.DoesNotExist:
+        return HttpResponse("Account not found")
+
+    context = {}
+
+    if request.method == 'POST':
+        niknem = request.POST.get("niknem")
+
+        if not niknem:
+            context['error'] = "Введите никнейм"
+        else:
+            niknem_item = NIKNEM(niknem=niknem, account=account)
+            niknem_item.save()
+            context['good'] = "Никнейм успешно сохранен"
+
+    return render(request, 'mainssss.html', context)
+
 
 def login_page(request):
     context = {}
@@ -102,4 +115,5 @@ def remember_password(request):
         name=request.POST.get("name")
         second_name=request.POST.get("user_seconds")
         email=request.POST.get("email")
+
     return render(request,"remember_password.html",context)
