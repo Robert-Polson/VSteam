@@ -134,3 +134,6 @@ def remember_password(request):
             context['error'] = 'Произошла ошибка при попытке изменения пароля'
 
     return render(request,"remember_password.html",context)
+
+def achievements(request):
+    return render(request,"Achievements.html")

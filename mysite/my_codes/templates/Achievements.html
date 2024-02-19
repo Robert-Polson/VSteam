@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Achievements</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main>
+        <div class="cir"></div>
+        <div class="cir1"></div>
+        <div class="ava"></div>
+        <form action="">
+            <h1>Achievements</h1>
+            <hr style="background-color: antiquewhite;">
+            <p>Hours with the team: <span>       0</span></p>
+            <p>Vicroties: <span>0</span></p>
+            <p>Defeats: <span>0</span></p>
+            <p>Likes from TM: <span>0</span></p>
+            <p>Dislikes from TM: <span>0</span></p>
+            <p>TM Raiting: <span>0</span></p>
+            <hr style="background-color: antiquewhite;">
+
+            <p>This text shows the info that player posted on his
+                page fo other gamers. This text shows the info that player posted on his
+                page fo other gamers. This text shows the info that player posted on his
+                page fo other gamers. This text shows the info that player posted on his
+                page fo other gamers. This text shows the info that player posted on his
+                page fo other gamers.
+            </p>
+
+            <button type="button" onclick="iop();">Back</button>
+        </form>
+        <div class="f2">
+            <div class="vid"></div>
+            <div class="vid"></div>
+            <div class="vid"></div>
+            <div class="vid"></div>
+            <div class="vid"></div>
+            <div class="vid"></div>
+        </div>
+    </main>
+<script>
+    function iop() {
+    window.location.href="http://127.0.0.1:8000/account_pages/"
+    }
+</script>
+</body>
+</html>
+    <style>
+       *
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+body
+{
+    background: rgba(0, 0, 0, 0.966);
+}
+
+main
+{
+    width: 100%;
+    padding: 160px;
+    height: 100vh;
+}
+
+form
+{
+    color: white;
+    width: 30%;
+    height: 100%;
+    border-radius: 20px;
+    background: rgba(128, 128, 128, 0.137);
+    border: 1px solid grey;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+    z-index: 3;
+    box-shadow: 0 0 40px rgba(54, 54, 54, 0.815);
+}
+
+form h1, hr
+{
+    text-align: center;
+    margin: 20px 0;
+}
+
+.cir
+{
+    content: '';
+    width: 150px;
+    height: 150px;
+    background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(0,212,255,1) 100%);
+    position: absolute;
+    border-radius: 360px;
+    top: 71px;
+    left: 1100px ;
+    z-index: -1;
+}
+
+.cir1
+{
+    content: '';
+    width: 150px;
+    height: 150px;
+    background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,119,0,1) 100%);
+    position: absolute;
+    border-radius: 360px;
+    top: 653px;
+    left: 570px ;
+    z-index: -1;
+}
+
+
+form p
+{
+    margin: 20px 0;
+}
+
+form button
+{
+    width: 50%;
+    background: rgba(0, 0, 0, 0.712);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    height: 50px;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    box-shadow: 0 0 10px rgba(54, 54, 54, 0.815);
+    transition: 0.5s;
+
+}
+
+form button:hover
+{
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(255,119,0,1);
+}
+
+.f2
+{
+    color: white;
+    width: 30%;
+    height: calc(100% - 160px * 2);
+    border-radius: 20px;
+    background: rgba(128, 128, 128, 0.137);
+    border: 1px solid grey;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+    z-index: 3;
+    box-shadow: 0 0 40px rgba(54, 54, 54, 0.815);
+    position: absolute;
+    top: 160px;
+    right: 160px;
+}
+
+.vid
+{
+    border: 2px solid red;
+    border-radius: 10px;
+    width: 45.8%;
+    height: 29.5%;
+    display: inline-block;
+    margin: 10px;
+}
+
+.ava
+{
+    content: '';
+    width: 150px;
+    height: 150px;
+    background: url('ava.webp') center/cover no-repeat;
+    position: absolute;
+    border-radius: 360px;
+    top: 71px;
+    left: 100px ;
+    z-index: 3;
+}
+    </style>
+</body>
+</html>

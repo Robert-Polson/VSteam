@@ -84,6 +84,9 @@
             color: #58afd1;
             font-size: 1.5em;
         }
+
+}
+
     </style>
 </head>
 <body>
@@ -96,9 +99,10 @@
                     alt="Person" class="card__image">
                 Change Avatar
             </label>
-
-            <p class="card__name">{{ account.name }} {{account.second_name}}</p>
-            <h1 class="card__name">{{niknem.niknem}}</h1>
+            <div class="">
+            <label>ИМЯ И ФАМИЛИЯ</label>:<p class="card__name">{{ account.name }} {{account.second_name}}</p>
+            </div>
+            <label>NIKNEM</label>:<h1 class="card__name">{{niknem.niknem}}</h1>
             <div class="grid-container">
                 <div class="grid-child-posts">156 Posts</div>
                 <div class="grid-child-followers">1012 Likes</div>
@@ -113,7 +117,14 @@
 
             <button class="btn">Follow</button>
             <button class="btn">Message</button>
+            <button class="btn" type="button" onclick="dostiz();">Achievements</button>
+
         </form>
     </div>
+<script>
+    function dostiz() {
+    window.location.href="http://127.0.0.1:8000/achievements//"
+    }
+</script>
 </body>
 </html>
