@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+Paaji+2:wght@400;500&display=swap">
+    <style>
+        body {
+            font-family: 'Baloo Paaji 2', cursive;
+            background-color: #393e46;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            background-color: #222831;
+            height: 37rem;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 10px 50px rgba(235, 25, 110, 1);
+            color: white;
+            padding: 20px;
+        }
+
+        .card__name {
+            margin-top: 15px;
+            font-size: 1.5em;
+        }
+
+        .card__image {
+            height: 160px;
+            width: 160px;
+            border-radius: 50%;
+            border: 5px solid #272133;
+            margin-top: 20px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 20px;
+            font-size: 1.2em;
+        }
+
+        .btn {
+            background-color: #58cdd1;
+            border: none;
+            cursor: pointer;
+            line-height: 1.5;
+            font-weight: bold;
+            padding: 0.75em 2em;
+            letter-spacing: 0.05rem;
+            margin: 1em;
+            width: 13rem;
+            color: #fff;
+            border-radius: 5px;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .btn:hover {
+            background-color: #eb196e;
+        }
+
+        .social-icons {
+            padding: 0;
+            list-style: none;
+            margin-top: 1em;
+        }
+
+        .social-icons li {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .social-icons i {
+            color: #58afd1;
+            font-size: 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="image" style="display:none;" id="avatarInput">
+            <label for="avatarInput">
+                <img src="{% if avatar %}{{ avatar.image.url }}{% else %}https://lh3.googleusercontent.com/ytP9VP86DItizVX2YNA-xTYzV09IS7rh4WexVp7eilIcfHmm74B7odbcwD5DTXmL0PF42i2wnRKSFPBHlmSjCblWHDCD2oD1oaM1CGFcSd48VBKJfsCi4bS170PKxGwji8CPmehwPw=w200-h247-no{% endif %}"
+                    alt="Person" class="card__image">
+                Change Avatar
+            </label>
+
+            <p class="card__name">{{ account.name }} {{account.second_name}}</p>
+            <h1 class="card__name">{{niknem.niknem}}</h1>
+            <div class="grid-container">
+                <div class="grid-child-posts">156 Posts</div>
+                <div class="grid-child-followers">1012 Likes</div>
+            </div>
+
+            <ul class="social-icons">
+                <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
+                <li><a href="#"><i class="fab fa-codepen"></i></a></li>
+            </ul>
+
+            <button class="btn">Follow</button>
+            <button class="btn">Message</button>
+        </form>
+    </div>
+</body>
+</html>
