@@ -35,7 +35,8 @@ def niknem_page(request):
     email = request.session.get('email')
 
     try:
-        account = Account.objects.get(name=name, second_name=second_name, email=email)
+        account = Account.objects.filter(name=name, second_name=second_name, email=email).first()
+
     except Account.DoesNotExist:
         return HttpResponse("Account not found")
 
@@ -43,10 +44,11 @@ def niknem_page(request):
 
     if request.method == 'POST':
         niknem = request.POST.get("niknem")
-
         if not niknem:
             context['error'] = "Введите никнейм"
         else:
+            request.session['niknem'] = niknem
+            context['niknem'] = niknem
             niknem_item = NIKNEM(niknem=niknem, account=account)
             niknem_item.save()
             context['good'] = "Никнейм успешно сохранен"
@@ -87,6 +89,8 @@ def account_page(request):
 
     try:
         account = Account.objects.filter(name=name, second_name=second_name, email=email).first()
+        niknem = NIKNEM.objects.filter(account=account).first()
+
         if not account:
             raise Account.DoesNotExist
 
@@ -103,17 +107,30 @@ def account_page(request):
                     new_avatar.save()
                 return redirect('account_page')
 
-        return render(request, 'account_page.html', {'account': account, 'avatar': avatar})
+        context = {'account': account, 'avatar': avatar, 'niknem': niknem}
+        return render(request, 'account_page.html', context)
     except Account.DoesNotExist:
         context = {'error': 'Такого пользователя нет'}
         return render(request, 'account_page.html', context)
+
 
 
 def remember_password(request):
     context={}
     if request.method=="POST":
         name=request.POST.get("name")
-        second_name=request.POST.get("user_seconds")
+        second_name=request.POST.get("second_name")
         email=request.POST.get("email")
+        password=request.POST.get("password")
+        try:
+            account=Account.objects.filter(name=name,second_name=second_name,email=email).first()
+            if account:
+                account.password=make_password(password)
+                account.save()
+                context['good']="Пароль успешно изменен"
+            else:
+                context['error']="Пароль не сохранен"
+        except Account.DoesNotExist:
+            context['error'] = 'Произошла ошибка при попытке изменения пароля'
 
     return render(request,"remember_password.html",context)
