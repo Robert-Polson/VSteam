@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="{% static 'find_users_style.css' %}" rel="stylesheet">
+</head>
+<body>
+    <form method="post">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit">Поиск</button>
+    </form>
+    {% if accounts|length > 0 %}
+        <div class="accounts_container">
+                {% for account in accounts %}
+                    <div class="account">
+                        <br>
+                        <span class="name">
+                            {{ account.niknem }}
+                        </span>
+                        <span class="go">
+                            <a href = "/account_pages">Перейти</a>
+                        </span>
+                        <br>
+                    </div>
+                    <hr>
+                {% endfor %}
+        </div>
+    {% else %}
+        Ничего не найдено
+    {% endif %}
+    {% if accounts|length > 0 %}
+        <div class="paginator">
+            {% if page > 1 %}
+                <a href="/find_users?query={{ query }}&page={{ page|add:-1 }}">Назад</a>
+            {% endif %}
+            {{ page }}
+            {% if page < max_page %}
+                <a href="/find_users?query={{ query }}&page={{ page|add:1 }}">Вперед</a>
+            {% endif %}
+        </div>
+    {% endif %}
+</body>
+</html>

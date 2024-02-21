@@ -28,5 +28,6 @@ urlpatterns = [
     path('login_pages/', views.login_page),
     path('account_pages/',views.account_page),
     path('remember_password/',views.remember_password),
+    path('find_users/',views.find_users_page),
     path('achievements//',views.achievements)
 ]

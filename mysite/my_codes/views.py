@@ -1,6 +1,9 @@
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password, check_password
+from django.utils.datastructures import MultiValueDictKeyError
+
+from .forms import SearchUserForm
 from .models import Account, NIKNEM, Avatar
 import re
 
@@ -21,7 +24,7 @@ def register_page(request):
         else:
             request.session['username'] = name
             request.session['user_seconds'] = second_name
-            request.session['email']=email
+            request.session['email'] = email
             table_item = Account(name=name, second_name=second_name, email=email, password=hashed_password)
             table_item.save()
             context['message'] = 'Вы успешно зарегистрировались'
@@ -81,7 +84,6 @@ def open_page(request):
     return render(request, 'open_page.html')
 
 
-
 def account_page(request):
     name = request.session.get('username')
     second_name = request.session.get('user_seconds')
@@ -114,26 +116,55 @@ def account_page(request):
         return render(request, 'account_page.html', context)
 
 
-
 def remember_password(request):
-    context={}
-    if request.method=="POST":
-        name=request.POST.get("name")
-        second_name=request.POST.get("second_name")
-        email=request.POST.get("email")
-        password=request.POST.get("password")
+    context = {}
+    if request.method == "POST":
+        name = request.POST.get("name")
+        second_name = request.POST.get("second_name")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
         try:
-            account=Account.objects.filter(name=name,second_name=second_name,email=email).first()
+            account = Account.objects.filter(name=name, second_name=second_name, email=email).first()
             if account:
-                account.password=make_password(password)
+                account.password = make_password(password)
                 account.save()
-                context['good']="Пароль успешно изменен"
+                context['good'] = "Пароль успешно изменен"
             else:
-                context['error']="Пароль не сохранен"
+                context['error'] = "Пароль не сохранен"
         except Account.DoesNotExist:
             context['error'] = 'Произошла ошибка при попытке изменения пароля'
 
-    return render(request,"remember_password.html",context)
+    return render(request, "remember_password.html", context)
+
 
 def achievements(request):
-    return render(request,"Achievements.html")
+    return render(request, "Achievements.html")
+
+
+def find_users_page(request):
+    context = {}
+
+    if request.method == 'POST' and SearchUserForm(request.POST).is_valid():
+        form = SearchUserForm(request.POST)
+        query = form.data['query']
+        page = 0
+    else:
+        try:
+            query = request.GET['query']
+        except MultiValueDictKeyError:
+            query = ''
+
+        try:
+            page = max(0, int(request.GET['page']) - 1)
+        except MultiValueDictKeyError:
+            page = 0
+
+    all_accounts_count = NIKNEM.objects.filter(niknem__contains=query).count()
+
+    context['page'] = page + 1
+    context['accounts'] = NIKNEM.objects.filter(niknem__contains=query)[page * 10:page * 10 + 10]
+    context['max_page'] = all_accounts_count // 10 + (all_accounts_count % 10 != 0)
+    context['query'] = query
+    context['form'] = SearchUserForm()
+
+    return render(request, "find_users.html", context)
