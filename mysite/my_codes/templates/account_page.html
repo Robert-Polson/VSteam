@@ -20,7 +20,8 @@
 
         .card {
             background-color: #222831;
-            height: 37rem;
+            height: 40rem;
+            max-width: 30rem;
             border-radius: 5px;
             display: flex;
             flex-direction: column;
@@ -28,6 +29,7 @@
             box-shadow: 0 10px 50px rgba(235, 25, 110, 1);
             color: white;
             padding: 20px;
+            margin-left:10px;
         }
 
         .card__name {
@@ -84,36 +86,79 @@
             color: #58afd1;
             font-size: 1.5em;
         }
+    .imgh {
+            border: 1px solid black;
+            border-radius: 20px;
+            width: 10rem;
+        }
+}
+
     </style>
 </head>
 <body>
     <div class="card">
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <input type="file" name="image" style="display:none;" id="avatarInput">
-            <label for="avatarInput">
-                <img src="{% if avatar %}{{ avatar.image.url }}{% else %}https://lh3.googleusercontent.com/ytP9VP86DItizVX2YNA-xTYzV09IS7rh4WexVp7eilIcfHmm74B7odbcwD5DTXmL0PF42i2wnRKSFPBHlmSjCblWHDCD2oD1oaM1CGFcSd48VBKJfsCi4bS170PKxGwji8CPmehwPw=w200-h247-no{% endif %}"
-                    alt="Person" class="card__image">
-                Change Avatar
-            </label>
-
-            <p class="card__name">{{ account.name }} {{account.second_name}}</p>
-            <h1 class="card__name">{{niknem.niknem}}</h1>
-            <div class="grid-container">
-                <div class="grid-child-posts">156 Posts</div>
-                <div class="grid-child-followers">1012 Likes</div>
-            </div>
-
-            <ul class="social-icons">
-                <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-                <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
-                <li><a href="#"><i class="fab fa-codepen"></i></a></li>
-            </ul>
-
-            <button class="btn">Follow</button>
-            <button class="btn">Message</button>
-        </form>
+        <form method="post" enctype="multipart/form-data" id="avatarForm">
+    {% csrf_token %}
+    <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="previewImage(event)">
+        <label for="avatarInput">
+            <img id="avatarPreview" class="imgh" src="old-image" alt="Добавьте аватар">
+        </label>
+    <div class="">
+        <label>ИМЯ И ФАМИЛИЯ</label>:
+        <p class="card__name">{{ account.name }} {{ account.second_name }}</p>
     </div>
+    <label>NIKNEM</label>:
+    <h1 class="card__name">{{ niknem.niknem }}</h1>
+    <div class="grid-container">
+        <div class="grid-child-posts">156 Posts</div>
+        <div class="grid-child-followers">1012 Likes</div>
+    </div>
+    <ul class="social-icons">
+        <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+        <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+        <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
+        <li><a href="#"><i class="fab fa-codepen"></i></a></li>
+    </ul>
+    <button type="submit" class="btn" onclick="uploadAvatar(event)" name="avatarInput">Change Avatar</button>
+    <button class="btn">My profile</button>
+    <button class="btn">Message</button>
+    <button class="btn" type="button" onclick="dostiz();">Achievements</button>
+</form>
+
+    </div>
+<script>
+    function dostiz() {
+    window.location.href="http://127.0.0.1:8000/achievements//"
+    }
+    function previewImage(event) {
+            const input = event.target;
+            const reader = new FileReader();
+            reader.onload = function() {
+                const img = document.getElementById('avatarPreview');
+                img.src = reader.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+
+        function uploadAvatar(event) {
+            event.preventDefault();
+            const form = document.getElementById('avatarForm');
+            const formData = new FormData(form);
+
+            fetch('/upload_avatar', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    let isImage=true;
+                    alert('Аватар успешно обновлен!');
+                } else {
+                    alert('Произошла ошибка при загрузке аватара.');
+                }
+            })
+            .catch(error => console.error('Ошибка:', error));
+        }
+</script>
 </body>
 </html>
