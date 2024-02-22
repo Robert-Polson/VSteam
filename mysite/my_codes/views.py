@@ -145,30 +145,31 @@ def achievements(request):
     return render(request, "Achievements.html")
 
 
+from django.shortcuts import render
+from .models import NIKNEM
+
 def find_users_page(request):
     context = {}
 
-    if request.method == 'POST' and SearchUserForm(request.POST).is_valid():
+    if request.method == 'POST':
         form = SearchUserForm(request.POST)
-        query = form.data['query']
-        page = 0
-    else:
-        try:
-            query = request.GET['query']
-        except MultiValueDictKeyError:
-            query = ''
-
-        try:
-            page = max(0, int(request.GET['page']) - 1)
-        except MultiValueDictKeyError:
+        if form.is_valid():
+            query = form.cleaned_data['query']
             page = 0
+        else:
+            query = ''
+    else:
+        query = request.GET.get('query', '')
+        page = max(0, int(request.GET.get('page', 1)) - 1)
 
     all_accounts_count = NIKNEM.objects.filter(niknem__contains=query).count()
+    accounts = NIKNEM.objects.filter(niknem__contains=query)[page * 10:page * 10 + 10]
 
     context['page'] = page + 1
-    context['accounts'] = NIKNEM.objects.filter(niknem__contains=query)[page * 10:page * 10 + 10]
+    context['accounts'] = accounts
     context['max_page'] = all_accounts_count // 10 + (all_accounts_count % 10 != 0)
     context['query'] = query
     context['form'] = SearchUserForm()
 
     return render(request, "find_users.html", context)
+

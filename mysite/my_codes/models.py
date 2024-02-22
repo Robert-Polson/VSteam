@@ -13,7 +13,7 @@ class NIKNEM(models.Model):
 
 class Avatar(models.Model):
     image = models.ImageField()
-    account = models.ForeignKey(to=Account,on_delete=models.CASCADE,null=True)
+    account = models.ForeignKey(to=Account, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return f'Avatar for {self.account.name}'
+        return f'Avatar for {self.account.first_name} {self.account.last_name} ({self.account.nickname})'
