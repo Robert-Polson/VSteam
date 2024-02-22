@@ -1,4 +1,4 @@
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password, check_password
 from .models import Account, NIKNEM, Avatar
@@ -82,6 +82,11 @@ def open_page(request):
 
 
 
+
+
+
+
+
 def account_page(request):
     name = request.session.get('username')
     second_name = request.session.get('user_seconds')
@@ -96,23 +101,27 @@ def account_page(request):
 
         avatar = Avatar.objects.filter(account=account).first()
 
-        if request.method == "POST":
-            if 'image' in request.FILES:
-                image = request.FILES['image']
-                if avatar:
-                    avatar.image = image
-                    avatar.save()
-                else:
-                    new_avatar = Avatar(image=image, account=account)
-                    new_avatar.save()
-                return redirect('account_page')
+        if request.method == 'POST' and 'avatarInput' in request.FILES:
+            image = request.FILES['avatarInput']
 
-        context = {'account': account, 'avatar': avatar, 'niknem': niknem}
-        return render(request, 'account_page.html', context)
+            if avatar:
+                avatar.image = image
+                avatar.save()
+            else:
+                new_avatar = Avatar(image=image, account=account)
+                new_avatar.save()
+            return redirect('account_page')
+
+
+        if request.method == 'GET':
+            context = {'account': account, 'avatar': avatar, 'niknem': niknem}
+            return render(request, 'account_page.html', context)
+        else:
+            return HttpResponseBadRequest()
+
     except Account.DoesNotExist:
         context = {'error': 'Такого пользователя нет'}
         return render(request, 'account_page.html', context)
-
 
 
 def remember_password(request):
