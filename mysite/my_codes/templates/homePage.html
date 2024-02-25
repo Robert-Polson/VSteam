@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TEAM DER</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<style>
+  /* Reset styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #333;
+  color: #fff;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+header {
+  padding: 20px 0;
+}
+
+header h1 {
+  font-size: 24px;
+}
+
+nav ul {
+  list-style-type: none;
+}
+
+nav ul li {
+  display: inline;
+  margin-right: 20px;
+}
+
+nav ul li a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.user-avatar {
+  float: right;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #555; /* Заглушка для аватарки */
+}
+
+.main {
+  display: flex;
+}
+
+.friends-list {
+  width: 20%;
+  padding: 20px;
+}
+
+.friends-list h2 {
+  margin-bottom: 10px;
+}
+
+.friends-list ul {
+  list-style-type: none;
+}
+
+.friends-list ul li {
+  margin-bottom: 10px;
+}
+
+.posts {
+  width: 80%;
+  padding: 20px;
+}
+
+/* Пример стилей для карточек с постами */
+.post-card {
+  background-color: #444;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+}
+
+.post-card h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.post-card img {
+  max-width: 100%;
+  height: auto;
+}
+
+.post-card p {
+  font-size: 16px;
+}
+
+</style>
+  <header>
+    <div class="container">
+      <h1>TEAM DER</h1>
+      <nav>
+        <ul>
+          <li><a href="#">Друзья</a></li>
+          <li><a href="#">Игры</a></li>
+          <li><a href="#">Сообщество</a></li>
+        </ul>
+      </nav>
+      <div class="user-avatar">
+        <!-- Здесь будет аватарка пользователя -->
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <section class="posts">
+        <h2>Посты</h2>
+        <!-- Примеры карточек с контентом -->
+        <div class="post-card">
+          <h3>пост 1</h3>
+          <img src="game1.jpg" alt="Игровое изображение 1">
+          <p>Описание поста 1...</p>
+        </div>
+        <div class="post-card">
+          <h3>пост 2</h3>
+          <img src="game2.jpg" alt="Игровое изображение 2">
+          <p>Описание поста 2...</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+</body>
+</html>
