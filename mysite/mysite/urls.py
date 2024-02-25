@@ -25,9 +25,9 @@ urlpatterns = [
     path('mainsss/', views.niknem_page),
     path('login_pages/', views.login_page),
     path('register_page/', views.register_page),
-    path('login_pages/', views.login_page),
     path('account_pages/',views.account_page, name='account_page'),
     path('remember_password/',views.remember_password),
     path('find_users/',views.find_users_page),
-    path('achievements//',views.achievements)
+    path('achievements//',views.achievements),
+    path('open_page', views.open_page)
 ]
