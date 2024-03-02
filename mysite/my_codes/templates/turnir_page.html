@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <style>
+       body {
+           background-color: black;
+           color: white;
+           font-family: Arial, sans-serif;
+       }
+
+       .header {
+           background-color: #1a2843;
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+           padding: 10px;
+       }
+       .head_buttons{
+            wight: 50px;
+            height: 50 px;
+            color: #1a2843;
+       }
+       .header img {
+           width: 40px;
+           height: 40px;
+           border-radius: 50%;
+       }
+
+       .games-column {
+           display: flex;
+           flex-direction: column;
+           justify-content: center;
+           align-items: center;
+           width: 200px;
+           border-right: 2px solid #1a2843;
+       }
+
+       .games-table {
+           margin-left: 20px;
+       }
+
+       th,
+       td {
+           border: 1px solid #1a2843;
+           padding: 10px;
+       }
+
+       th {
+           background-color: #1a2843;
+       }
+
+       tr:nth-child(even) {
+           background-color: #2a3851;
+       }
+   </style>
+   <title>Touraments</title>
+    <div class="header">
+       <div class="head_buttons">
+           <form action="page/new.html" target="_blank">
+                <button>Главная</button>
+           </form>
+           <form action="page/new.html" target="_blank">
+                <button>Teamder</button>
+           </form>
+           <form action="page/new.html" target="_blank">
+                <button>Активности</button>
+           </form>
+       </div>
+       <img src="profile-icon.png" alt="Profile Icon">
+   </div>
+</head>
+<body>
+   <div class="main">
+       <div class="games-column" style="float: left;">
+           <h3>Games</h3>
+           <ul>
+               <li>Dota 2</li>
+               <li>COUNTER-STRIKE 2</li>
+               <li>LEAGUE OF LEGENDS</li>
+               <li>WORLD OF TANKS</li>
+               <li>FIFA</li>
+               <li>CALL OF DUTY</li>
+               <li>FORTNITE</li>
+               <li>PUBG</li>
+               <li>Ещё одна игра</li>
+               <li>Ещё одна игра</li>
+               <li>Ещё одна игра</li>
+               <li>Ещё одна игра</li>
+           </ul>
+       </div>
+
+       <table class="games-table" style="float: centre;">
+           <thead>
+               <tr>
+                   <th>Date</th>
+                   <th>Next Tournaments</th>
+                   <th>Participants</th>
+                   <th>Where to Watch</th>
+               </tr>
+           </thead>
+           <tbody>
+               <tr>
+                   <td>2022-06-22</td>
+                   <td>The International 10</td>
+                   <td>18 teams</td>
+                   <td>Twitch</td>
+               </tr>
+               <tr>
+                   <td>2022-07-16</td>
+                   <td>ESL One Cologne 2022</td>
+                   <td>16 teams</td>
+                   <td>ESL_CSGO</td>
+               </tr>
+               <tr>
+                   <td>2022-08-05</td>
+                   <td>Worlds 2022</td>
+                   <td>24 teams</td>
+                   <td>Riot Games</td>
+               </tr>
+               <tr>
+                   <td>2022-09-01</td>
+                   <td>Tank Festival</td>
+                   <td>100 teams</td>
+                   <td>Youtube</td>
+               </tr>
+           </tbody>
+       </table>
+   </div>
+</body>
