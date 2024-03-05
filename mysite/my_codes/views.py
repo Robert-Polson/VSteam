@@ -172,4 +172,11 @@ def find_users_page(request):
     context['form'] = SearchUserForm()
 
     return render(request, "find_users.html", context)
+def home_page(request):
+    return render(request,'homePage.html')
 
+def turnir_page(request):
+    return render(request,'turnir_page.html')
+
+def reviews(request):
+    return render(request,'reviews.html')

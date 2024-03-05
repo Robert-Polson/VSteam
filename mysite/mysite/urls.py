@@ -29,5 +29,8 @@ urlpatterns = [
     path('remember_password/',views.remember_password),
     path('find_users/',views.find_users_page),
     path('achievements//',views.achievements),
-    path('open_page', views.open_page)
+    path('open_page', views.open_page),
+    path('home_pages/', views.home_page),
+    path('turnir_page/', views.turnir_page),
+    path('reviews/',views.reviews)
 ]
