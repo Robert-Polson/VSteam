@@ -7,7 +7,7 @@ from .forms import SearchUserForm
 from .models import Account, NIKNEM, Avatar
 import re
 import time
-
+from django.contrib.auth.models import User
 def register_page(request):
     context = {}
     if request.method == "POST":
@@ -16,19 +16,22 @@ def register_page(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         hashed_password = make_password(password)
-
         if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
             context['error'] = 'Неправильно введён логин'
         elif len(password) < 8:
             context['error'] = 'Пароль должен содержать минимум 8 символов'
         else:
-            request.session['username'] = name
-            request.session['user_seconds'] = second_name
-            request.session['email'] = email
-            table_item = Account(name=name, second_name=second_name, email=email, password=hashed_password)
-            table_item.save()
-            context['message'] = 'Вы успешно зарегистрировались'
+            account_exists = Account.objects.filter(email=email).exists()
+            if not account_exists:
+                username = name.lower() + '_' + second_name.lower()
+                user = User.objects.create_user(first_name=name, username=username, last_name=second_name, email=email,password=hashed_password)
 
+                table_item = Account(name=name, second_name=second_name, email=email, password=hashed_password)
+                table_item.save()
+                context['message'] = 'Вы успешно зарегистрировались'
+
+            else:
+                context['error'] = 'Пользователь с таким email уже существует'
     return render(request, 'register.html', context)
 
 
@@ -58,26 +61,27 @@ def niknem_page(request):
 
     return render(request, 'mainssss.html', context)
 
-
-def login_page(request):
+def login_page (request) :
     context = {}
-    if request.method == "POST":
-        email = request.POST.get("email")
-        password = request.POST.get("password")
-        accounts = Account.objects.filter(email=email)
-        if accounts.exists():
-            for account in accounts:
-                if check_password(password, account.password):
-                    request.session['username'] = account.name
-                    request.session['user_seconds'] = account.second_name
-                    request.session['email'] = account.email
-                    context["good"] = "Вы успешно зашли в аккаунт"
-                    break
-            else:
-                context["error"] = "Попробуйте ввести другой пароль"
+    if request.method =="POST":
+        email = request. POST.get("email")
+        password = request. POST. get ("password")
+
+        users = User.objects. filter (email=email)
+        if users.exists():
+            for user in users:
+                if check_password (make_password(password), user.password):
+                    print ("good")
+                    request. session[ 'username'] = user.username
+                    request. session[ 'email'] = user.email
+                    context[ "good"] = "Вы успешно зашли в аккаунт"
+                    return render (request,'login.html', context)
+                else:
+                    print ("bad" )
+                context[ "error"] = "Попробуйте ввести деугой дароль"
         else:
-            context["error"] = "Такого пользователя нет"
-    return render(request, 'login.html', context)
+            context ["error"] = "Такого пользователя нет"
+    return render(request,"login.html", context)
 
 
 def open_page(request):
