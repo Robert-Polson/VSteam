@@ -32,5 +32,6 @@ urlpatterns = [
     path('open_page', views.open_page),
     path('home_pages/', views.home_page),
     path('turnir_page/', views.turnir_page),
-    path('reviews/',views.reviews)
+    path('reviews/',views.reviews),
+    path('settings/',views.settings_page)
 ]

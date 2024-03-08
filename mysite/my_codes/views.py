@@ -6,7 +6,7 @@ from django.utils.datastructures import MultiValueDictKeyError
 from .forms import SearchUserForm
 from .models import Account, NIKNEM, Avatar
 import re
-
+import time
 
 def register_page(request):
     context = {}
@@ -81,7 +81,10 @@ def login_page(request):
 
 
 def open_page(request):
-    return render(request, 'open_page.html')
+    context={}
+    context={'text':"Добро пожаловать в мир возможностей и новых знакомств! Здесь каждый может найти не только друзей, но и надежных игровых партнеров для захватывающих приключений. Давайте создадим незабываемые воспоминания вместе! Добро пожаловать в наше сообщество, где дружба и игры ждут вас на каждом шагу. Присоединяйтесь и откройте для себя мир новых возможностей!"}
+
+    return render(request, 'open_page.html',context)
 
 
 def account_page(request):
@@ -180,3 +183,6 @@ def turnir_page(request):
 
 def reviews(request):
     return render(request,'reviews.html')
+def settings_page(request):
+    context={}
+    return render(request,'settings.html',context)

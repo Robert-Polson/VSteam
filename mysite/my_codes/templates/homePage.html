@@ -7,12 +7,14 @@
     <link rel="stylesheet" href="style.css">
 
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+
+    <link href="https://fonts.cdnfonts.com/css/retron2000" rel="stylesheet">
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
    </head>
 <body>
 <div style="display: flex; ">
 
-        <input type="text" class="dark-rounded-input" placeholder="Search the POSTs">
+        <input type="search" class="dark-rounded-input" placeholder="Search the POSTs" style="color: green;">
       </div>
   <div class="sidebar close">
     <div class="logo-details">
@@ -21,7 +23,7 @@
     </div>
     <ul class="nav-links">
       <li>
-        <a href="#">
+        <a href="http://127.0.0.1:8000/turnir_page/">
           <i class='bx bx-grid-alt' ></i>
           <span class="link_name">Tournaments</span>
         </a>
@@ -53,7 +55,7 @@
         </ul>
       </li>
       <li>
-        <a href="#">
+        <a href="http://127.0.0.1:8000/reviews/">
           <i class='bx bx-pie-chart-alt-2' ></i>
           <span class="link_name">Reviews</span>
         </a>
@@ -81,7 +83,7 @@
         </ul>
       </li>
       <li>
-        <a href="#">
+        <a href="http://127.0.0.1:8000/find_users/">
           <i class='bx bx-compass' ></i>
           <span class="link_name">Find a friends</span>
         </a>
@@ -99,12 +101,12 @@
         </ul>
       </li>
       <li>
-        <a href="#">
+        <a href="http://127.0.0.1:8000/settings/">
           <i class='bx bx-cog' ></i>
           <span class="link_name">Settings</span>
         </a>
         <ul class="sub-menu blank">
-          <li><a class="link_name" href="#">Settings</a></li>
+          <li><a class="link_name" href="http://127.0.0.1:8000/settings/">Settings</a></li>
         </ul>
       </li>
       <li>
@@ -149,7 +151,7 @@
   font-family: 'Rocher';
   src: url(https://assets.codepen.io/9632/RocherColorGX.woff2);
 }
-
+@import url('https://fonts.cdnfonts.com/css/retron2000');
     * Google Fonts Import Link */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 *{
@@ -262,10 +264,13 @@
   font-weight: 400;
   color: #fff;
   transition: all 0.4s ease;
+  font-family: 'Retron2000', sans-serif;
+  color: green;
 }
 .sidebar.close .nav-links li a .link_name{
   opacity: 0;
   pointer-events: none;
+
 }
 .sidebar .nav-links li .sub-menu{
   padding: 6px 6px 14px 80px;
