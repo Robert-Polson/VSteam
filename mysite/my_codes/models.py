@@ -7,6 +7,7 @@ class Account(models.Model):
     second_name = models.CharField(max_length=30)
     email = models.CharField(max_length=30)
     password = models.CharField(max_length=30)
+
 class NIKNEM(models.Model):
     niknem=models.CharField(max_length=30,null=True)
     account=models.ForeignKey(to=Account,on_delete=models.CASCADE, null=True)
@@ -17,3 +18,9 @@ class Avatar(models.Model):
 
     def __str__(self):
         return f'Avatar for {self.account.first_name} {self.account.last_name} ({self.account.nickname})'
+
+class Turnir(models.Model):
+    date = models.DateField()
+    name = models.CharField()
+    participants = models.IntegerField()
+    placeToWatch = models.CharField()
