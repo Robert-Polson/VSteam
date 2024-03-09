@@ -7,27 +7,41 @@
     <link href="{% static 'find_users_style.css' %}" rel="stylesheet">
 </head>
 <body>
+<header>
+        <div class="container1">
+          <div style="display: flex; ">
+            <h1 style="color: green;">TEAM DER</h1>
+            <input type="text" class="dark-rounded-input" placeholder="Search the friends" style="width: 500px;">
+          </div>
+          <nav>
+            <ul>
+              <li><a href="#">Друзья</a></li>
+              <li><a href="#">Игры</a></li>
+              <li><a href="#">Сообщество</a></li>
+            </ul>
+          </nav>
+          <div class="user-avatar">
+            <!-- Здесь будет аватарка пользователя -->
+          </div>
+        </div>
+    </header>
     <form method="post">
         {% csrf_token %}
         {{ form }}
         <button type="submit" class="glow-on-hover">Поиск</button>
     </form>
     {% if accounts|length > 0 %}
-        <div class="accounts_container">
-                {% for account in accounts %}
-                    <div class="account">
-                        <br>
-                        <span class="name">
-            {{ account.account.name }} {{ account.account.second_name }} - {{ account.niknem }}
-        </span>
-        <span class="go">
-            <a href="/account_pages">Перейти</a>
-        </span>
-                        <br>
-                    </div>
-                    <hr>
-                {% endfor %}
-        </div>
+        <div class="container">
+        {% for account in accounts %}
+            <div class="user-card">
+                <img src="{{ account.avatar.image.url }}" alt="User Avatar">
+                <div class="user-info">
+                    <h2>{{ account.account.name }} {{ account.account.second_name }}</h2>
+                    <p>Nickname: {{ account.niknem }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
     {% else %}
     <h1>Ничего не найдено</h1>
     {% endif %}
@@ -43,125 +57,104 @@
         </div>
     {% endif %}
 <style>
-body {
-    background-image: url({% static '5172658.jpg' %});
-    background-size: cover;
-    background-position: center;
-    margin: 0;
-    padding: 0;
-}
+    @import url('https://fonts.cdnfonts.com/css/retron2000');
 
-.accounts_container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-.account {
-    width: 300px;
-    margin: 10px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+    body {
+      font-family: 'Rocher';
+      background-color: grey;
+      color: #ffffff;
+      margin: 0;
+      padding: 0;
+    }
 
-.account {
-    background-color: #f9f9f9;
-    color: #333;
-}
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px;
+    }
 
-.name {
-    font-size: 18px;
-    font-weight: bold;
-    color: #007bff;
-}
+    .user-card {
+      background-color: #333333;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 300px;
+    }
 
-.go a {
-    color: #007bff;
-    text-decoration: none;
-}
+    .user-card img {
+      width: 100%;
+      height: auto;
+      border-bottom: 2px solid #ffffff;
+    }
 
-.go a:hover {
-    text-decoration: underline;
-}
+    .user-info {
+      padding: 20px;
+    }
 
-.paginator {
-    margin-top: 20px;
-    text-align: center;
-}
+    .user-info h2 {
+      margin-top: 0;
+      font-size: 24px;
+    }
 
-.paginator a {
-    margin: 0 10px;
-    color: #007bff;
-    text-decoration: none;
-}
+    .user-info p {
+      margin: 5px 0;
+      font-size: 18px;
+    }
 
-.paginator a:hover {
-    text-decoration: underline;
-}
+    .container1 {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
 
-.glow-on-hover {
-    width: 200px; /* Уменьшаем ширину кнопки */
-    height: 40px; /* Уменьшаем высоту кнопки */
-    border: none;
-    outline: none;
-    color: #fff;
-    background: #111;
-    cursor: pointer;
-    position: relative;
-    z-index: 0;
-    border-radius: 10px;
-    margin-top: 20px; /* Отступ сверху */
-}
+    .dark-rounded-input {
+        background-color: #333;
+        color: #fff;
+        padding: 10px;
+        border-radius: 20px;
+        border-color: #444;
+        border-style: solid;
+        outline: none;
+        margin: auto;
+    }
 
-.glow-on-hover:before {
-    content: '';
-    background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
-    position: absolute;
-    top: -2px;
-    left:-2px;
-    background-size: 400%;
-    z-index: -1;
-    filter: blur(5px);
-    width: calc(100% + 4px);
-    height: calc(100% + 4px);
-    animation: glowing 20s linear infinite;
-    opacity: 0;
-    transition: opacity .3s ease-in-out;
-    border-radius: 10px;
-}
+    .user-avatar {
+      float: right;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #555; /* Заглушка для аватарки */
+    }
 
-.glow-on-hover:active {
-    color: #000
-}
+    header {
+      padding: 20px 0;
+    }
 
-.glow-on-hover:active:after {
-    background: transparent;
-}
+    header h1 {
+      font-size: 24px;
+    }
 
-.glow-on-hover:hover:before {
-    opacity: 1;
-}
+    nav ul {
+      list-style-type: none;
+    }
 
-.glow-on-hover:after {
-    z-index: -1;
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: #111;
-    left: 0;
-    top: 0;
-    border-radius: 10px;
-}
+    nav ul li {
+      display: inline;
+      margin-right: 20px;
+    }
 
-@keyframes glowing {
-    0% { background-position: 0 0; }
-    50% { background-position: 400% 0; }
-    100% { background-position: 0 0; }
-}
-
+    nav ul li a {
+      color: #fff;
+      text-decoration: none;
+    }
 </style>
 </body>
 </html>

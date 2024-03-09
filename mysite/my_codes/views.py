@@ -36,15 +36,15 @@ def register_page(request):
 
 
 def niknem_page(request):
-    name = request.session.get('username')
-    second_name = request.session.get('user_seconds')
+    first_name = request.session.get('username')
+    last_name = request.session.get('user_seconds')
     email = request.session.get('email')
 
     try:
-        account = Account.objects.filter(name=name, second_name=second_name, email=email).first()
+        user = User.objects.filter(first_name=first_name, last_name=last_name, email=email).first()
 
-    except Account.DoesNotExist:
-        return HttpResponse("Account not found")
+    except User.DoesNotExist:
+        return HttpResponse("User not found")
 
     context = {}
 
@@ -55,7 +55,7 @@ def niknem_page(request):
         else:
             request.session['niknem'] = niknem
             context['niknem'] = niknem
-            niknem_item = NIKNEM(niknem=niknem, account=account)
+            niknem_item = NIKNEM(niknem=niknem, user=user)
             niknem_item.save()
             context['good'] = "Никнейм успешно сохранен"
 
