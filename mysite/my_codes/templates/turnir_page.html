@@ -3,6 +3,7 @@
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
    <style>
        body {
            background-color: black;
@@ -20,32 +21,87 @@
        .head_buttons{
             wight: 50px;
             height: 50 px;
-            color: #1a2843;
+            background-color: #1a2843;
+            display: flex;
+       }
+       .button_head{
+            wight: 50px
+            height: 50px
+            background-color: #1a2843;
+            margin-right: 50px;
        }
        .header img {
            width: 40px;
            height: 40px;
-           border-radius: 50%;
+           border-radius: 5 0%;
        }
 
        .games-column {
            display: flex;
            flex-direction: column;
-           justify-content: center;
+           justify-content: left;
            align-items: center;
-           width: 200px;
-           border-right: 2px solid #1a2843;
+           width: 250px;
+           height: 750px;
+           border-right: 4px solid #1a2843;
        }
 
-       .games-table {
-           margin-left: 20px;
-       }
+       .games-column ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
 
-       th,
-       td {
-           border: 1px solid #1a2843;
-           padding: 10px;
-       }
+        .games-column li {
+            display: flex;
+            align-items: center;
+            justify-content: left;
+            width: 100%;
+            height: 50px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-right: 20px;
+        }
+
+        .games-column li:hover {
+            background-color: #2a3851;
+        }
+        .game-button {
+            background-color: black;
+            color: white;
+            font-size: 1.2em;
+            padding: 20px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* distribute the icon and text evenly inside the button */
+            width: 100%; /* make the buttons take up the full width of the list items */
+        }
+
+        .game-button:hover {
+            background-color: #1a2843;
+        }
+
+        .game-button span {
+            margin-right: 10px;
+        }
+        .games-table {
+            margin-left: 20px;
+            margin-top: 20px;
+            width: 80%;
+            margin-bottom: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #1a2843;
+            padding: 10px;
+            width: 25%;
+        }
 
        th {
            background-color: #1a2843;
@@ -54,50 +110,59 @@
        tr:nth-child(even) {
            background-color: #2a3851;
        }
+       .h4 {
+            font-size: 2em; /* make the title bigger */
+            text-align: center; /* center the title */
+            margin-top: 20px; /* add margin to the top of the title */
+            margin-bottom: 500px; /* add margin to the bottom of the title */
+        }
    </style>
-   <title>Touraments</title>
+    <title>Tournaments</title>
     <div class="header">
        <div class="head_buttons">
-           <form action="page/new.html" target="_blank">
-                <button>Главная</button>
-           </form>
-           <form action="page/new.html" target="_blank">
-                <button>Teamder</button>
-           </form>
-           <form action="page/new.html" target="_blank">
-                <button>Активности</button>
-           </form>
+               <form action="page/new.html" target="_blank" style="float: left; margin-right: 20px;margin-left: 40px">
+                    <button_head><font size="6" color="white" face="VT323">Главная</font></button_head>
+               </form>
+               <form action="page/new.html" target="_blank" style="float: center left; margin-right: 20px;">
+                   <button_head><font size="6" color="white" face="VT323">Teamder</font></button_head>
+               </form>
+               <form action="page/new.html" target="_blank" style="float: center;">
+                   <button_head><font size="6" color="white" face="VT323">Активности</font></button_head>
+               </form>
        </div>
        <img src="profile-icon.png" alt="Profile Icon">
    </div>
 </head>
 <body>
-   <div class="main">
-       <div class="games-column" style="float: left;">
-           <h3>Games</h3>
-           <ul>
-               <li>Dota 2</li>
-               <li>COUNTER-STRIKE 2</li>
-               <li>LEAGUE OF LEGENDS</li>
-               <li>WORLD OF TANKS</li>
-               <li>FIFA</li>
-               <li>CALL OF DUTY</li>
-               <li>FORTNITE</li>
-               <li>PUBG</li>
-               <li>Ещё одна игра</li>
-               <li>Ещё одна игра</li>
-               <li>Ещё одна игра</li>
-               <li>Ещё одна игра</li>
-           </ul>
-       </div>
-
+    <div class="main">
+        <div class="games-column" style="float: left;">
+            <h3>Games</h3>
+            <ul>
+                <li><button class="game-button">Dota 2</button></li>
+                <li><button class="game-button">COUNTER-STRIKE 2</button></li>
+                <li><button class="game-button">LEAGUE OF LEGENDS</button></li>
+                <li><button class="game-button">WORLD OF TANKS</button></li>
+                <li><button class="game-button">FIFA</button></li>
+                <li><button class="game-button">CALL OF DUTY</button></li>
+                <li><button class="game-button">FORTNITE</button></li>
+                <li><button class="game-button">PUBG</button></li>
+                <li><button class="game-button">GAME</button></li>
+                <li><button class="game-button">GAME</button></li>
+                <li><button class="game-button">GAME</button></li>
+                <li><button class="game-button">GAME</button></li>
+                <li><button class="game-button">GAME</button></li>
+            </ul>
+        </div>
+    </div>
+        <h4>Game</h4>
        <table class="games-table" style="float: centre;">
+
            <thead>
                <tr>
                    <th>Date</th>
                    <th>Next Tournaments</th>
                    <th>Participants</th>
-                   <th>Where to Watch</th>
+                   <th>Where to Watach</th>
                </tr>
            </thead>
            <tbody>
