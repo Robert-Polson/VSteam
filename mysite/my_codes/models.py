@@ -25,6 +25,6 @@ class Avatar(models.Model):
 
 class Turnir(models.Model):
     date = models.DateField()
-    name = models.CharField()
+    name = models.CharField(max_length=50)
     participants = models.IntegerField()
-    placeToWatch = models.CharField()
+    placeToWatch = models.CharField(max_length=50)
