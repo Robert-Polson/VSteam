@@ -184,28 +184,15 @@ a {
         <div class="shape"></div>
         <div class="shape"></div>
     </div>
-    <form method="post">
-        {% csrf_token %}
-        <h3>Login Here</h3>
-        <label for="username">Login</label>
-        <input type="text" placeholder="Email" id="username" name="email">
-        <label for="password">Password</label>
-        <input type="password" placeholder="Password" id="password" name="password">
-        <p class="tyty"><a href="http://127.0.0.1:8000/remember_password/">Забыли пароль?</a></p>
-        <button>Log In</button>
-        <div class="social">
-            <div class="go"><i class="fab fa-google"></i> Google</div>
-            <div class="fb"><i class="fab fa-facebook"></i> Facebook</div>
-        </div>
-        {% if good %}
-            <p class="goodently good">{{good}}</p>
-        <script>
-            window.location.href="http://127.0.0.1:8000/home_pages/";
-        </script>
-        {% endif %}
-        {% if error %}
-            <p class="goodently error">{{error}}</p>
-        {% endif %}
-    </form>
+
+        {% block content %}
+<form method="POST" novalidate>
+	{% csrf_token %}
+	<h1>Login</h1>
+    {{form.as_p}}
+	<input type="submit" value="Login" />
+	<p>Don't have an account? <a href="{%url 'register' %}">Register</a></p>
+</form>
+{% endblock content%}
 </body>
 </html>
