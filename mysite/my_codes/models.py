@@ -17,9 +17,9 @@ class NIKNEM(models.Model):
         return self.niknem
 class Avatar(models.Model):
     image = models.ImageField()
-    account = models.ForeignKey(to=Account, on_delete=models.CASCADE, null=True)
+    account = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return f'Avatar for {self.account.first_name} {self.account.last_name} ({self.account.nickname})'
+        return f'Avatar for {self.niknem.user.username} ({self.niknem.niknem})'
 
 

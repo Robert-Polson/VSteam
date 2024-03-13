@@ -24,6 +24,7 @@ def register_page(request):
             user = form.save(commit=False)
             user.username = user.username.lower()
             user.save()
+            login(request, user)
             request.session['username'] = user.username
             request.session['email'] = user.email
 
@@ -31,6 +32,7 @@ def register_page(request):
             niknem_item.save()
 
             messages.success(request, 'You have signed up successfully.')
+            print(messages.success(request, 'You have signed up successfully.'))
             return redirect('mainssss')
         else:
             return render(request, 'register.html', {'form': form})
@@ -75,10 +77,11 @@ def login_page(request):
         if form.is_valid():
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
-            user = authenticate(request, username=email, password=password)
+            user = authenticate(request, username=email.lower(), password=password)
             if user:
                 login(request, user)
                 messages.success(request, f'Hi {user.username.title()}, welcome back!')
+                print(request.user.username)
                 return redirect('homePage')
         else:
             messages.error(request, 'Invalid username or password')
@@ -87,6 +90,7 @@ def login_page(request):
 
 
 def open_page(request):
+
     context={}
     context={'text':"Добро пожаловать в мир возможностей и новых знакомств! Здесь каждый может найти не только друзей, но и надежных игровых партнеров для захватывающих приключений. Давайте создадим незабываемые воспоминания вместе! Добро пожаловать в наше сообщество, где дружба и игры ждут вас на каждом шагу. Присоединяйтесь и откройте для себя мир новых возможностей!"}
 
@@ -94,34 +98,27 @@ def open_page(request):
 
 
 def account_page(request):
-    context = {'name': User.first_name, 'second_name': User.last_name, 'email': User.email}
+    username = request.user.username
+    context = {'email': request.user.email}
 
     try:
-        user = User.objects.filter(username=context['name'], last_name=context['second_name'], email=context['email']).first()
+        user = User.objects.filter(username=username, email=context['email']).first()
 
         if not user:
             raise User.DoesNotExist
 
-        niknem = NIKNEM.objects.filter(account=user).first()
-        avatar = Avatar.objects.filter(account=user).first()
+        niknem = NIKNEM.objects.filter(user=user).first()
 
-        if request.method == 'POST' and 'avatarInput' in request.FILES:
-            image = request.FILES['avatarInput']
 
-            if avatar:
-                avatar.image = image
-                avatar.save()
-            else:
-                new_avatar = Avatar(image=image, account=user)
-                new_avatar.save()
-            return redirect('account_page')
-
-        context = {'account': user, 'avatar': avatar, 'niknem': niknem}
+        context = {'account': user, 'niknem': niknem, 'username': username}
         return render(request, 'account_page.html', context)
 
     except User.DoesNotExist:
         context = {'error': 'Такого пользователя нет'}
         return render(request, 'account_page.html', context)
+
+
+
 
 
 
@@ -162,6 +159,7 @@ def find_users_page(request):
             page = 0
         else:
             query = ''
+            page = 0
     else:
         query = request.GET.get('query', '')
         page = max(0, int(request.GET.get('page', 1)) - 1)
@@ -173,10 +171,11 @@ def find_users_page(request):
     context['accounts'] = accounts
     context['max_page'] = all_accounts_count // 10 + (all_accounts_count % 10 != 0)
     context['query'] = query
-    context['form'] = SearchUserForm()
+    context['form'] = SearchUserForm(initial={'query': query})
 
     return render(request, "find_users.html", context)
 def home_page(request):
+    print(request.user.username)
     context={}
 
     context['username']=f'Welcome'
