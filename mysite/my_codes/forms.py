@@ -7,7 +7,7 @@ class SearchUserForm(forms.Form):
     query = CharField(required=True, label='')
 
 class LoginForm(forms.Form):
-    email = forms.CharField(label='Email')
+    username = forms.CharField(label='Username')
     password = forms.CharField(widget=forms.PasswordInput, label='Password')
 
 
