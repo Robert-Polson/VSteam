@@ -6,6 +6,10 @@ from django.contrib.auth.models import User
 class SearchUserForm(forms.Form):
     query = CharField(required=True, label='')
 
+class RememberPassword(forms.Form):
+    username=forms.CharField(label='Username')
+    email = forms.CharField(label='Login')
+    password = forms.CharField(widget=forms.PasswordInput, label='Password')
 class LoginForm(forms.Form):
     username = forms.CharField(label='Username')
     password = forms.CharField(widget=forms.PasswordInput, label='Password')

@@ -8,7 +8,7 @@ from .models import Account, NIKNEM, Avatar
 import re
 import time
 from django.contrib.auth.models import User
-from .forms import LoginForm, RegisterForm
+from .forms import LoginForm, RegisterForm, RememberPassword
 from django.contrib.auth import login, authenticate
 from django.contrib import messages
 from django.shortcuts import render, redirect
@@ -91,7 +91,7 @@ def login_page(request):
 
 def open_page(request):
     print(request.user.username)
-    if request.user.is_authenticated== True:
+    if request.user.is_authenticated == True:
         return redirect('homePage')
     context={}
     context={'text':"Добро пожаловать в мир возможностей и новых знакомств! Здесь каждый может найти не только друзей, но и надежных игровых партнеров для захватывающих приключений. Давайте создадим незабываемые воспоминания вместе! Добро пожаловать в наше сообщество, где дружба и игры ждут вас на каждом шагу. Присоединяйтесь и откройте для себя мир новых возможностей!"}
@@ -120,29 +120,25 @@ def account_page(request):
         return render(request, 'account_page.html', context)
 
 
-
-
-
-
 def remember_password(request):
-    context = {}
-    if request.method == "POST":
-        name = request.POST.get("name")
-        second_name = request.POST.get("second_name")
-        email = request.POST.get("email")
-        password = request.POST.get("password")
-        try:
-            user = User.objects.filter(first_name=name, last_name=second_name, email=email).first()
+    form = RememberPassword()
+    if request.method == 'POST':
+        form = RememberPassword(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password')
+            user = User.objects.filter(username=username.lower(), email=email.lower()).first()
             if user:
-                user.set_password(password)
+                user.set_password(password)  # Установка нового пароля
                 user.save()
-                context['good'] = "Пароль успешно изменен"
+                messages.success(request, f'Password changed successfully for user {user.username}!')
+                return redirect('login')
             else:
-                context['error'] = "Пароль не сохранен"
-        except User.DoesNotExist:
-            context['error'] = 'Произошла ошибка при попытке изменения пароля'
+                messages.error(request, 'User not found with the provided username and email')
 
-    return render(request, "remember_password.html", context)
+    return render(request, 'remember_password.html', {'form': form})
+
 
 
 def achievements(request):
@@ -178,9 +174,8 @@ def find_users_page(request):
     return render(request, "find_users.html", context)
 def home_page(request):
     print(request.user.username)
-    context={}
+    context = {}
 
-    context['username']=f'Welcome'
     return render(request,'homePage.html',context)
 
 def turnir_page(request):
