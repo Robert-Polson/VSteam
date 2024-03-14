@@ -192,6 +192,7 @@ a {
     {{form.as_p}}
 	<input type="submit" value="Login" />
 	<p>Don't have an account? <a href="{%url 'register' %}">Register</a></p>
+    <p>Forget password? <a href="{% url 'remember_password' %}">Remember password</a></p>
 </form>
 {% endblock content%}
 </body>
