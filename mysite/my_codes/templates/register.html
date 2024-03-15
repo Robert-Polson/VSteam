@@ -6,40 +6,39 @@
 </head>
 <body>
 <section class="container">
-        <div class="login-container">
-            <div class="circle circle-one"></div>
-            <div class="form-container">
-                <img src="https://raw.githubusercontent.com/hicodersofficial/glassmorphism-login-form/master/assets/illustration.png" alt="illustration" class="illustration" />
-                <h1 class="opacity">REGISTER</h1>
-                <form method="post">
-                    {% csrf_token %}
-                    <input type="text" placeholder="First Name" id="firstname" name="name">
-                    <input type="text" placeholder="Last Name" id="lastname" name="second_name">
-                    <input type="text" placeholder="Email" id="email" name="email">
-                    <input type="password" placeholder="Password" id="password" name="password">
-                    <button class="opacity">SUBMIT</button>
-                </form>
-                {% if error %}
-    <p class="error">{{ error }}</p>
-{% endif %}
+    <div class="login-container">
+        <div class="circle circle-one"></div>
+        <div class="form-container">
+            <img src="https://raw.githubusercontent.com/hicodersofficial/glassmorphism-login-form/master/assets/illustration.png" alt="illustration" class="illustration" />
+            <h1 class="opacity">REGISTER</h1>
 
-{% if message %}
-    <p class="message">{{ message }}</p>
-    <time></time>
-    <script>
-        setTimeout(function() {
-           window.location.href = "http://127.0.0.1:8000/mainsss/";
-        }, 2000);
-    </script>
-{% endif %}
-                <div class="register-forget opacity">
+            {% block content %}
 
-                </div>
-            </div>
-            <div class="circle circle-two"></div>
+<form method="POST" novalidate>
+	{% csrf_token %}
+
+	{% for field in form %}
+	<p>
+		{% if field.errors %}
+		<ul class="errorlist">
+			{% for error in field.errors %}
+			<li>{{ error }}</li>
+			{% endfor %}
+		</ul>
+		{% endif %}
+	 	{{ field.label_tag }} {{ field }}
+	</p>
+	{% endfor %}
+	<input type="submit" value="Register" />
+</form>
+{% endblock content%}
+
+            <div class="register-forget opacity"></div>
         </div>
-        <div class="theme-btn-container"></div>
-    </section>
+        <div class="circle circle-two"></div>
+    </div>
+    <div class="theme-btn-container"></div>
+</section>
 <style>
     :root {
     --background: #1a1a2e;

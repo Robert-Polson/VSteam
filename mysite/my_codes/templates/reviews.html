@@ -2,10 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title></title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Подключаем файл со стилями -->
 </head>
 <body>
+    <div class="mains">
+        <h1>Comments</h1>
+        <input type="text" placeholder="Enter the username you wanna comment">
+        <input type="text" placeholder="Enter the comment" style="height: 50px">
+        <button type="submit">Отправить</button>
+    </div>
+
     <div class="area" style="position: absolute">
         <ul class="circles">
                 <li></li>
@@ -19,62 +27,67 @@
                 <li></li>
                 <li></li>
         </ul>
-</div >
-    <main>
+    </div>
 
-
-        <div class="comm">
-            <h1>Comments</h1>
-            <input type="text" placeholder="Enter the username you wanna comment" class="un">
-            <textarea name="" placeholder="Enter the comment" id="" class="un1"></textarea>
-        </div>
-    </main>
     <style>
-        @import url('https://fonts.googleapis.com/css?family=Exo:400,700');
+         @import url('https://fonts.googleapis.com/css?family=Exo:400,700');
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: black;
+            background: -webkit-linear-gradient(to left, #8f94fb, #4e54c8);
+            width: 100%;
+            height: 100vh;
+        }
 
-*{
-    margin: 0px;
-    padding: 0px;
-}
+        .mains {
+            text-align: center;
+            color: white;
+            background-color: #1a1a2e;
+            padding: 20px;
+            display: inline-block;
+            margin-left: 40%;
+            margin-top: 20%;
+            height: 300px;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px white;
+        }
 
-body{
-    font-family: 'Exo', sans-serif;
-}
+        .mains h1 {
+            margin-bottom: 20px; /* Увеличиваем отступ после заголовка */
+        }
 
+        .mains input {
+            width: 80%; /* Ширина полей ввода */
+            padding: 10px; /* Поля вокруг текста внутри поля ввода */
+            margin-bottom: 15px; /* Отступ между полями */
+            border: none; /* Убираем границу поля ввода */
+            border-radius: 5px; /* Скругляем углы поля ввода */
+        }
 
-.context {
-    width: 100%;
-    position: absolute;
-    top:50vh;
+        .mains input::placeholder {
+            color: #ccc; /* Цвет placeholder текста */
+        }
 
-}
+        .mains input:focus {
+            outline: none;
+        }
 
-.context h1{
-    text-align: center;
-    color: #fff;
-    font-size: 50px;
-}
+        .area {
+            position: absolute;
+        }
 
+        .circles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
 
-.area{
-    background: #4e54c8;
-    background: -webkit-linear-gradient(to left, #8f94fb, #4e54c8);
-    width: 100%;
-    height:100vh;
-
-
-}
-
-.circles{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-}
-
-.circles li{
+        .circles li {
     position: absolute;
     display: block;
     list-style: none;
@@ -83,17 +96,18 @@ body{
     background: rgba(255, 255, 255, 0.2);
     animation: animate 25s linear infinite;
     bottom: -150px;
-}
-
-.circles li:nth-child(1){
-    left: 25%;
-    width: 80px;
-    height: 80px;
-    animation-delay: 0s;
+    border-radius: 0; /* Изменение border-radius на 0 */
 }
 
 
-.circles li:nth-child(2){
+        .circles li:nth-child(1) {
+            left: 25%;
+            width: 80px;
+            height: 80px;
+            animation-delay: 0s;
+        }
+
+        .circles li:nth-child(2){
     left: 10%;
     width: 20px;
     height: 20px;
@@ -153,32 +167,26 @@ body{
     animation-duration: 35s;
 }
 
-.circles li:nth-child(10){
+.circles li:nth-child(10) {
     left: 85%;
     width: 150px;
     height: 150px;
     animation-delay: 0s;
-    animation-duration: 11s;
+    animation-duration: 25s;
 }
 
-
-
 @keyframes animate {
-
-    0%{
+    0% {
         transform: translateY(0) rotate(0deg);
         opacity: 1;
-        border-radius: 0;
+        border-radius: 50%;
     }
-
-    100%{
+    100% {
         transform: translateY(-1000px) rotate(720deg);
         opacity: 0;
         border-radius: 50%;
     }
-
 }
-
     </style>
 </body>
 </html>

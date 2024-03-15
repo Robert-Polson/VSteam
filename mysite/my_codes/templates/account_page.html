@@ -105,7 +105,7 @@
     </label>
     <div class="">
         <label>ИМЯ И ФАМИЛИЯ</label>:
-        <p class="card__name">{{ name }} {{ second_name }}</p>
+        <p class="card__name">{{ account.username }}</p>
     </div>
     <label>NIKNEM</label>:
     <h1 class="card__name">{{ niknem.niknem }}</h1>
@@ -121,7 +121,7 @@
     </ul>
     <input type="file" name="avatarInput" style="display: none;" onchange="previewImage(event)">
     <button type="submit" class="btn">Change Avatar</button>
-    <button class="btn">My profile</button>
+    <button class="btn">Publish the post</button>
     <button class="btn">Message</button>
     <button class="btn" type="button" onclick="dostiz();">Achievements</button>
 </form>
