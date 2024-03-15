@@ -1,17 +1,21 @@
-from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
-from django.shortcuts import render, redirect
-from django.contrib.auth.hashers import make_password, check_password
-from django.utils.datastructures import MultiValueDictKeyError
+from io import BytesIO
+from uuid import uuid4
 
-from .forms import SearchUserForm
-from .models import Account, NIKNEM, Avatar
-import re
-import time
-from django.contrib.auth.models import User
-from .forms import LoginForm, RegisterForm, RememberPassword
-from django.contrib.auth import login, authenticate
+from PIL import Image
 from django.contrib import messages
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.models import User
+from django.core.files.storage import FileSystemStorage
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
+
+from .forms import LoginForm, RegisterForm, RememberPassword
+from .forms import SearchUserForm
+from .models import NIKNEM, Account
+from mysite import settings
+
+from mysite.settings import MEDIA_ROOT
+
 
 def register_page(request):
     if request.method == 'GET':
@@ -38,10 +42,9 @@ def register_page(request):
             return render(request, 'register.html', {'form': form})
 
 
-
 def niknem_page(request):
-    username=request.session.get('username')
-    email=request.session.get('email')
+    username = request.session.get('username')
+    email = request.session.get('email')
     print(request.user.username)
     try:
         user = User.objects.get(username=username, email=email)
@@ -93,14 +96,46 @@ def open_page(request):
     print(request.user.username)
     if request.user.is_authenticated == True:
         return redirect('homePage')
-    context={}
-    context={'text':"Добро пожаловать в мир возможностей и новых знакомств! Здесь каждый может найти не только друзей, но и надежных игровых партнеров для захватывающих приключений. Давайте создадим незабываемые воспоминания вместе! Добро пожаловать в наше сообщество, где дружба и игры ждут вас на каждом шагу. Присоединяйтесь и откройте для себя мир новых возможностей!"}
+    context = {}
+    context = {
+        'text': "Добро пожаловать в мир возможностей и новых знакомств! Здесь каждый может найти не только друзей, но и надежных игровых партнеров для захватывающих приключений. Давайте создадим незабываемые воспоминания вместе! Добро пожаловать в наше сообщество, где дружба и игры ждут вас на каждом шагу. Присоединяйтесь и откройте для себя мир новых возможностей!"}
 
-    return render(request, 'open_page.html',context)
+    return render(request, 'open_page.html', context)
+
+
+def api_v1_user_upload_avatar(request):
+    if request.method != 'POST':
+        return HttpResponse(status=405)
+
+    uploaded_file = request.FILES.get('avatar', None)
+
+    if not uploaded_file:
+        return HttpResponse(status=400)
+
+    if not uploaded_file.content_type.startswith('image/'):
+        return HttpResponse(status=415)
+
+    user = request.user
+
+    if not user.is_authenticated:
+        return HttpResponse(status=401)
+
+    try:
+        with BytesIO(uploaded_file.read()) as f:
+            image = Image.open(f)
+            image.verify()
+
+            image = Image.open(f)
+            path = MEDIA_ROOT + '/avatars/' + str(user.id) + '.png'
+
+            image.save(path)
+        return HttpResponse(status=200)
+    except Exception as e:
+        print(e)
+        return HttpResponse(status=400)
 
 
 def account_page(request):
-    print(request.user)
     username = request.user.username
     context = {'email': request.user.email}
 
@@ -111,24 +146,14 @@ def account_page(request):
             raise User.DoesNotExist
 
         niknem = NIKNEM.objects.filter(user=user).first()
-        context.update({
-            'account': user,
-            'niknem': niknem,
-            'show_change': True,
-            'show_publish_button': True,
-            'show_message_button': True,
-            'show_achievements_button': True,
-            'show_likes':False,
-            'show_dislike': False,
-            'invite_friends':False,
-            'add_comments':False
-        })
 
+        context = {'account': user, 'niknem': niknem, 'username': username}
         return render(request, 'account_page.html', context)
 
     except User.DoesNotExist:
         context = {'error': 'Такого пользователя нет'}
         return render(request, 'account_page.html', context)
+
 
 
 def remember_password(request):
@@ -141,7 +166,7 @@ def remember_password(request):
             password = form.cleaned_data.get('password')
             user = User.objects.filter(username=username.lower(), email=email.lower()).first()
             if user:
-                user.set_password(password)
+                user.set_password(password)  # Установка нового пароля
                 user.save()
                 messages.success(request, f'Password changed successfully for user {user.username}!')
                 return redirect('login')
@@ -151,32 +176,10 @@ def remember_password(request):
     return render(request, 'remember_password.html', {'form': form})
 
 
-
 def achievements(request):
     return render(request, "Achievements.html")
 
-def settings_page(request, user_id=None):
-    try:
-        user = User.objects.get(id=user_id)
-        niknem = NIKNEM.objects.filter(user=user).first()
 
-        context = {
-            'account': user,
-            'niknem': niknem,
-            'show_change':False,
-            'show_publish_button': True,
-            'show_message_button': False,
-            'show_achievements_button': True,
-            'show_likes': True,
-            'show_dislike': True,
-            'invite_friends':True,
-            'add_comments':True
-        }
-        return render(request, 'account_page.html', context)
-
-    except User.DoesNotExist:
-        context = {'error': 'Такого пользователя нет'}
-        return render(request, 'account_page.html', context)
 def find_users_page(request):
     context = {}
 
@@ -193,9 +196,7 @@ def find_users_page(request):
         page = max(0, int(request.GET.get('page', 1)) - 1)
 
     all_accounts_count = NIKNEM.objects.filter(niknem__contains=query).count()
-
-    current_user = request.user
-    accounts = NIKNEM.objects.filter(niknem__contains=query).exclude(user=current_user)[page * 10:page * 10 + 10]
+    accounts = NIKNEM.objects.filter(niknem__contains=query)[page * 10:page * 10 + 10]
 
     context['page'] = page + 1
     context['accounts'] = accounts
@@ -203,23 +204,24 @@ def find_users_page(request):
     context['query'] = query
     context['form'] = SearchUserForm(initial={'query': query})
 
-    #user_accounts=
     return render(request, "find_users.html", context)
+
+
 def home_page(request):
     print(request.user.username)
     context = {}
 
-    return render(request,'homePage.html',context)
+    return render(request, 'homePage.html', context)
+
 
 def turnir_page(request):
-    return render(request,'turnir_page.html')
+    return render(request, 'turnir_page.html')
+
 
 def reviews(request):
-    # context ={}
-    # if request.method=="POST":
-    #     comments=request.POST.get('comments')
-    #     try:
-    #         niknem=NIKNEM.objects.filter(niknem=comments).first()
-    #         if niknem:
+    return render(request, 'reviews.html')
 
-    return render(request,'reviews.html')
+
+def settings_page(request):
+    context = {}
+    return render(request, 'settings.html', context)
