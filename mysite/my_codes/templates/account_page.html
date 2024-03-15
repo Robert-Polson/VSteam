@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load user_avatar %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -91,8 +92,6 @@
             border-radius: 20px;
             width: 10rem;
         }
-}
-
     </style>
 </head>
 <body>
@@ -101,7 +100,7 @@
     {% csrf_token %}
     <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="previewImage(event)">
     <label for="avatarInput">
-        <img id="avatarPreview" class="imgh" src="old-image" alt="Добавьте аватар">
+        <img id="avatarPreview" class="imgh" src="{% user_avatar '35' %}" alt="Добавьте аватар">
     </label>
     <div class="">
         <label>ИМЯ И ФАМИЛИЯ</label>:
@@ -120,7 +119,7 @@
         <li><a href="#"><i class="fab fa-codepen"></i></a></li>
     </ul>
     <input type="file" name="avatarInput" style="display: none;" onchange="previewImage(event)">
-    <button type="submit" class="btn">Change Avatar</button>
+    <button class="btn" type="button" onclick="uploadAvatar()">Change Avatar</button>
     <button class="btn">Publish the post</button>
     <button class="btn">Message</button>
     <button class="btn" type="button" onclick="dostiz();">Achievements</button>
@@ -139,27 +138,38 @@
                 img.src = reader.result;
             };
             reader.readAsDataURL(input.files[0]);
-        }
+    }
 
-        function uploadAvatar(event) {
-            event.preventDefault();
-            const form = document.getElementById('avatarForm');
-            const formData = new FormData(form);
+    function uploadAvatar(event) {
+        let input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.click();
 
-            fetch('/upload_avatar', {
+        input.onchange = function() {
+            let avatar = input.files[0];
+
+            let formData = new FormData();
+            formData.append("avatar", avatar);
+
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            fetch('/api/v1/user/change_avatar/', {
                 method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (response.ok) {
-                    let isImage=true;
-                    alert('Аватар успешно обновлен!');
-                } else {
-                    alert('Произошла ошибка при загрузке аватара.');
+                body: formData,
+                headers: {
+                    'X-CSRFToken': csrftoken
                 }
             })
-            .catch(error => console.error('Ошибка:', error));
+            .then(response => {
+                if (!response.ok) {
+                    alert('Ошибка');
+                }
+            })
+            .catch(error => console.error(error));
         }
+    }
+
 </script>
 </body>
 </html>
