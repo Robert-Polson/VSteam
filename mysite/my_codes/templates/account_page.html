@@ -133,11 +133,24 @@
         <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
         <li><a href="#"><i class="fab fa-codepen"></i></a></li>
     </ul>
-    <input type="file" name="avatarInput" style="display: none;" onchange="previewImage(event)">
+            {% if show_change %}
     <button type="submit" class="btn">Change Avatar</button>
+            {% endif %}
+{% if show_publish_button %}
     <button class="btn">Publish the post</button>
+{% endif %}
+{% if show_message_button %}
     <button class="btn">Message</button>
+{% endif %}
+{% if show_achievements_button %}
     <button class="btn" type="button" onclick="dostiz();">Achievements</button>
+{% endif %}
+{% if show_likes %}
+            <button class="btn">Like</button>
+            {% endif %}
+            {% if show_dislike %}
+            <button class="btn">DisLike</button>
+            {% endif %}
 </form>
 
     </div>

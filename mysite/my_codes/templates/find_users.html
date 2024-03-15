@@ -32,17 +32,18 @@
     </form>
     {% if accounts|length > 0 %}
         <div class="container">
-        {% for account in accounts %}
-            <div class="user-card">
-                <img src="{{ account.avatar.image.url }}" alt="User Avatar">
-                <div class="user-info">
-                    <h2>{{ account.user.username }}</h2>
-                    <p>Nickname: {{ account.niknem }}</p>
-                    <a href="{% url 'polzovatels_account' %}"><p>перейти</p></a>
-                </div>
+    {% for account in accounts %}
+        <div class="user-card">
+            <img src="{{ account.avatar.image.url }}" alt="User Avatar">
+            <div class="user-info">
+                <h2>{{ account.user.username }}</h2>
+                <p>Nickname: {{ account.niknem }}</p>
+                <a href="{% url 'polzovatels_account' account.user.id %}" style="text-decoration: none; color: red;"><p>перейти</p></a>
             </div>
-        {% endfor %}
-    </div>
+        </div>
+    {% endfor %}
+</div>
+
     {% else %}
     <h1>Ничего не найдено</h1>
     {% endif %}

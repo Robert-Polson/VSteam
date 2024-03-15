@@ -28,10 +28,11 @@ urlpatterns = [
     path('account_pages/',views.account_page, name='account_page'),
     path('remember_password/',views.remember_password,name='remember_password'),
     path('find_users/',views.find_users_page),
-    path('achievements//',views.achievements),
+    path('achievements/',views.achievements, name='achievements'),
     path('open_page', views.open_page, name='open_page'),
     path('home_pages/', views.home_page,name='homePage'),
     path('turnir_page/', views.turnir_page),
     path('reviews/',views.reviews),
-    path('polzovatels_account/',views.settings_page,name='polzovatels_account')
+    path('polzovatels_account/<int:user_id>/', views.settings_page, name='polzovatels_account')
+
 ]
