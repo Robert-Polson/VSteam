@@ -171,6 +171,7 @@ def find_users_page(request):
     context['query'] = query
     context['form'] = SearchUserForm(initial={'query': query})
 
+    #user_accounts=
     return render(request, "find_users.html", context)
 def home_page(request):
     print(request.user.username)
@@ -185,4 +186,4 @@ def reviews(request):
     return render(request,'reviews.html')
 def settings_page(request):
     context={}
-    return render(request,'settings.html',context)
+    return render(request,'polzovatels_account.html',context)

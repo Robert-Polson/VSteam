@@ -5,17 +5,27 @@
     <title>Title</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+Paaji+2:wght@400;500&display=swap">
+    <link href="https://fonts.cdnfonts.com/css/retron2000" rel="stylesheet">
     <style>
+        @import url('https://fonts.cdnfonts.com/css/retron2000');
+
         body {
-            font-family: 'Baloo Paaji 2', cursive;
-            background-color: #393e46;
-            color: #fff;
+            font-family: 'Retron2000', sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            box-sizing: border-box;
+            background: var(--background);
+            color: var(--color);
+            letter-spacing: 1px;
+            transition: background 0.2s ease;
+            -webkit-transition: background 0.2s ease;
+            -moz-transition: background 0.2s ease;
+            -ms-transition: background 0.2s ease;
+            -o-transition: background 0.2s ease;
         }
 
         .card {
@@ -27,7 +37,7 @@
             flex-direction: column;
             align-items: center;
             box-shadow: 0 10px 50px rgba(235, 25, 110, 1);
-            color: white;
+
             padding: 20px;
             margin-left:10px;
         }
@@ -86,14 +96,18 @@
             color: #58afd1;
             font-size: 1.5em;
         }
-    .imgh {
+        .imgh {
             border: 1px solid black;
             border-radius: 20px;
             width: 10rem;
         }
-}
 
-    </style>
+        .theme-btn-container {
+            position: absolute;
+            left: 0;
+            bottom: 2rem;
+        }
+</style>
 </head>
 <body>
     <div class="card">
@@ -127,6 +141,7 @@
 </form>
 
     </div>
+    <div class="theme-btn-container"></div>
 <script>
     function dostiz() {
     window.location.href="http://127.0.0.1:8000/achievements//"
@@ -160,6 +175,63 @@
             })
             .catch(error => console.error('Ошибка:', error));
         }
+
+
+
+    const themes = [
+    {
+        background: "#1A1A2E",
+        color: "#1F51FF",
+        primaryColor: "#0F3460"
+    },
+    {
+        background: "#461220",
+        color: "#FF3131",
+        primaryColor: "#E94560"
+    },
+    {
+        background: "#192A51",
+        color: "#1F51FF",
+        primaryColor: "#967AA1"
+    },
+    {
+        background: "#F7B267",
+        color: "#FFF01F",
+        primaryColor: "#F4845F"
+    },
+    {
+        background: "#F25F5C",
+        color: "#FF5E00",
+        primaryColor: "#642B36"
+    },
+    {
+        background: "#231F20",
+        color: "#39FF14",
+        primaryColor: "#BB4430"
+    }
+];
+
+const setTheme = (theme) => {
+    const root = document.querySelector(":root");
+    root.style.setProperty("--background", theme.background);
+    root.style.setProperty("--color", theme.color);
+    root.style.setProperty("--primary-color", theme.primaryColor);
+    root.style.setProperty("--glass-color", theme.glassColor);
+};
+
+const displayThemeButtons = () => {
+    const btnContainer = document.querySelector(".theme-btn-container");
+    themes.forEach((theme) => {
+        const div = document.createElement("div");
+        div.className = "theme-btn";
+        div.style.cssText = background: ${theme.background}; width: 25px; height: 25px;
+        btnContainer.appendChild(div);
+        div.addEventListener("click", () => setTheme(theme));
+    });
+};
+
+displayThemeButtons();
+
 </script>
 </body>
 </html>
