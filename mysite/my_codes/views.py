@@ -3,7 +3,7 @@ from io import BytesIO
 from PIL import Image, UnidentifiedImageError
 from PIL.Image import DecompressionBombError
 from django.contrib import messages
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -234,3 +234,7 @@ def my_profile(request):
         return redirect('user_profile', username=user.username)
     return redirect('register')
 
+
+def logout_page(request):
+    logout(request)
+    return redirect('login')
