@@ -2,7 +2,7 @@ from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password, check_password
 from django.utils.datastructures import MultiValueDictKeyError
-from passlib.hash import pbkdf2_sha256
+
 from .forms import SearchUserForm
 from .models import Account, NIKNEM, Avatar
 import re
