@@ -99,6 +99,7 @@ def open_page(request):
 
 
 def account_page(request):
+    print(request.user)
     username = request.user.username
     context = {'email': request.user.email}
 
@@ -109,9 +110,19 @@ def account_page(request):
             raise User.DoesNotExist
 
         niknem = NIKNEM.objects.filter(user=user).first()
+        context.update({
+            'account': user,
+            'niknem': niknem,
+            'show_change': True,
+            'show_publish_button': True,
+            'show_message_button': True,
+            'show_achievements_button': True,
+            'show_likes':False,
+            'show_dislike': False,
+            'invite_friends':False,
+            'add_comments':False
+        })
 
-
-        context = {'account': user, 'niknem': niknem, 'username': username}
         return render(request, 'account_page.html', context)
 
     except User.DoesNotExist:
@@ -129,7 +140,7 @@ def remember_password(request):
             password = form.cleaned_data.get('password')
             user = User.objects.filter(username=username.lower(), email=email.lower()).first()
             if user:
-                user.set_password(password)  # Установка нового пароля
+                user.set_password(password)
                 user.save()
                 messages.success(request, f'Password changed successfully for user {user.username}!')
                 return redirect('login')
@@ -143,9 +154,28 @@ def remember_password(request):
 def achievements(request):
     return render(request, "Achievements.html")
 
+def settings_page(request, user_id=None):
+    try:
+        user = User.objects.get(id=user_id)
+        niknem = NIKNEM.objects.filter(user=user).first()
 
+        context = {
+            'account': user,
+            'niknem': niknem,
+            'show_change':False,
+            'show_publish_button': True,
+            'show_message_button': False,
+            'show_achievements_button': True,
+            'show_likes': True,
+            'show_dislike': True,
+            'invite_friends':True,
+            'add_comments':True
+        }
+        return render(request, 'account_page.html', context)
 
-
+    except User.DoesNotExist:
+        context = {'error': 'Такого пользователя нет'}
+        return render(request, 'account_page.html', context)
 def find_users_page(request):
     context = {}
 
@@ -162,7 +192,9 @@ def find_users_page(request):
         page = max(0, int(request.GET.get('page', 1)) - 1)
 
     all_accounts_count = NIKNEM.objects.filter(niknem__contains=query).count()
-    accounts = NIKNEM.objects.filter(niknem__contains=query)[page * 10:page * 10 + 10]
+
+    current_user = request.user
+    accounts = NIKNEM.objects.filter(niknem__contains=query).exclude(user=current_user)[page * 10:page * 10 + 10]
 
     context['page'] = page + 1
     context['accounts'] = accounts
@@ -170,6 +202,7 @@ def find_users_page(request):
     context['query'] = query
     context['form'] = SearchUserForm(initial={'query': query})
 
+    #user_accounts=
     return render(request, "find_users.html", context)
 def home_page(request):
     print(request.user.username)
@@ -189,7 +222,11 @@ def turnir_page(request):
     return render(request,'turnir_page.html')
 
 def reviews(request):
+    # context ={}
+    # if request.method=="POST":
+    #     comments=request.POST.get('comments')
+    #     try:
+    #         niknem=NIKNEM.objects.filter(niknem=comments).first()
+    #         if niknem:
+
     return render(request,'reviews.html')
-def settings_page(request):
-    context={}
-    return render(request,'settings.html',context)
