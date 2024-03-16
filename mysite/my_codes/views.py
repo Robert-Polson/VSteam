@@ -1,20 +1,17 @@
 from io import BytesIO
-from uuid import uuid4
 
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
+from PIL.Image import DecompressionBombError
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
-from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from mysite.settings import MEDIA_ROOT
 
 from .forms import LoginForm, RegisterForm, RememberPassword
 from .forms import SearchUserForm
-from .models import NIKNEM, Account
-from mysite import settings
-
-from mysite.settings import MEDIA_ROOT
+from .models import NIKNEM
 
 
 def register_page(request):
@@ -94,11 +91,14 @@ def login_page(request):
 
 def open_page(request):
     print(request.user.username)
-    if request.user.is_authenticated == True:
+    if request.user.is_authenticated:
         return redirect('homePage')
     context = {}
     context = {
-        'text': "Добро пожаловать в мир возможностей и новых знакомств! Здесь каждый может найти не только друзей, но и надежных игровых партнеров для захватывающих приключений. Давайте создадим незабываемые воспоминания вместе! Добро пожаловать в наше сообщество, где дружба и игры ждут вас на каждом шагу. Присоединяйтесь и откройте для себя мир новых возможностей!"}
+        'text': "Добро пожаловать в мир возможностей и новых знакомств! Здесь каждый может найти не только друзей, "
+                "но и надежных игровых партнеров для захватывающих приключений. Давайте создадим незабываемые "
+                "воспоминания вместе! Добро пожаловать в наше сообщество, где дружба и игры ждут вас на каждом шагу. "
+                "Присоединяйтесь и откройте для себя мир новых возможностей!"}
 
     return render(request, 'open_page.html', context)
 
@@ -126,34 +126,34 @@ def api_v1_user_upload_avatar(request):
             image.verify()
 
             image = Image.open(f)
+
+            image = image.resize((256, 256), Image.Resampling.LANCZOS)
+
             path = MEDIA_ROOT + '/avatars/' + str(user.id) + '.png'
 
             image.save(path)
         return HttpResponse(status=200)
-    except Exception as e:
-        print(e)
+    except [UnidentifiedImageError, EOFError, DecompressionBombError]:
         return HttpResponse(status=400)
+    except Exception:
+        return HttpResponse(status=500)
 
 
-def account_page(request):
-    username = request.user.username
-    context = {'email': request.user.email}
-
+def account_page(request, username):
     try:
-        user = User.objects.filter(username=username, email=context['email']).first()
+        user = User.objects.filter(username=username).first()
 
         if not user:
             raise User.DoesNotExist
 
         niknem = NIKNEM.objects.filter(user=user).first()
 
-        context = {'account': user, 'niknem': niknem, 'username': username}
+        context = {'account': user, 'niknem': niknem.niknem if niknem is not None else 'No NickName', 'is_owner_of_account': user == request.user}
         return render(request, 'account_page.html', context)
 
     except User.DoesNotExist:
         context = {'error': 'Такого пользователя нет'}
         return render(request, 'account_page.html', context)
-
 
 
 def remember_password(request):

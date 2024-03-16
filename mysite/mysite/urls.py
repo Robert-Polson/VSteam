@@ -37,6 +37,7 @@ urlpatterns = [
     path('turnir_page/', views.turnir_page),
     path('reviews/', views.reviews),
     path('settings/', views.settings_page),
+    path('user/<str:username>', views.account_page),
 
     path('api/v1/user/change_avatar/', views.api_v1_user_upload_avatar),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
