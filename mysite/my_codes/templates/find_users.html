@@ -12,7 +12,8 @@
         <div class="container1">
           <div style="display: flex; ">
             <h1 style="color: green;">TEAM DER</h1>
-            <input type="text" class="dark-rounded-input" placeholder="Search the friends" style="width: 500px;" name="query">
+            <input type="text" id="query" class="dark-rounded-input" placeholder="Search the friends" style="width: 500px;" name="query">
+              <button onclick="searchButton()" class="glow-on-hover">Поиск</button>
           </div>
           <nav>
             <ul>
@@ -26,11 +27,6 @@
           </div>
         </div>
     </header>
-    <form method="post">
-        {% csrf_token %}
-        {{ form }}
-        <button type="submit" class="glow-on-hover">Поиск</button>
-    </form>
     {% if accounts|length > 0 %}
         <div class="container">
         {% for account in accounts %}
@@ -157,5 +153,11 @@
       text-decoration: none;
     }
 </style>
+<script>
+    function searchButton()
+    {
+        window.location.href = "/find_users?query=" + document.getElementById("query").value;
+    }
+</script>
 </body>
 </html>
