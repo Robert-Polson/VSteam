@@ -225,3 +225,12 @@ def reviews(request):
 def settings_page(request):
     context = {}
     return render(request, 'settings.html', context)
+
+
+def my_profile(request):
+    print('123')
+    user = request.user
+    if user.is_authenticated:
+        return redirect('user_profile', username=user.username)
+    return redirect('register')
+
