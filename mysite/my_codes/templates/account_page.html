@@ -149,7 +149,13 @@
             <button class="btn">Like</button>
             {% endif %}
             {% if show_dislike %}
-            <button class="btn">DisLike</button>
+            <a href="#"><button class="btn">DisLike</button></a>
+            {% endif %}
+            {% if invite_friends %}
+            <button class="btn">Invite a friends</button>
+            {% endif %}
+            {% if add_comments %}
+            <button class="btn"><a href="{% url 'reviews' %}" style="text-decoration:none; color:white">Write Comments</a></button>
             {% endif %}
 </form>
 

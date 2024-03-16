@@ -119,7 +119,9 @@ def account_page(request):
             'show_message_button': True,
             'show_achievements_button': True,
             'show_likes':False,
-            'show_dislike': False
+            'show_dislike': False,
+            'invite_friends':False,
+            'add_comments':False
         })
 
         return render(request, 'account_page.html', context)
@@ -166,7 +168,9 @@ def settings_page(request, user_id=None):
             'show_message_button': False,
             'show_achievements_button': True,
             'show_likes': True,
-            'show_dislike': True
+            'show_dislike': True,
+            'invite_friends':True,
+            'add_comments':True
         }
         return render(request, 'account_page.html', context)
 
@@ -211,4 +215,11 @@ def turnir_page(request):
     return render(request,'turnir_page.html')
 
 def reviews(request):
+    # context ={}
+    # if request.method=="POST":
+    #     comments=request.POST.get('comments')
+    #     try:
+    #         niknem=NIKNEM.objects.filter(niknem=comments).first()
+    #         if niknem:
+
     return render(request,'reviews.html')
