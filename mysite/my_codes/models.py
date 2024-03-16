@@ -22,4 +22,8 @@ class Avatar(models.Model):
     def __str__(self):
         return f'Avatar for {self.niknem.user.username} ({self.niknem.niknem})'
 
-
+class Turnir(models.Model):
+    date = models.DateField()
+    name = models.CharField(max_length=50)
+    participants = models.IntegerField()
+    placeToWatch = models.CharField(max_length=50)
