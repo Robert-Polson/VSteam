@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password, check_password
 from django.utils.datastructures import MultiValueDictKeyError
 from .forms import SearchUserForm
-from .models import Account, NIKNEM, Avatar
+from .models import Account, NIKNEM, Avatar, Turnir
 import re
 import time
 from django.contrib.auth.models import User
@@ -178,6 +178,14 @@ def home_page(request):
     return render(request,'homePage.html',context)
 
 def turnir_page(request):
+    context = {}
+    if request.method == "POST":
+        date = request.POST.get('Date')
+        name = request.POST.get('Name')
+        participants = request.POST.get('Participants')
+        placeToWatch = request.POST.get('PlaceToWatch')
+        turnir = Turnir.objects.create(date=date, name=name, participants=participants, placeToWatch=placeToWatch)
+    context['turnirs'] = Turnir.objects
     return render(request,'turnir_page.html')
 
 def reviews(request):
