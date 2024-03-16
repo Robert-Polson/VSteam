@@ -123,21 +123,26 @@
         <img id="avatarPreview" class="imgh" src="{% user_avatar account.id %}" alt="Добавьте аватар">
     </label>
     <div class="">
-        <label>ИМЯ И ФАМИЛИЯ</label>:
-        <p class="card__name">{{ account.username }}</p>
-    </div>
-    <label>NIKNEM</label>:
-    <h1 class="card__name">{{ niknem.niknem }}</h1>
-    <div class="grid-container">
-        <div class="grid-child-posts">156 Posts</div>
-        <div class="grid-child-followers">1012 Likes</div>
-    </div>
-    <ul class="social-icons">
-        <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-        <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-        <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
-        <li><a href="#"><i class="fab fa-codepen"></i></a></li>
-    </ul>
+    <label>ИМЯ И ФАМИЛИЯ</label>:
+    <p class="card__name">{{ account.username }}</p>
+</div>
+<label>NIKNEM</label>:
+{% if niknem %}
+    <h1 class="card__name">{{ niknem }}</h1>
+{% else %}
+    <p>No NickName</p>
+{% endif %}
+<div class="grid-container">
+    <div class="grid-child-posts">156 Posts</div>
+    <div class="grid-child-followers">1012 Likes</div>
+</div>
+<ul class="social-icons">
+    <li><a href="#"><i class="fab fa-instagram"></i></i></a></li>
+    <li><a href="#"><i class="fab fa-twitter"></i></i></a></li>
+    <li><a href="#"><i class="fab fa-linkedin"></i></i></a></li>
+    <li><a href="#"><i class="fab fa-codepen"></i></i></a></li>
+</ul>
+
     <input type="file" name="avatarInput" style="display: none;" onchange="previewImage(event)">
     {% if is_owner_of_account == True %}
         <button class="btn" type="button" onclick="uploadAvatar()">Change Avatar</button>

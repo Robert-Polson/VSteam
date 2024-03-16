@@ -156,6 +156,8 @@ def account_page(request, username):
         return render(request, 'account_page.html', context)
 
 
+
+
 def remember_password(request):
     form = RememberPassword()
     if request.method == 'POST':
@@ -166,7 +168,7 @@ def remember_password(request):
             password = form.cleaned_data.get('password')
             user = User.objects.filter(username=username.lower(), email=email.lower()).first()
             if user:
-                user.set_password(password)  # Установка нового пароля
+                user.set_password(password)
                 user.save()
                 messages.success(request, f'Password changed successfully for user {user.username}!')
                 return redirect('login')
@@ -226,9 +228,29 @@ def reviews(request):
     return render(request, 'reviews.html')
 
 
-def settings_page(request):
-    context = {}
-    return render(request, 'settings.html', context)
+def settings_page(request, user_id=None):
+    try:
+        user = User.objects.get(id=user_id)
+        niknem = NIKNEM.objects.filter(user=user).first()
+
+        context = {
+            'account': user,
+            'niknem': niknem,
+            'show_change':False,
+            'show_publish_button': True,
+            'show_message_button': False,
+            'show_achievements_button': True,
+            'show_likes': True,
+            'show_dislike': True,
+            'invite_friends':True,
+            'add_comments':True
+        }
+        return render(request, 'account_page.html', context)
+
+    except User.DoesNotExist:
+        context = {'error': 'Такого пользователя нет'}
+        return render(request, 'account_page.html', context)
+
 
 
 def my_profile(request):

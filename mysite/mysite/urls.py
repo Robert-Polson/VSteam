@@ -40,6 +40,6 @@ urlpatterns = [
     path('user/<str:username>', views.account_page, name='user_profile'),
     path('my_profile/', views.my_profile, name='my_profile'),
     path('logout/', views.logout_page, name='logout'),
-
+    path('polzovatels_account/<int:user_id>/', views.settings_page, name='polzovatels_account'),
     path('api/v1/user/change_avatar/', views.api_v1_user_upload_avatar),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
