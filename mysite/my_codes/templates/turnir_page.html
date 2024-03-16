@@ -162,35 +162,29 @@
                    <th>Date</th>
                    <th>Next Tournaments</th>
                    <th>Participants</th>
-                   <th>Where to Watach</th>
+                   <th>Where to Watch</th>
                </tr>
            </thead>
            <tbody>
-               <tr>
-                   <td>2022-06-22</td>
-                   <td>The International 10</td>
-                   <td>18 teams</td>
-                   <td>Twitch</td>
-               </tr>
-               <tr>
-                   <td>2022-07-16</td>
-                   <td>ESL One Cologne 2022</td>
-                   <td>16 teams</td>
-                   <td>ESL_CSGO</td>
-               </tr>
-               <tr>
-                   <td>2022-08-05</td>
-                   <td>Worlds 2022</td>
-                   <td>24 teams</td>
-                   <td>Riot Games</td>
-               </tr>
-               <tr>
-                   <td>2022-09-01</td>
-                   <td>Tank Festival</td>
-                   <td>100 teams</td>
-                   <td>Youtube</td>
-               </tr>
+               {% for i in turnirs %}
+                    <tr>
+                        <td>i.date</td>
+                        <td>i.name</td>
+                        <td>i.participants</td>
+                        <td>t.placeToWatch</td>
+                    </tr>
+               {% endfor %}
            </tbody>
+
        </table>
-   </div>
+        <button onclick="add_turnir()">Add Tournament</button>
 </body>
+<script>
+    function add_turnir() {
+        let div = document.createElement('div')
+        div.innerHTML = '<form method="post">{% csrf_token %}<p>Date: <input type="date" id="Date"></p><p>Name: <input type="text" id="Name"></p><p>Participants: <input type="number" id="Participants"></p><p>Place to watch: <input type="text" id="PlaceToWatch"></p><input type="submit" value="ADD!"></form>'
+        document.body.append(div)
+    }
+    function ADD() {}
+
+</script>
