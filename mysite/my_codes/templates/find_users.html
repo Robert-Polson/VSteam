@@ -31,7 +31,7 @@
         <div class="container">
         {% for account in accounts %}
             <div class="user-card">
-                <img src="{% user_avatar account.user.id %}" alt="User Avatar">
+                <img src="{% user_avatar account.user.id %}" alt="User Avatar" style="border-radius: 30px; width: 100px;">
                 <div class="user-info">
                     <h2>{{ account.user.username }}</h2>
                     <p>Nickname: {{ account.niknem }}</p>

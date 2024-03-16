@@ -196,7 +196,9 @@ def find_users_page(request):
         page = max(0, int(request.GET.get('page', 1)) - 1)
 
     all_accounts_count = NIKNEM.objects.filter(niknem__contains=query).count()
-    accounts = NIKNEM.objects.filter(niknem__contains=query)[page * 10:page * 10 + 10]
+
+    current_user = request.user
+    accounts = NIKNEM.objects.filter(niknem__contains=query).exclude(user=current_user)[page * 10:page * 10 + 10]
 
     context['page'] = page + 1
     context['accounts'] = accounts
@@ -204,7 +206,9 @@ def find_users_page(request):
     context['query'] = query
     context['form'] = SearchUserForm(initial={'query': query})
 
+    #user_accounts=
     return render(request, "find_users.html", context)
+
 
 
 def home_page(request):
