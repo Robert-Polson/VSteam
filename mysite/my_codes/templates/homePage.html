@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load user_avatar %}
 
 <html lang="en" dir="ltr">
   <head>
@@ -19,7 +20,7 @@
       </div>
   <div class="sidebar close">
     <div class="logo-details">
-      <i class='bx bxl-c-plus-plus'></i>
+      <img class="imgh" src="{% user_avatar account.id %}" width="64px" height="64px">
       <span class="logo_name">TEAM DER</span>
     </div>
     <ul class="nav-links">
