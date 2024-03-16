@@ -65,7 +65,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
             ],
             'libraries': {
-                'user_avatar': 'mysite.templatetags.user_avatar',
+                'user_avatar': 'my_codes.templatetags.user_avatar',
             }
         },
     },

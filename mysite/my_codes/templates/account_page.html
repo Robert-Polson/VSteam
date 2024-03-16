@@ -100,14 +100,14 @@
     {% csrf_token %}
     <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="previewImage(event)">
     <label for="avatarInput">
-        <img id="avatarPreview" class="imgh" src="{% user_avatar '35' %}" alt="Добавьте аватар">
+        <img id="avatarPreview" class="imgh" src="{% user_avatar account.id %}" alt="Добавьте аватар">
     </label>
     <div class="">
         <label>ИМЯ И ФАМИЛИЯ</label>:
         <p class="card__name">{{ account.username }}</p>
     </div>
     <label>NIKNEM</label>:
-    <h1 class="card__name">{{ niknem.niknem }}</h1>
+    <h1 class="card__name">{{ niknem }}</h1>
     <div class="grid-container">
         <div class="grid-child-posts">156 Posts</div>
         <div class="grid-child-followers">1012 Likes</div>
@@ -119,10 +119,12 @@
         <li><a href="#"><i class="fab fa-codepen"></i></a></li>
     </ul>
     <input type="file" name="avatarInput" style="display: none;" onchange="previewImage(event)">
-    <button class="btn" type="button" onclick="uploadAvatar()">Change Avatar</button>
-    <button class="btn">Publish the post</button>
-    <button class="btn">Message</button>
-    <button class="btn" type="button" onclick="dostiz();">Achievements</button>
+    {% if is_owner_of_account == True %}
+        <button class="btn" type="button" onclick="uploadAvatar()">Change Avatar</button>
+        <button class="btn">Publish the post</button>
+        <button class="btn">Message</button>
+        <button class="btn" type="button" onclick="dostiz();">Achievements</button>
+    {% endif %}
 </form>
 
     </div>
@@ -162,7 +164,9 @@
                 }
             })
             .then(response => {
-                if (!response.ok) {
+                if (response.ok) {
+                    location.reload()
+                } else {
                     alert('Ошибка');
                 }
             })
