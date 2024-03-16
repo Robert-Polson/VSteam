@@ -209,7 +209,7 @@ def find_users_page(request):
 
 def home_page(request):
     print(request.user.username)
-    context = {}
+    context = {'account': request.user}
 
     return render(request, 'homePage.html', context)
 
