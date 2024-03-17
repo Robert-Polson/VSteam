@@ -236,14 +236,7 @@ def settings_page(request, user_id=None):
         context = {
             'account': user,
             'niknem': niknem,
-            'show_change':False,
-            'show_publish_button': True,
-            'show_message_button': False,
-            'show_achievements_button': True,
-            'show_likes': True,
-            'show_dislike': True,
-            'invite_friends':True,
-            'add_comments':True
+            'show_sett_acc_page':True
         }
         return render(request, 'account_page.html', context)
 
