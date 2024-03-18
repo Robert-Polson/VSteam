@@ -261,18 +261,21 @@ def logout_page(request):
 
 def profile(request, username=None):
     friend = Friend.objects.filter(current_user=request.user).first()
+
     friends = []
     if friend:
         friends = friend.users.all()
 
     if username:
         post_owner = get_object_or_404(User, username=username)
+
     else:
         post_owner = request.user
 
     args = {
         'post_owner': post_owner,
         'friends': friends,
+
     }
     return render(request, 'profile.html', args)
 

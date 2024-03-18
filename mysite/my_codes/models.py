@@ -14,8 +14,12 @@ class NIKNEM(models.Model):
 
 
 class Friend(models.Model):
-    current_user = models.ForeignKey(User, related_name='owner', on_delete=models.CASCADE,null=True)
+    current_user = models.ForeignKey(User, related_name='owner', on_delete=models.CASCADE, null=True)
     users = models.ManyToManyField(User, related_name='friends')
+
+
+    def get_niknem(self):
+        return NIKNEM.objects.get(user=self.users.first()).niknem
 
     @classmethod
     def make_friend(cls, current_user, new_friend):
@@ -33,6 +37,7 @@ class Friend(models.Model):
 
     def __str__(self):
         return self.current_user.username
+
 
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

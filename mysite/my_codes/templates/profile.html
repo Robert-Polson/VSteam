@@ -11,13 +11,13 @@
         <div class="friend-card">
 
             <p>{{ friend.username }}</p>
-
         </div>
     {% endfor %}
 {% else %}
     <h2>Друзья пользователя {{ user.username }}:</h2>
     {% for friend in user.friends.all %}
         <div class="friend-card">
+
             <p>{{ friend.username }}</p>
         </div>
     {% endfor %}
@@ -26,10 +26,13 @@
 <h2>Friends:</h2>
 <ul>
     {% for friend in friends %}
-        <li>{{ friend.username }}</li>
+        <li>
+            {{ friend.username }} (Nickname: {{ friend.get_niknem }})
+        </li>
     {% empty %}
         <li>No friends yet</li>
     {% endfor %}
 </ul>
+
 </body>
 </html>
