@@ -6,12 +6,12 @@ from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from mysite.settings import MEDIA_ROOT
 
 from .forms import LoginForm, RegisterForm, RememberPassword
 from .forms import SearchUserForm
-from .models import NIKNEM
+from .models import NIKNEM, Friend, Post
 
 
 def register_page(request):
@@ -148,14 +148,13 @@ def account_page(request, username):
 
         niknem = NIKNEM.objects.filter(user=user).first()
 
-        context = {'account': user, 'niknem': niknem.niknem if niknem is not None else 'No NickName', 'is_owner_of_account': user == request.user}
+        context = {'account': user, 'niknem': niknem.niknem if niknem is not None else 'No NickName',
+                   'is_owner_of_account': user == request.user}
         return render(request, 'account_page.html', context)
 
     except User.DoesNotExist:
         context = {'error': 'Такого пользователя нет'}
         return render(request, 'account_page.html', context)
-
-
 
 
 def remember_password(request):
@@ -208,10 +207,12 @@ def find_users_page(request):
     context['query'] = query
     context['form'] = SearchUserForm(initial={'query': query})
 
-    #user_accounts=
+    if 'add_friend' in request.POST:
+        friend_id = request.POST.get('friend_id')
+        friend = get_object_or_404(User, id=friend_id)
+        Friend.make_friend(request.user, friend)
+
     return render(request, "find_users.html", context)
-
-
 
 def home_page(request):
     print(request.user.username)
@@ -236,14 +237,13 @@ def settings_page(request, user_id=None):
         context = {
             'account': user,
             'niknem': niknem,
-            'show_sett_acc_page':True
+            'show_sett_acc_page': True
         }
         return render(request, 'account_page.html', context)
 
     except User.DoesNotExist:
         context = {'error': 'Такого пользователя нет'}
         return render(request, 'account_page.html', context)
-
 
 
 def my_profile(request):
@@ -257,3 +257,31 @@ def my_profile(request):
 def logout_page(request):
     logout(request)
     return redirect('login')
+
+
+def profile(request, username=None):
+    friend = Friend.objects.filter(current_user=request.user).first()
+    friends = []
+    if friend:
+        friends = friend.users.all()
+
+    if username:
+        post_owner = get_object_or_404(User, username=username)
+    else:
+        post_owner = request.user
+
+    args = {
+        'post_owner': post_owner,
+        'friends': friends,
+    }
+    return render(request, 'profile.html', args)
+
+
+def change_friends(request, operation, pk):
+    friend = get_object_or_404(User, pk=pk)
+    if operation == 'add':
+        Friend.make_friend(request.user, friend)
+    return redirect('profile', username=friend.username)
+
+
+

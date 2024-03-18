@@ -5,6 +5,31 @@
     <title>Title</title>
 </head>
 <body>
+{% if user == main_user %}
+    <h2>Мои друзья:</h2>
+    {% for friend in main_user.friends.all %}
+        <div class="friend-card">
 
+            <p>{{ friend.username }}</p>
+
+        </div>
+    {% endfor %}
+{% else %}
+    <h2>Друзья пользователя {{ user.username }}:</h2>
+    {% for friend in user.friends.all %}
+        <div class="friend-card">
+            <p>{{ friend.username }}</p>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<h2>Friends:</h2>
+<ul>
+    {% for friend in friends %}
+        <li>{{ friend.username }}</li>
+    {% empty %}
+        <li>No friends yet</li>
+    {% endfor %}
+</ul>
 </body>
 </html>

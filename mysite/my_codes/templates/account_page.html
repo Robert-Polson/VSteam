@@ -149,11 +149,14 @@
         <button class="btn">Publish the post</button>
         <button class="btn">Message</button>
         <button class="btn" type="button" onclick="dostiz();">Achievements</button>
-            <button class="btn">Friends</button>
+            <a href="{' url 'profile_pk' '}"><button class="btn">My Friends</button></a>
     {% endif %}
 
             {% if show_sett_acc_page == True %}
-        <button class="btn">Invite a friend</button>
+        <form method="post" action="{% url 'change_friends' operation='add' pk=account.id %}">
+    {% csrf_token %}
+    <button class="btn" type="submit">Invite a friend</button>
+</form>
         <button class="btn">Message</button>
         <button class="btn" >Achievements</button>
     {% endif %}

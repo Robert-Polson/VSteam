@@ -30,17 +30,22 @@
     {% if accounts|length > 0 %}
         <div class="container">
     {% for account in accounts %}
-        <div class="user-card">
-            <img src="{% user_avatar account.user.id %}" alt="User Avatar" style="border-radius: 30px; width: 100px;">
-            <div class="user-info">
-                <h2>{{ account.user.username }}</h2>
-                <p>Nickname: {{ account.niknem }}</p>
-                {% if account.user %}
-                    <a href="{% url 'polzovatels_account' account.user.id %}" style="text-decoration: none; color: red;"><p>перейти</p></a>
-                {% endif %}
-            </div>
+    <div class="user-card">
+        <img src="{% user_avatar account.user.id %}" alt="User Avatar" style="border-radius: 30px; width: 100px;">
+        <div class="user-info">
+            <h2>{{ account.user.username }}</h2>
+            <p>Nickname: {{ account.niknem }}</p>
+            <form method="post" action="{% url 'find_users_page' %}">
+                {% csrf_token %}
+                <input type="hidden" name="friend_id" value="{{ account.user.id }}">
+                <button class="btn" type="submit" name="add_friend">Invite a friend</button>
+            </form>
+            {% if account.user %}
+                <a href="{% url 'polzovatels_account' account.user.id %}" style="text-decoration: none; color: red;"><p>перейти</p></a>
+            {% endif %}
         </div>
-    {% endfor %}
+    </div>
+{% endfor %}
 </div>
     {% else %}
     <h1>Ничего не найдено</h1>
