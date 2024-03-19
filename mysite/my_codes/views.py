@@ -261,11 +261,16 @@ def logout_page(request):
 
 def profile(request, username=None):
     friend = Friend.objects.filter(current_user=request.user).first()
-
+    friends_data =[]
     friends = []
     if friend:
         friends = friend.users.all()
 
+        for friend in friends:
+            friend_data = dict()
+            friend_data['username'] = friend.username
+            friend_data['niknem'] = NIKNEM.objects.filter(user=friend).first()
+            friends_data.append(friend_data)
     if username:
         post_owner = get_object_or_404(User, username=username)
 
@@ -274,7 +279,7 @@ def profile(request, username=None):
 
     args = {
         'post_owner': post_owner,
-        'friends': friends,
+        'friends': friends_data,
 
     }
     return render(request, 'profile.html', args)
