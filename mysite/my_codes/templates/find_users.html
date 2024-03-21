@@ -1,4 +1,5 @@
 {% load static %}
+{% load user_avatar %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,7 +12,8 @@
         <div class="container1">
           <div style="display: flex; ">
             <h1 style="color: green;">TEAM DER</h1>
-            <input type="text" class="dark-rounded-input" placeholder="Search the friends" style="width: 500px;" name="query">
+            <input type="text" id="query" class="dark-rounded-input" placeholder="Search the friends" style="width: 500px;" name="query">
+              <button onclick="searchButton()" class="glow-on-hover">Поиск</button>
           </div>
           <nav>
             <ul>
@@ -25,25 +27,26 @@
           </div>
         </div>
     </header>
-    <form method="post">
-        {% csrf_token %}
-        {{ form }}
-        <button type="submit" class="glow-on-hover">Поиск</button>
-    </form>
     {% if accounts|length > 0 %}
         <div class="container">
     {% for account in accounts %}
-        <div class="user-card">
-            <img src="{{ account.avatar.image.url }}" alt="User Avatar">
-            <div class="user-info">
-                <h2>{{ account.user.username }}</h2>
-                <p>Nickname: {{ account.niknem }}</p>
+    <div class="user-card">
+        <img src="{% user_avatar account.user.id %}" alt="User Avatar" style="border-radius: 30px; width: 100px;">
+        <div class="user-info">
+            <h2>{{ account.user.username }}</h2>
+            <p>Nickname: {{ account.niknem }}</p>
+            <form method="post" action="{% url 'find_users_page' %}">
+                {% csrf_token %}
+                <input type="hidden" name="friend_id" value="{{ account.user.id }}">
+                <button class="btn" type="submit" name="add_friend">Invite a friend</button>
+            </form>
+            {% if account.user %}
                 <a href="{% url 'polzovatels_account' account.user.id %}" style="text-decoration: none; color: red;"><p>перейти</p></a>
-            </div>
+            {% endif %}
         </div>
-    {% endfor %}
+    </div>
+{% endfor %}
 </div>
-
     {% else %}
     <h1>Ничего не найдено</h1>
     {% endif %}
@@ -158,5 +161,11 @@
       text-decoration: none;
     }
 </style>
+<script>
+    function searchButton()
+    {
+        window.location.href = "/find_users?query=" + document.getElementById("query").value;
+    }
+</script>
 </body>
 </html>

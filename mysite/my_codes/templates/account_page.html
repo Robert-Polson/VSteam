@@ -1,11 +1,11 @@
 <!DOCTYPE html>
+{% load user_avatar %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+Paaji+2:wght@400;500&display=swap">
-    <link href="https://fonts.cdnfonts.com/css/retron2000" rel="stylesheet">
     <style>
         @import url('https://fonts.cdnfonts.com/css/retron2000');
 
@@ -107,7 +107,11 @@
             left: 0;
             bottom: 2rem;
         }
-
+    .imgh {
+            border: 1px solid black;
+            border-radius: 20px;
+            width: 10rem;
+        }
     </style>
 </head>
 <body>
@@ -116,48 +120,46 @@
     {% csrf_token %}
     <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="previewImage(event)">
     <label for="avatarInput">
-        <img id="avatarPreview" class="imgh" src="old-image" alt="Добавьте аватар">
+        <img id="avatarPreview" class="imgh" src="{% user_avatar account.id %}" alt="Добавьте аватар">
     </label>
     <div class="">
-        <label>ИМЯ И ФАМИЛИЯ</label>:
-        <p class="card__name">{{ account.username }}</p>
-    </div>
-    <label>NIKNEM</label>:
-    <h1 class="card__name">{{ niknem.niknem }}</h1>
-    <div class="grid-container">
-        <div class="grid-child-posts">156 Posts</div>
-        <div class="grid-child-followers">1012 Likes</div>
-    </div>
-    <ul class="social-icons">
-        <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-        <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-        <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
-        <li><a href="#"><i class="fab fa-codepen"></i></a></li>
-    </ul>
-            {% if show_change %}
-    <button type="submit" class="btn">Change Avatar</button>
-            {% endif %}
-{% if show_publish_button %}
-    <button class="btn">Publish the post</button>
+    <label>ИМЯ И ФАМИЛИЯ</label>:
+    <p class="card__name">{{ account.username }}</p>
+</div>
+<label>NIKNEM</label>:
+{% if niknem %}
+    <h1 class="card__name">{{ niknem }}</h1>
+{% else %}
+    <p>No NickName</p>
 {% endif %}
-{% if show_message_button %}
-    <button class="btn">Message</button>
-{% endif %}
-{% if show_achievements_button %}
-    <button class="btn" type="button" onclick="dostiz();">Achievements</button>
-{% endif %}
-{% if show_likes %}
-            <button class="btn">Like</button>
-            {% endif %}
-            {% if show_dislike %}
-            <a href="#"><button class="btn">DisLike</button></a>
-            {% endif %}
-            {% if invite_friends %}
-            <button class="btn">Invite a friends</button>
-            {% endif %}
-            {% if add_comments %}
-            <button class="btn"><a href="{% url 'reviews' %}" style="text-decoration:none; color:white">Write Comments</a></button>
-            {% endif %}
+<div class="grid-container">
+    <div class="grid-child-posts">156 Posts</div>
+    <div class="grid-child-followers">1012 Likes</div>
+</div>
+<ul class="social-icons">
+    <li><a href="#"><i class="fab fa-instagram"></i></i></a></li>
+    <li><a href="#"><i class="fab fa-twitter"></i></i></a></li>
+    <li><a href="#"><i class="fab fa-linkedin"></i></i></a></li>
+    <li><a href="#"><i class="fab fa-codepen"></i></i></a></li>
+</ul>
+
+    <input type="file" name="avatarInput" style="display: none;" onchange="previewImage(event)">
+    {% if is_owner_of_account == True %}
+        <button class="btn" type="button" onclick="uploadAvatar()">Change Avatar</button>
+        <button class="btn">Publish the post</button>
+        <button class="btn">Message</button>
+        <button class="btn" type="button" onclick="dostiz();">Achievements</button>
+            <a href="{' url 'profile_pk' '}"><button class="btn">My Friends</button></a>
+    {% endif %}
+
+            {% if show_sett_acc_page == True %}
+        <form method="post" action="{% url 'change_friends' operation='add' pk=account.id %}">
+    {% csrf_token %}
+    <button class="btn" type="submit">Invite a friend</button>
+</form>
+        <button class="btn">Message</button>
+        <button class="btn" >Achievements</button>
+    {% endif %}
 </form>
 
     </div>
@@ -174,31 +176,40 @@
                 img.src = reader.result;
             };
             reader.readAsDataURL(input.files[0]);
-        }
+    }
 
-        function uploadAvatar(event) {
-            event.preventDefault();
-            const form = document.getElementById('avatarForm');
-            const formData = new FormData(form);
+    function uploadAvatar(event) {
+        let input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.click();
 
-            fetch('/upload_avatar', {
+        input.onchange = function() {
+            let avatar = input.files[0];
+
+            let formData = new FormData();
+            formData.append("avatar", avatar);
+
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            fetch('/api/v1/user/change_avatar/', {
                 method: 'POST',
-                body: formData
+                body: formData,
+                headers: {
+                    'X-CSRFToken': csrftoken
+                }
             })
             .then(response => {
                 if (response.ok) {
-                    let isImage=true;
-                    alert('Аватар успешно обновлен!');
+                    location.reload()
                 } else {
-                    alert('Произошла ошибка при загрузке аватара.');
+                    alert('Ошибка');
                 }
             })
-            .catch(error => console.error('Ошибка:', error));
+            .catch(error => console.error(error));
         }
-
-
-
-    const themes = [
+    }
+const themes = [
     {
         background: "#1A1A2E",
         color: "#1F51FF",
@@ -251,7 +262,6 @@ const displayThemeButtons = () => {
 };
 
 displayThemeButtons();
-
 </script>
 </body>
 </html>
