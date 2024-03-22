@@ -140,18 +140,26 @@ def api_v1_user_upload_avatar(request):
 
 
 def account_page(request, username):
+    social_links = request.session.get('social_links', {})
+    instagram_link = social_links.get('instagram_link')
+    twitter_link = social_links.get('twitter_link')
+    twitch_link = social_links.get('twitch_link')
+    codepen_link = social_links.get('codepen_link')
     try:
         user = User.objects.filter(username=username).first()
-
         if not user:
             raise User.DoesNotExist
-
         niknem = NIKNEM.objects.filter(user=user).first()
-
-        context = {'account': user, 'niknem': niknem.niknem if niknem is not None else 'No NickName',
-                   'is_owner_of_account': user == request.user}
+        context = {
+            'instagram_link': instagram_link,
+            'twitter_link': twitter_link,
+            'twitch_link': twitch_link,
+            'codepen_link': codepen_link,
+            'account': user,
+            'niknem': niknem.niknem if niknem is not None else 'No NickName',
+            'is_owner_of_account': user == request.user
+        }
         return render(request, 'account_page.html', context)
-
     except User.DoesNotExist:
         context = {'error': 'Такого пользователя нет'}
         return render(request, 'account_page.html', context)
@@ -214,6 +222,7 @@ def find_users_page(request):
 
     return render(request, "find_users.html", context)
 
+
 def home_page(request):
     print(request.user.username)
     context = {'account': request.user}
@@ -261,7 +270,7 @@ def logout_page(request):
 
 def profile(request, username=None):
     friend = Friend.objects.filter(current_user=request.user).first()
-    friends_data =[]
+    friends_data = []
     friends = []
     if friend:
         friends = friend.users.all()
@@ -292,4 +301,21 @@ def change_friends(request, operation, pk):
     return redirect('profile', username=friend.username)
 
 
+def social_network(request):
+    context = {}
+    if request.method=="POST":
+        instagram_link = request.POST.get('instagram_link')
+        twitter_link = request.POST.get('twitter_link')
+        twitch_link = request.POST.get('twitch_link')
+        codepen_link = request.POST.get('codepen_link')
 
+
+        social_links = {
+            'instagram_link': instagram_link,
+            'twitter_link': twitter_link,
+            'twitch_link': twitch_link,
+            'codepen_link' : codepen_link
+        }
+        request.session['social_links'] = social_links
+        context = social_links
+    return render(request, 'social_network.html', context)
