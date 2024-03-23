@@ -11,7 +11,7 @@ from mysite.settings import MEDIA_ROOT
 
 from .forms import LoginForm, RegisterForm, RememberPassword
 from .forms import SearchUserForm
-from .models import NIKNEM, Friend, Post
+from .models import NIKNEM, Friend, Post,Turnir
 
 
 def register_page(request):
@@ -37,6 +37,7 @@ def register_page(request):
             return redirect('mainssss')
         else:
             return render(request, 'register.html', {'form': form})
+
 
 
 def niknem_page(request):
@@ -160,6 +161,7 @@ def account_page(request, username):
             'is_owner_of_account': user == request.user
         }
         return render(request, 'account_page.html', context)
+
     except User.DoesNotExist:
         context = {'error': 'Такого пользователя нет'}
         return render(request, 'account_page.html', context)
@@ -231,7 +233,15 @@ def home_page(request):
 
 
 def turnir_page(request):
-    return render(request, 'turnir_page.html')
+    context = {}
+    if request.method == "POST":
+        date = request.POST.get('Date')
+        name = request.POST.get('Name')
+        participants = request.POST.get('Participants')
+        placeToWatch = request.POST.get('PlaceToWatch')
+        turnir = Turnir.objects.create(date=date, name=name, participants=participants, placeToWatch=placeToWatch)
+    context['turnirs'] = Turnir.objects
+    return render(request,'turnir_page.html')
 
 
 def reviews(request):

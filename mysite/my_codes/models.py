@@ -38,6 +38,11 @@ class Friend(models.Model):
     def __str__(self):
         return self.current_user.username
 
+class Turnir(models.Model):
+    date = models.DateField()
+    name = models.CharField(max_length=50)
+    participants = models.IntegerField()
+    placeToWatch = models.CharField(max_length=50)
 
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
