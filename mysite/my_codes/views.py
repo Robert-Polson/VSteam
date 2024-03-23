@@ -319,3 +319,7 @@ def social_network(request):
         request.session['social_links'] = social_links
         context = social_links
     return render(request, 'social_network.html', context)
+
+def charts(request):
+
+    return render(request, 'charts.html')
