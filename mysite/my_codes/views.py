@@ -211,15 +211,18 @@ def home_page(request):
     return render(request,'homePage.html',context)
 
 def turnir_page(request):
-    context = {}
+    context = dict()
     if request.method == "POST":
         date = request.POST.get('Date')
         name = request.POST.get('Name')
         participants = request.POST.get('Participants')
         placeToWatch = request.POST.get('PlaceToWatch')
-        turnir = Turnir.objects.create(date=date, name=name, participants=participants, placeToWatch=placeToWatch)
-    context['turnirs'] = Turnir.objects
-    return render(request,'turnir_page.html')
+        if date != None and name != None and participants != None and placeToWatch != None:
+            if Turnir.objects.filter(date=date, name=name, participants=participants, placeToWatch=placeToWatch).count() == 0:
+                turnir = Turnir.objects.create(date=date, name=name, participants=participants, placeToWatch=placeToWatch)
+                turnir.save()
+    context['turnirs'] = Turnir.objects.filter().all()
+    return render(request,'turnir_page.html', context)
 
 def reviews(request):
     # context ={}
