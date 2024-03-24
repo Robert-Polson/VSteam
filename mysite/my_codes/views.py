@@ -3,7 +3,6 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password, check_password
 from django.utils.datastructures import MultiValueDictKeyError
 from .forms import SearchUserForm
-from .models import Account, NIKNEM, Avatar, Turnir
 import re
 import time
 from django.contrib.auth.models import User
