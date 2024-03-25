@@ -47,8 +47,8 @@ class Turnir(models.Model):
     placeToWatch = models.CharField(max_length=50)
 
 
-class Comment(models.Model):
+class Reviews(models.Model):
     id_commentator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_id_commentator')
-    id_topic_comm = models.CharField(max_length=20)
+    id_topic_comm = models.CharField(max_length=20,null=True)
     text_id_comm = models.CharField(max_length=300)
-    id_commented = models.ForeignKey(User, on_delete=models.CASCADE, related_name="id_commented")
+    id_commented = models.ForeignKey(User, on_delete=models.CASCADE, related_name="id_commented", null=True)

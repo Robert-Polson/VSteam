@@ -1,4 +1,5 @@
 from io import BytesIO
+from sqlite3 import IntegrityError
 
 from PIL import Image, UnidentifiedImageError
 from PIL.Image import DecompressionBombError
@@ -11,7 +12,7 @@ from mysite.settings import MEDIA_ROOT
 
 from .forms import LoginForm, RegisterForm, RememberPassword
 from .forms import SearchUserForm
-from .models import NIKNEM, Friend, Turnir, Comment
+from .models import NIKNEM, Friend, Turnir, Reviews
 
 
 def register_page(request):
@@ -244,15 +245,26 @@ def turnir_page(request):
     return render(request, 'turnir_page.html')
 
 
+
+
+
 def reviews(request, user_id=None):
-    response = settings_page(request, user_id)
-    print(request.user.username)
+    try:
+        user1 = User.objects.get(id=user_id)
+        current_user = request.user
+        id_topic = request.POST.get('id_topic')
+        id_comm = request.POST.get('id_comm')
 
-    id_commentator = Comment.objects.filter(id_commentator=user_id).first()
-    id_commented = Comment.objects.filter(id_commented=response.context['account']).first()
+        if id_topic:
+            id_table = Reviews(id_commentator=current_user, id_topic_comm=id_topic, text_id_comm=id_comm, id_commented=user1)
+            id_table.save()
+            context = {'account': user1}
+            return render(request, 'reviews.html', context)
+        else:
+            return render(request, 'reviews.html', {'error_message': 'id_topic is required'})
+    except IntegrityError as e:
+        return render(request, 'reviews.html', {'error_message': f'IntegrityError: {e}'})
 
-    if not id_commentator or not id_commented:
-        return HttpResponse(status=200)
 
 
 def settings_page(request, user_id=None):

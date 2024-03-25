@@ -7,13 +7,26 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>{{id_commentator}}</h1>
-    <h1>{{ id_commented }}</h1>
+
+    <header>
+
+    {% for comment_data in comments_data %}
+        <div>
+            <p>Commentator: {{ comment_data.commentator_user.username }}</p>
+            <p>Commented user: {{ comment_data.commented_user.username }}</p>
+            <p>{{ comment_data.comment_text }}</p>
+
+        </div>
+    {% endfor %}
+    </header>
     <div class="mains">
         <h1>Comments</h1>
-        <input type="text" placeholder="Enter the topic">
-        <input type="text" placeholder="Enter the comment">
+        <form method="post">
+            {% csrf_token %}
+        <input type="text" placeholder="Enter the topic" name="id_topic">
+        <input type="text" placeholder="Enter the comment" name="id_comm">
         <button type="submit">Отправить</button>
+        </form>
     </div>
 
     <div class="area" style="position: absolute">
