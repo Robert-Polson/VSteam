@@ -11,7 +11,7 @@ from mysite.settings import MEDIA_ROOT
 
 from .forms import LoginForm, RegisterForm, RememberPassword
 from .forms import SearchUserForm
-from .models import NIKNEM, Friend, Post,Turnir
+from .models import NIKNEM, Friend, Turnir, Comment
 
 
 def register_page(request):
@@ -37,7 +37,6 @@ def register_page(request):
             return redirect('mainssss')
         else:
             return render(request, 'register.html', {'form': form})
-
 
 
 def niknem_page(request):
@@ -240,26 +239,32 @@ def turnir_page(request):
         participants = request.POST.get('Participants')
         placeToWatch = request.POST.get('PlaceToWatch')
         turnir = Turnir.objects.create(date=date, name=name, participants=participants, placeToWatch=placeToWatch)
+
     context['turnirs'] = Turnir.objects
-    return render(request,'turnir_page.html')
+    return render(request, 'turnir_page.html')
 
 
-def reviews(request):
-    return render(request, 'reviews.html')
+def reviews(request, user_id=None):
+    response = settings_page(request, user_id)
+    print(request.user.username)
+
+    id_commentator = Comment.objects.filter(id_commentator=user_id).first()
+    id_commented = Comment.objects.filter(id_commented=response.context['account']).first()
+
+    if not id_commentator or not id_commented:
+        return HttpResponse(status=200)
 
 
 def settings_page(request, user_id=None):
     try:
         user = User.objects.get(id=user_id)
         niknem = NIKNEM.objects.filter(user=user).first()
-
         context = {
             'account': user,
             'niknem': niknem,
             'show_sett_acc_page': True
         }
         return render(request, 'account_page.html', context)
-
     except User.DoesNotExist:
         context = {'error': 'Такого пользователя нет'}
         return render(request, 'account_page.html', context)
@@ -313,23 +318,22 @@ def change_friends(request, operation, pk):
 
 def social_network(request):
     context = {}
-    if request.method=="POST":
+    if request.method == "POST":
         instagram_link = request.POST.get('instagram_link')
         twitter_link = request.POST.get('twitter_link')
         twitch_link = request.POST.get('twitch_link')
         codepen_link = request.POST.get('codepen_link')
 
-
         social_links = {
             'instagram_link': instagram_link,
             'twitter_link': twitter_link,
             'twitch_link': twitch_link,
-            'codepen_link' : codepen_link
+            'codepen_link': codepen_link
         }
         request.session['social_links'] = social_links
         context = social_links
     return render(request, 'social_network.html', context)
 
-def charts(request):
 
+def charts(request):
     return render(request, 'charts.html')

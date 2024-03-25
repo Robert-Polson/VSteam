@@ -16,6 +16,7 @@ class NIKNEM(models.Model):
 class Friend(models.Model):
     current_user = models.ForeignKey(User, related_name='owner', on_delete=models.CASCADE, null=True)
     users = models.ManyToManyField(User, related_name='friends')
+
     # niknem = models.CharField(null=True,max_length=50)
 
     # def get_niknem(self):
@@ -38,16 +39,16 @@ class Friend(models.Model):
     def __str__(self):
         return self.current_user.username
 
+
 class Turnir(models.Model):
     date = models.DateField()
     name = models.CharField(max_length=50)
     participants = models.IntegerField()
     placeToWatch = models.CharField(max_length=50)
 
-class Post(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    content = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f"Post by {self.user.username} at {self.created_at}"
+class Comment(models.Model):
+    id_commentator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_id_commentator')
+    id_topic_comm = models.CharField(max_length=20)
+    text_id_comm = models.CharField(max_length=300)
+    id_commented = models.ForeignKey(User, on_delete=models.CASCADE, related_name="id_commented")
