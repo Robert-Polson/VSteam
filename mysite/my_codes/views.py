@@ -1,3 +1,4 @@
+import json
 from io import BytesIO
 
 from PIL import Image, UnidentifiedImageError
@@ -101,42 +102,6 @@ def open_page(request):
                 "Присоединяйтесь и откройте для себя мир новых возможностей!"}
 
     return render(request, 'open_page.html', context)
-
-
-def api_v1_user_upload_avatar(request):
-    if request.method != 'POST':
-        return HttpResponse(status=405)
-
-    uploaded_file = request.FILES.get('avatar', None)
-
-    if not uploaded_file:
-        return HttpResponse(status=400)
-
-    if not uploaded_file.content_type.startswith('image/'):
-        return HttpResponse(status=415)
-
-    user = request.user
-
-    if not user.is_authenticated:
-        return HttpResponse(status=401)
-
-    try:
-        with BytesIO(uploaded_file.read()) as f:
-            image = Image.open(f)
-            image.verify()
-
-            image = Image.open(f)
-
-            image = image.resize((256, 256), Image.Resampling.LANCZOS)
-
-            path = MEDIA_ROOT + '/avatars/' + str(user.id) + '.png'
-
-            image.save(path)
-        return HttpResponse(status=200)
-    except [UnidentifiedImageError, EOFError, DecompressionBombError]:
-        return HttpResponse(status=400)
-    except Exception:
-        return HttpResponse(status=500)
 
 
 def account_page(request, username):
@@ -303,23 +268,22 @@ def change_friends(request, operation, pk):
 
 def social_network(request):
     context = {}
-    if request.method=="POST":
+    if request.method == "POST":
         instagram_link = request.POST.get('instagram_link')
         twitter_link = request.POST.get('twitter_link')
         twitch_link = request.POST.get('twitch_link')
         codepen_link = request.POST.get('codepen_link')
 
-
         social_links = {
             'instagram_link': instagram_link,
             'twitter_link': twitter_link,
             'twitch_link': twitch_link,
-            'codepen_link' : codepen_link
+            'codepen_link': codepen_link
         }
         request.session['social_links'] = social_links
         context = social_links
     return render(request, 'social_network.html', context)
 
-def charts(request):
 
+def charts(request):
     return render(request, 'charts.html')

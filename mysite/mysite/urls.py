@@ -20,6 +20,7 @@ from django.template.defaulttags import url
 from django.urls import path
 
 from my_codes import views
+from my_codes.api_views import v1 as api_v1
 
 from mysite import settings
 
@@ -31,7 +32,7 @@ urlpatterns = [
     path('register_page/', views.register_page, name='register'),
     path('account_pages/', views.account_page, name='account_page'),
     path('remember_password/', views.remember_password, name='remember_password'),
-    path('find_users/', views.find_users_page,name="find_users_page"),
+    path('find_users/', views.find_users_page, name="find_users_page"),
     path('achievements//', views.achievements),
     path('open_page', views.open_page, name='open_page'),
     path('home_pages/', views.home_page, name='homePage'),
@@ -45,7 +46,8 @@ urlpatterns = [
     path('connect/<str:operation>/<int:pk>/', views.change_friends, name='change_friends'),
     path('change-friends/<str:operation>/<int:pk>/', views.change_friends, name='change_friends'),
     path('polzovatels_account/<int:user_id>/', views.settings_page, name='polzovatels_account'),
-    path('api/v1/user/change_avatar/', views.api_v1_user_upload_avatar),
-    path('social_network/' , views.social_network , name = 'social_network'),
-    path('charts/', views.charts, name = 'charts')
+    path('api/v1/user/change_avatar/', api_v1.user_upload_avatar),
+    path('api/v1/user/publish_post/', api_v1.user_publish_post),
+    path('social_network/', views.social_network, name='social_network'),
+    path('charts/', views.charts, name='charts')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
