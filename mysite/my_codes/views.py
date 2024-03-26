@@ -245,9 +245,6 @@ def turnir_page(request):
     return render(request, 'turnir_page.html')
 
 
-
-
-
 def reviews(request, user_id=None):
     try:
         user1 = User.objects.get(id=user_id)
@@ -256,7 +253,8 @@ def reviews(request, user_id=None):
         id_comm = request.POST.get('id_comm')
 
         if id_topic:
-            id_table = Reviews(id_commentator=current_user, id_topic_comm=id_topic, text_id_comm=id_comm, id_commented=user1)
+            id_table = Reviews(id_commentator=current_user, id_topic_comm=id_topic, text_id_comm=id_comm,
+                               id_commented=user1)
             id_table.save()
             context = {'account': user1}
             return render(request, 'reviews.html', context)
@@ -264,7 +262,6 @@ def reviews(request, user_id=None):
             return render(request, 'reviews.html', {'error_message': 'id_topic is required'})
     except IntegrityError as e:
         return render(request, 'reviews.html', {'error_message': f'IntegrityError: {e}'})
-
 
 
 def settings_page(request, user_id=None):
@@ -279,7 +276,7 @@ def settings_page(request, user_id=None):
         return render(request, 'account_page.html', context)
     except User.DoesNotExist:
         context = {'error': 'Такого пользователя нет'}
-        return render(request, 'account_page.html', context)
+    return render(request, 'account_page.html', context)
 
 
 def my_profile(request):
