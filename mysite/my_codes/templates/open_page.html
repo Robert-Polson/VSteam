@@ -12,9 +12,33 @@
     <div class='air air3'></div>
     <div class='air air4'></div>
   </section>
+<style>
+  .text-container {
+      left: 10%;
+      background: black;
+      width: 410px;
+      height: 400px;
+      color: green;
+      size: 6;
+      font-family: 'Retron2000', sans-serif;
+  }
+  .text-container p{
+       white-space: nowrap;
+       overflow: hidden;
+       width: 410px;
+  }
+  .text-line {
+          opacity = 0;
+          animation: revealText 4s steps(40) forwards;
+          animation-delay: calc(0.0001s * var(--index));
+      }
 
+      @keyframes revealText {
+          from {opacity: 0;}
+          to {opacity: 1;}
+      }
 </style>
-    <style media="screen">
+<style media="screen">
         @import url('https://fonts.cdnfonts.com/css/retron2000');
     *{
     margin: 0;
@@ -92,7 +116,7 @@
 }
 
 form {
-    height: 540px;
+    height: 400px;
     width: 400px;
     color: black;
     position: absolute;
@@ -106,8 +130,25 @@ form {
     padding: 10px 40px;
     display: flex;
     flex-direction: column;
+    display: inline-block;
 }
-
+form1 {
+    height: 540px;
+    width: 500px;
+    color: black;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 80%;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.1);
+    box-shadow: 0 0 40px rgba(8,7,16,0.6);
+    padding: 10px 40px;
+    display: flex;
+    flex-direction: column;
+    display: inline-block;
+}
 h3 {
       font-size: px;
       font-weight: 500;
@@ -297,14 +338,12 @@ button:hover i::after {
     color: #cdfd51;
     font-family: 'Retron2000', sans-serif;
     text-shadow: 2px 2px 4px green;
-}
 
+}
     </style>
 </head>
 <body>
 <h3 class="main_title" id="output"></h3>
-
-
 <script>
 const word = "Welcome to TEAM DER";
     let index = 0;
@@ -331,22 +370,33 @@ const word = "Welcome to TEAM DER";
 
     displayLetter();
 </script>
-<form id="myForm" method="post" onsubmit="return redirectUser()">
+<form id="myForm" method="post" onsubmit="return redirectUser()" style="float: center">
     {% csrf_token %}
-
-    <button style="--clr:#39FF14" id="registerButton" class="glow-on-hover"><span>REGISTER</span><i></i></button>
-
-
-<button style="--clr:#0FF0FC" id="loginButton" class="glow-on-hover"><span>LOGIN</span><i></i></button>
-
-
-<button style="--clr:#8A2BE2" id="continueButton" class="glow-on-hover"><span>Button</span><i></i></button>
-
-
-
+    <div>
+        <button style="--clr:#39FF14" id="registerButton" class="glow-on-hover"><span>REGISTER</span><i></i></button>
+        <button style="--clr:#0FF0FC" id="loginButton" class="glow-on-hover"><span>LOGIN</span><i></i></button>
+        <button style="--clr:#8A2BE2" id="continueButton" class="glow-on-hover"><span>Button</span><i></i></button>
+    </div>
 </form>
+<form1 style="float: right;">
+    {% csrf_token %}
+    <div>
+        <div class="text-container">
+            <p class="text-line" style="--index: 1;">Добро пожаловать в мир возможностей</p>
+            <p class="text-line" style="--index: 2;">и новых знакомств! Здесь каждый может</p>
+            <p class="text-line" style="--index: 3;">найти не только друзей, но и надежных</p>
+            <p class="text-line" style="--index: 4;">игровых партнеров для захватывающих</p>
+            <p class="text-line" style="--index: 5;">приключений. Давайте создадим приятные</p>
+            <p class="text-line" style="--index: 6;">воспоминания вместе! Добро пожаловать в</p>
+            <p class="text-line" style="--index: 7;"> наше сообщество, где дружба и игры ждут</p>
+            <p class="text-line" style="--index: 8;">вас на каждом шагу. Присоединяйтесь и </p>
+            <p class="text-line" style="--index: 9;">откройте для себя мир новых возможностей!</p>
+        </div>
+    </div>
+</form1>
+
     <script>
-        function redirectUser() {
+       function redirectUser() {
             const form = document.getElementById('myForm');
             const registerButton = document.getElementById('registerButton');
             const loginButton = document.getElementById('loginButton');
@@ -364,11 +414,6 @@ const word = "Welcome to TEAM DER";
             }
             return true;
         }
-
-
-
     </script>
-
-
 </body>
 </html>
