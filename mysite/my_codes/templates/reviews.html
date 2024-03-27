@@ -9,7 +9,7 @@
 <body>
 
     <header>
-
+    <a href="{% url 'homePage' %}"><button style="top:10px;">Вернутся обратно</button></a>
     {% for comment_data in comments_data %}
         <div>
             <p>Commentator: {{ comment_data.commentator_user.username }}</p>
