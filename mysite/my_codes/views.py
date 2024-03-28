@@ -16,33 +16,33 @@ from .models import NIKNEM, Friend, Turnir, Reviews
 
 
 def register_page(request):
-    if request.method == 'GET':
+    if request.method == "GET":
         form = RegisterForm()
-        return render(request, 'register.html', {'form': form})
+        return render(request, "register.html", {"form": form})
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
             user.username = user.username.lower()
             user.save()
             login(request, user)
-            request.session['username'] = user.username
-            request.session['email'] = user.email
+            request.session["username"] = user.username
+            request.session["email"] = user.email
 
             niknem_item = NIKNEM(user=user)
             niknem_item.save()
 
-            messages.success(request, 'You have signed up successfully.')
-            print(messages.success(request, 'You have signed up successfully.'))
-            return redirect('mainssss')
+            messages.success(request, "You have signed up successfully.")
+            print(messages.success(request, "You have signed up successfully."))
+            return redirect("mainssss")
         else:
-            return render(request, 'register.html', {'form': form})
+            return render(request, "register.html", {"form": form})
 
 
 def niknem_page(request):
-    username = request.session.get('username')
-    email = request.session.get('email')
+    username = request.session.get("username")
+    email = request.session.get("email")
     print(request.user.username)
     try:
         user = User.objects.get(username=username, email=email)
@@ -51,69 +51,70 @@ def niknem_page(request):
 
     context = {}
 
-    if request.method == 'POST':
+    if request.method == "POST":
         niknem = request.POST.get("niknem")
         if not niknem:
-            context['error'] = "Введите никнейм"
+            context["error"] = "Введите никнейм"
         else:
-            request.session['niknem'] = niknem
-            context['niknem'] = niknem
+            request.session["niknem"] = niknem
+            context["niknem"] = niknem
 
             niknem_item, created = NIKNEM.objects.get_or_create(user=user)
             niknem_item.niknem = niknem
             niknem_item.save()
 
-            context['good'] = "Никнейм успешно сохранен"
+            context["good"] = "Никнейм успешно сохранен"
 
         if user:
-            context['user_id'] = user.id
+            context["user_id"] = user.id
 
-    return render(request, 'mainssss.html', context)
+    return render(request, "mainssss.html", context)
 
 
 def login_page(request):
     form = LoginForm()
-    if request.method == 'POST':
+    if request.method == "POST":
         form = LoginForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
+            username = form.cleaned_data.get("username")
+            password = form.cleaned_data.get("password")
             user = authenticate(request, username=username.lower(), password=password)
             if user:
                 login(request, user)
-                messages.success(request, f'Hi {user.username.title()}, welcome back!')
+                messages.success(request, f"Hi {user.username.title()}, welcome back!")
                 print(request.user.username)
-                return redirect('homePage')
+                return redirect("homePage")
         else:
-            messages.error(request, 'Invalid username or password')
+            messages.error(request, "Invalid username or password")
 
-    return render(request, 'login.html', {'form': form})
+    return render(request, "login.html", {"form": form})
 
 
 def open_page(request):
     print(request.user.username)
     if request.user.is_authenticated:
-        return redirect('homePage')
+        return redirect("homePage")
     context = {}
     context = {
-        'text': "Добро пожаловать в мир возможностей и новых знакомств! Здесь каждый может найти не только друзей, "
-                "но и надежных игровых партнеров для захватывающих приключений. Давайте создадим незабываемые "
-                "воспоминания вместе! Добро пожаловать в наше сообщество, где дружба и игры ждут вас на каждом шагу. "
-                "Присоединяйтесь и откройте для себя мир новых возможностей!"}
+        "text": "Добро пожаловать в мир возможностей и новых знакомств! Здесь каждый может найти не только друзей, "
+        "но и надежных игровых партнеров для захватывающих приключений. Давайте создадим незабываемые "
+        "воспоминания вместе! Добро пожаловать в наше сообщество, где дружба и игры ждут вас на каждом шагу. "
+        "Присоединяйтесь и откройте для себя мир новых возможностей!"
+    }
 
-    return render(request, 'open_page.html', context)
+    return render(request, "open_page.html", context)
 
 
 def api_v1_user_upload_avatar(request):
-    if request.method != 'POST':
+    if request.method != "POST":
         return HttpResponse(status=405)
 
-    uploaded_file = request.FILES.get('avatar', None)
+    uploaded_file = request.FILES.get("avatar", None)
 
     if not uploaded_file:
         return HttpResponse(status=400)
 
-    if not uploaded_file.content_type.startswith('image/'):
+    if not uploaded_file.content_type.startswith("image/"):
         return HttpResponse(status=415)
 
     user = request.user
@@ -130,7 +131,7 @@ def api_v1_user_upload_avatar(request):
 
             image = image.resize((256, 256), Image.Resampling.LANCZOS)
 
-            path = MEDIA_ROOT + '/avatars/' + str(user.id) + '.png'
+            path = MEDIA_ROOT + "/avatars/" + str(user.id) + ".png"
 
             image.save(path)
         return HttpResponse(status=200)
@@ -141,50 +142,52 @@ def api_v1_user_upload_avatar(request):
 
 
 def account_page(request, username):
-    social_links = request.session.get('social_links', {})
-    instagram_link = social_links.get('instagram_link')
-    twitter_link = social_links.get('twitter_link')
-    twitch_link = social_links.get('twitch_link')
-    codepen_link = social_links.get('codepen_link')
+    social_links = request.session.get("social_links", {})
+    instagram_link = social_links.get("instagram_link")
+    twitter_link = social_links.get("twitter_link")
+    twitch_link = social_links.get("twitch_link")
+    codepen_link = social_links.get("codepen_link")
     try:
         user = User.objects.filter(username=username).first()
+        reviews = Reviews.objects.filter(id_commented=user.id)
         if not user:
             raise User.DoesNotExist
         niknem = NIKNEM.objects.filter(user=user).first()
         context = {
-            'instagram_link': instagram_link,
-            'twitter_link': twitter_link,
-            'twitch_link': twitch_link,
-            'codepen_link': codepen_link,
-            'account': user,
-            'niknem': niknem.niknem if niknem is not None else 'No NickName',
-            'is_owner_of_account': user == request.user
+            "instagram_link": instagram_link,
+            "twitter_link": twitter_link,
+            "twitch_link": twitch_link,
+            "codepen_link": codepen_link,
+            "account": user,
+            "niknem": niknem.niknem if niknem is not None else "No NickName",
+            "is_owner_of_account": user == request.user,
+            "reviews": reviews
         }
-        return render(request, 'account_page.html', context)
+        return render(request, "account_page.html", context)
 
     except User.DoesNotExist:
-        context = {'error': 'Такого пользователя нет'}
-        return render(request, 'account_page.html', context)
+        context = {"error": "Такого пользователя нет"}
+        return render(request, "account_page.html", context)
 
 
 def remember_password(request):
     form = RememberPassword()
-    if request.method == 'POST':
+    if request.method == "POST":
         form = RememberPassword(request.POST)
         if form.is_valid():
-            username = form.cleaned_data.get('username')
-            email = form.cleaned_data.get('email')
-            password = form.cleaned_data.get('password')
+            username = form.cleaned_data.get("username")
+            email = form.cleaned_data.get("email")
+            password = form.cleaned_data.get("password")
             user = User.objects.filter(username=username.lower(), email=email.lower()).first()
             if user:
                 user.set_password(password)
                 user.save()
-                messages.success(request, f'Password changed successfully for user {user.username}!')
-                return redirect('login')
+                messages.success(request, f"Password changed successfully for user {user.username}!")
+                return redirect("login")
             else:
-                messages.error(request, 'User not found with the provided username and email')
+                messages.error(request, "User not found with the provided username and email")
 
-    return render(request, 'remember_password.html', {'form': form})
+    return render(request, "remember_password.html", {"form": form})
 
 
 def achievements(request):
@@ -194,31 +197,31 @@ def achievements(request):
 def find_users_page(request):
     context = {}
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = SearchUserForm(request.POST)
         if form.is_valid():
-            query = form.cleaned_data['query']
+            query = form.cleaned_data["query"]
             page = 0
         else:
-            query = ''
+            query = ""
             page = 0
     else:
-        query = request.GET.get('query', '')
-        page = max(0, int(request.GET.get('page', 1)) - 1)
+        query = request.GET.get("query", "")
+        page = max(0, int(request.GET.get("page", 1)) - 1)
 
     all_accounts_count = NIKNEM.objects.filter(niknem__contains=query).count()
 
     current_user = request.user
-    accounts = NIKNEM.objects.filter(niknem__contains=query).exclude(user=current_user)[page * 10:page * 10 + 10]
+    accounts = NIKNEM.objects.filter(niknem__contains=query).exclude(user=current_user)[page * 10 : page * 10 + 10]
 
-    context['page'] = page + 1
-    context['accounts'] = accounts
-    context['max_page'] = all_accounts_count // 10 + (all_accounts_count % 10 != 0)
-    context['query'] = query
-    context['form'] = SearchUserForm(initial={'query': query})
+    context["page"] = page + 1
+    context["accounts"] = accounts
+    context["max_page"] = all_accounts_count // 10 + (all_accounts_count % 10 != 0)
+    context["query"] = query
+    context["form"] = SearchUserForm(initial={"query": query})
 
-    if 'add_friend' in request.POST:
-        friend_id = request.POST.get('friend_id')
+    if "add_friend" in request.POST:
+        friend_id = request.POST.get("friend_id")
         friend = get_object_or_404(User, id=friend_id)
         Friend.make_friend(request.user, friend)
 
@@ -227,69 +230,67 @@ def find_users_page(request):
 
 def home_page(request):
     print(request.user.username)
-    context = {'account': request.user}
+    context = {"account": request.user}
 
-    return render(request, 'homePage.html', context)
+    return render(request, "homePage.html", context)
 
 
-def turnir_page(request):
+def tournament_page(request):
     context = {}
     if request.method == "POST":
-        date = request.POST.get('Date')
-        name = request.POST.get('Name')
-        participants = request.POST.get('Participants')
-        placeToWatch = request.POST.get('PlaceToWatch')
+        date = request.POST.get("Date")
+        name = request.POST.get("Name")
+        participants = request.POST.get("Participants")
+        placeToWatch = request.POST.get("PlaceToWatch")
         turnir = Turnir.objects.create(date=date, name=name, participants=participants, placeToWatch=placeToWatch)
 
-    context['turnirs'] = Turnir.objects
-    return render(request, 'turnir_page.html')
+    context["turnirs"] = Turnir.objects
+    return render(request, "tournament.html")
 
 
 def reviews(request, user_id=None):
     try:
         user1 = User.objects.get(id=user_id)
         current_user = request.user
-        id_topic = request.POST.get('id_topic')
-        id_comm = request.POST.get('id_comm')
+        id_topic = request.POST.get("id_topic")
+        id_comm = request.POST.get("id_comm")
 
         if id_topic:
-            id_table = Reviews(id_commentator=current_user, id_topic_comm=id_topic, text_id_comm=id_comm,
-                               id_commented=user1)
+            id_table = Reviews(
+                id_commentator=current_user, id_topic_comm=id_topic, text_id_comm=id_comm, id_commented=user1
+            )
             id_table.save()
-            context = {'account': user1}
-            return render(request, 'reviews.html', context)
+            context = {"account": user1}
+            return render(request, "reviews.html", context)
         else:
-            return render(request, 'reviews.html', {'error_message': 'id_topic is required'})
+            return render(request, "reviews.html", {"error_message": "id_topic is required"})
     except IntegrityError as e:
-        return render(request, 'reviews.html', {'error_message': f'IntegrityError: {e}'})
+        return render(request, "reviews.html", {"error_message": f"IntegrityError: {e}"})
 
 
 def settings_page(request, user_id=None):
     try:
         user = User.objects.get(id=user_id)
         niknem = NIKNEM.objects.filter(user=user).first()
-        context = {
-            'account': user,
-            'niknem': niknem,
-            'show_sett_acc_page': True
-        }
-        return render(request, 'account_page.html', context)
+        reviews = Reviews.objects.filter(id_commented = user_id)
+        context = {"account": user, "niknem": niknem, "show_sett_acc_page": True, 'reviews': reviews}
+        return render(request, "account_page.html", context)
     except User.DoesNotExist:
-        context = {'error': 'Такого пользователя нет'}
-    return render(request, 'account_page.html', context)
+        context = {"error": "Такого пользователя нет"}
+    return render(request, "account_page.html", context)
 
 
 def my_profile(request):
-    print('123')
+    print("123")
     user = request.user
     if user.is_authenticated:
-        return redirect('user_profile', username=user.username)
-    return redirect('register')
+        return redirect("user_profile", username=user.username)
+    return redirect("register")
 
 
 def logout_page(request):
     logout(request)
-    return redirect('login')
+    return redirect("login")
 
 
 def profile(request, username=None):
@@ -301,8 +302,8 @@ def profile(request, username=None):
 
         for friend in friends:
             friend_data = dict()
-            friend_data['username'] = friend.username
-            friend_data['niknem'] = NIKNEM.objects.filter(user=friend).first()
+            friend_data["username"] = friend.username
+            friend_data["niknem"] = NIKNEM.objects.filter(user=friend).first()
             friends_data.append(friend_data)
     if username:
         post_owner = get_object_or_404(User, username=username)
@@ -311,38 +312,37 @@ def profile(request, username=None):
         post_owner = request.user
 
     args = {
-        'post_owner': post_owner,
-        'friends': friends_data,
-
+        "post_owner": post_owner,
+        "friends": friends_data,
     }
-    return render(request, 'profile.html', args)
+    return render(request, "profile.html", args)
 
 
 def change_friends(request, operation, pk):
     friend = get_object_or_404(User, pk=pk)
-    if operation == 'add':
+    if operation == "add":
         Friend.make_friend(request.user, friend)
-    return redirect('profile', username=friend.username)
+    return redirect("profile", username=friend.username)
 
 
 def social_network(request):
     context = {}
     if request.method == "POST":
-        instagram_link = request.POST.get('instagram_link')
-        twitter_link = request.POST.get('twitter_link')
-        twitch_link = request.POST.get('twitch_link')
-        codepen_link = request.POST.get('codepen_link')
+        instagram_link = request.POST.get("instagram_link")
+        twitter_link = request.POST.get("twitter_link")
+        twitch_link = request.POST.get("twitch_link")
+        codepen_link = request.POST.get("codepen_link")
 
         social_links = {
-            'instagram_link': instagram_link,
-            'twitter_link': twitter_link,
-            'twitch_link': twitch_link,
-            'codepen_link': codepen_link
+            "instagram_link": instagram_link,
+            "twitter_link": twitter_link,
+            "twitch_link": twitch_link,
+            "codepen_link": codepen_link,
         }
-        request.session['social_links'] = social_links
+        request.session["social_links"] = social_links
         context = social_links
-    return render(request, 'social_network.html', context)
+    return render(request, "social_network.html", context)
 
 
 def charts(request):
-    return render(request, 'charts.html')
+    return render(request, "charts.html")

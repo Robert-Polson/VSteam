@@ -183,6 +183,14 @@
 
     </div>
     <div class="theme-btn-container"></div>
+{% for review in reviews %}
+<div class="reviewss">
+    <label>Комментатор: <p style="color: black">{{review.id_commentator}}</p></label>
+    <label>Тема: <p style="color: black"> {{review.id_topic_comm}} </p></label>
+    <label>Текст комментария: <p style="color: black"> {{review.text_id_comm}}</p></label>
+    <label>Получатель: <p style="color: black">{{review.id_commented}}</p></label>
+</div>
+{% endfor %}
 <script>
     function dostiz() {
     window.location.href="http://127.0.0.1:8000/achievements//"
