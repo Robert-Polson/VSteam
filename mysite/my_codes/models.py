@@ -38,6 +38,12 @@ class Friend(models.Model):
 
     def __str__(self):
         return self.current_user.username
+    @classmethod
+    def get_friends(cls, current_user):
+        friend,created = cls.objects.get_or_create(
+            current_user = current_user
+        )
+        return friend.users
 
 
 class Turnir(models.Model):
@@ -49,6 +55,18 @@ class Turnir(models.Model):
 
 class Reviews(models.Model):
     id_commentator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_id_commentator')
-    id_topic_comm = models.CharField(max_length=20,null=True)
+    id_topic_comm = models.CharField(max_length=20, null=True)
     text_id_comm = models.CharField(max_length=300)
     id_commented = models.ForeignKey(User, on_delete=models.CASCADE, related_name="id_commented", null=True)
+
+
+class Post1(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=65)
+    text = models.CharField(max_length=150)
+    date = models.DateField(blank='true', auto_now_add=True)
+    image = models.FileField(blank='true')
+    tag = models.CharField(max_length=50, blank='true')
+    likes = models.IntegerField(blank=True, default='0')
+    comm = models.IntegerField(blank=True, default='0')
+    views = models.IntegerField(blank=True, default='0')

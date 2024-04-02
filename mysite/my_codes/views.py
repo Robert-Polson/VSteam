@@ -6,13 +6,14 @@ from PIL.Image import DecompressionBombError
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from mysite.settings import MEDIA_ROOT
 
-from .forms import LoginForm, RegisterForm, RememberPassword
+from .forms import LoginForm, RegisterForm, RememberPassword, PostForm
 from .forms import SearchUserForm
-from .models import NIKNEM, Friend, Turnir, Reviews
+from .models import NIKNEM, Friend, Turnir, Reviews, Post1
+import requests
 
 
 def register_page(request):
@@ -97,9 +98,9 @@ def open_page(request):
     context = {}
     context = {
         "text": "Добро пожаловать в мир возможностей и новых знакомств! Здесь каждый может найти не только друзей, "
-        "но и надежных игровых партнеров для захватывающих приключений. Давайте создадим незабываемые "
-        "воспоминания вместе! Добро пожаловать в наше сообщество, где дружба и игры ждут вас на каждом шагу. "
-        "Присоединяйтесь и откройте для себя мир новых возможностей!"
+                "но и надежных игровых партнеров для захватывающих приключений. Давайте создадим незабываемые "
+                "воспоминания вместе! Добро пожаловать в наше сообщество, где дружба и игры ждут вас на каждом шагу. "
+                "Присоединяйтесь и откройте для себя мир новых возможностей!"
     }
 
     return render(request, "open_page.html", context)
@@ -142,6 +143,7 @@ def api_v1_user_upload_avatar(request):
 
 
 def account_page(request, username):
+    friends_count = 0
     social_links = request.session.get("social_links", {})
     instagram_link = social_links.get("instagram_link")
     twitter_link = social_links.get("twitter_link")
@@ -150,6 +152,10 @@ def account_page(request, username):
     try:
         user = User.objects.filter(username=username).first()
         reviews = Reviews.objects.filter(id_commented=user.id)
+        # friends = Friend.objects.filter(current_user=user)
+        # friends_count = friends.count()
+        friends  = Friend.get_friends(current_user=user)
+        friends_count = friends.count()
         if not user:
             raise User.DoesNotExist
         niknem = NIKNEM.objects.filter(user=user).first()
@@ -161,7 +167,8 @@ def account_page(request, username):
             "account": user,
             "niknem": niknem.niknem if niknem is not None else "No NickName",
             "is_owner_of_account": user == request.user,
-            "reviews": reviews
+            "reviews": reviews,
+            "friends_count": friends_count
         }
         return render(request, "account_page.html", context)
 
@@ -212,7 +219,7 @@ def find_users_page(request):
     all_accounts_count = NIKNEM.objects.filter(niknem__contains=query).count()
 
     current_user = request.user
-    accounts = NIKNEM.objects.filter(niknem__contains=query).exclude(user=current_user)[page * 10 : page * 10 + 10]
+    accounts = NIKNEM.objects.filter(niknem__contains=query).exclude(user=current_user)[page * 10: page * 10 + 10]
 
     context["page"] = page + 1
     context["accounts"] = accounts
@@ -226,13 +233,6 @@ def find_users_page(request):
         Friend.make_friend(request.user, friend)
 
     return render(request, "find_users.html", context)
-
-
-def home_page(request):
-    print(request.user.username)
-    context = {"account": request.user}
-
-    return render(request, "homePage.html", context)
 
 
 def tournament_page(request):
@@ -249,6 +249,7 @@ def tournament_page(request):
 
 
 def reviews(request, user_id=None):
+    bad_words = ['']
     try:
         user1 = User.objects.get(id=user_id)
         current_user = request.user
@@ -272,7 +273,7 @@ def settings_page(request, user_id=None):
     try:
         user = User.objects.get(id=user_id)
         niknem = NIKNEM.objects.filter(user=user).first()
-        reviews = Reviews.objects.filter(id_commented = user_id)
+        reviews = Reviews.objects.filter(id_commented=user_id)
         context = {"account": user, "niknem": niknem, "show_sett_acc_page": True, 'reviews': reviews}
         return render(request, "account_page.html", context)
     except User.DoesNotExist:
@@ -294,20 +295,20 @@ def logout_page(request):
 
 
 def profile(request, username=None):
-    friend = Friend.objects.filter(current_user=request.user).first()
+    friend_instance = Friend.objects.filter(current_user=request.user).first()
     friends_data = []
-    friends = []
-    if friend:
-        friends = friend.users.all()
 
-        for friend in friends:
+    if friend_instance:
+        friends = friend_instance.users.all()
+        for friend_obj in friends:
             friend_data = dict()
-            friend_data["username"] = friend.username
-            friend_data["niknem"] = NIKNEM.objects.filter(user=friend).first()
+            friend_data["username"] = friend_obj.username
+            friend_data["niknem"] = NIKNEM.objects.filter(user=friend_obj).first()
+            friend_data["id"] = friend_obj.id
             friends_data.append(friend_data)
+
     if username:
         post_owner = get_object_or_404(User, username=username)
-
     else:
         post_owner = request.user
 
@@ -315,7 +316,9 @@ def profile(request, username=None):
         "post_owner": post_owner,
         "friends": friends_data,
     }
+
     return render(request, "profile.html", args)
+
 
 
 def change_friends(request, operation, pk):
@@ -345,4 +348,54 @@ def social_network(request):
 
 
 def charts(request):
-    return render(request, "charts.html")
+    user_data_2020 = [
+        { "label": "JAN", "y": 58200 },
+        { "label": "FEB", "y": 59110 },
+        { "label": "MAR", "y": 60320 },
+        { "label": "APR", "y": 61440 },
+        { "label": "MAY", "y": 62580 },
+        { "label": "JUN", "y": 63190 },
+        { "label": "JUL", "y": 64000 },
+        { "label": "AUG", "y": 64290 },
+        { "label": "SEP", "y": 65530 },
+        { "label": "OCT", "y": 65300 },
+        { "label": "NOV", "y": 65340 },
+        { "label": "DEC", "y": 64530 }
+    ]
+    user_data_2021 = [
+        { "label": "JAN", "y": 2000 },
+        { "label": "FEB", "y": 66210 },
+        { "label": "MAR", "y": 66540 },
+        { "label": "APR", "y": 66680 },
+        { "label": "MAY", "y": 67500 },
+        { "label": "JUN", "y": 68850 },
+        { "label": "JUL", "y": 69000 },
+        { "label": "AUG", "y": 70130 },
+        { "label": "SEP", "y": 71050 },
+        { "label": "OCT", "y": 71500 },
+        { "label": "NOV", "y": 72110 },
+        { "label": "DEC", "y": 71820 }
+    ]
+    return render(request, 'charts.html', { "user_data_2021": user_data_2021, "user_data_2020": user_data_2020 })
+
+
+def create_post(request):
+    if request.method == "POST":
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            return redirect('homePage')
+    else:
+        form = PostForm()
+    return render(request, 'create_post.html', )
+
+
+def home_page(request):
+    posts = Post1.objects.all().order_by()
+    context = {
+        "account": request.user,
+        'posts': posts
+    }
+    return render(request, 'homePage.html', context)

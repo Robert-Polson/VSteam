@@ -137,8 +137,10 @@
     <p>No NickName</p>
 {% endif %}
 <div class="grid-container">
+
     <div class="grid-child-posts">156 Posts</div>
     <div class="grid-child-followers">1012 Likes</div>
+    <div class="grid-child-friends" >Friends: {{friends_count}}</div>
 </div>
 <ul class="social-icons">
     {% if instagram_link %}
@@ -161,9 +163,9 @@
         <button class="btn">Publish the post</button>
         <button class="btn"><a href="{% url 'social_network' %}" style="text-decoration: none; color: white;">About me</a></button>
         <button class="btn" type="button" onclick="dostiz();">Achievements</button>
-            <button class="btn"><a href="{% url 'profile_pk' username=user.username %}" style="text-decoration: none; color: white;">My friends</a></button>
-    {% endif %}
 
+    {% endif %}
+            <button class="btn"><a href="{% url 'profile_pk' username=user.username %}" style="text-decoration: none; color: white;">My friends</a></button>
             {% if show_sett_acc_page == True %}
         <form method="post" action="{% url 'change_friends' operation='add' pk=account.id %}">
     {% csrf_token %}
