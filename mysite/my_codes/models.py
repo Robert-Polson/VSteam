@@ -38,10 +38,11 @@ class Friend(models.Model):
 
     def __str__(self):
         return self.current_user.username
+
     @classmethod
     def get_friends(cls, current_user):
-        friend,created = cls.objects.get_or_create(
-            current_user = current_user
+        friend, created = cls.objects.get_or_create(
+            current_user=current_user
         )
         return friend.users
 
@@ -66,7 +67,16 @@ class Post1(models.Model):
     text = models.CharField(max_length=150)
     date = models.DateField(blank='true', auto_now_add=True)
     image = models.FileField(blank='true')
-    tag = models.CharField(max_length=50, blank='true')
+
+
+    def __str__(self):
+        return self.title
+
+class Likes:
+    other_user_id_likes = models.ForeignKey(User, on_delete= models.CASCADE)
     likes = models.IntegerField(blank=True, default='0')
+
+
+class Comm:
+    other_user_id_comm = models.ForeignKey(User,on_delete=models.CASCADE)
     comm = models.IntegerField(blank=True, default='0')
-    views = models.IntegerField(blank=True, default='0')

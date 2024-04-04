@@ -40,7 +40,13 @@ class RegisterForm(UserCreationForm):
         return password2
 
 
-class PostForm():
+class PostForm(forms.ModelForm):
     class Meta:
         model = Post1
-        fields = ['title', 'text', 'image']
+        fields = ['title', 'text', 'image' ]
+        labels = {
+            'title': 'Write a topic',
+            'text': 'Write a text',
+            'image': 'Load a picture/video'
+        }
+

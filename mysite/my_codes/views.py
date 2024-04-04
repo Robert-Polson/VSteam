@@ -1,3 +1,4 @@
+from datetime import datetime
 from io import BytesIO
 from sqlite3 import IntegrityError
 
@@ -6,6 +7,8 @@ from PIL.Image import DecompressionBombError
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
+from django.db.models import Count
+from django.db.models.functions import TruncMonth
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from mysite.settings import MEDIA_ROOT
@@ -348,48 +351,24 @@ def social_network(request):
 
 
 def charts(request):
-    user_data_2020 = [
-        { "label": "JAN", "y": 58200 },
-        { "label": "FEB", "y": 59110 },
-        { "label": "MAR", "y": 60320 },
-        { "label": "APR", "y": 61440 },
-        { "label": "MAY", "y": 62580 },
-        { "label": "JUN", "y": 63190 },
-        { "label": "JUL", "y": 64000 },
-        { "label": "AUG", "y": 64290 },
-        { "label": "SEP", "y": 65530 },
-        { "label": "OCT", "y": 65300 },
-        { "label": "NOV", "y": 65340 },
-        { "label": "DEC", "y": 64530 }
-    ]
-    user_data_2021 = [
-        { "label": "JAN", "y": 2000 },
-        { "label": "FEB", "y": 66210 },
-        { "label": "MAR", "y": 66540 },
-        { "label": "APR", "y": 66680 },
-        { "label": "MAY", "y": 67500 },
-        { "label": "JUN", "y": 68850 },
-        { "label": "JUL", "y": 69000 },
-        { "label": "AUG", "y": 70130 },
-        { "label": "SEP", "y": 71050 },
-        { "label": "OCT", "y": 71500 },
-        { "label": "NOV", "y": 72110 },
-        { "label": "DEC", "y": 71820 }
-    ]
-    return render(request, 'charts.html', { "user_data_2021": user_data_2021, "user_data_2020": user_data_2020 })
+    user_data_2023 = list(User.objects.annotate(month=TruncMonth('date_joined')).filter(date_joined__year=2023).values('month').annotate(user_count=Count('id')).order_by('month'))
+    user_data_2024 = list(User.objects.annotate(month=TruncMonth('date_joined')).filter(date_joined__year=2024).values('month').annotate(user_count=Count('id')).order_by('month'))
+    return render(request, 'charts.html', { "user_data_2023": user_data_2023, "user_data_2024": user_data_2024 })
 
 
 def create_post(request):
+    context = {}
     if request.method == "POST":
-        form = PostForm(request.POST)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user
-            post.save()
-            return redirect('homePage')
-    else:
-        form = PostForm()
-    return render(request, 'create_post.html', )
+        topic = request.POST.get('topic')
+        texts = request.POST.get('texts')
+        files_image = request.FILES.get('file_image')
+        context  = {
+            "topic": topic,
+            "texts": texts,
+            "files_image": files_image
+        }
+        post_author = Post1(author = request.user, title = topic, text = texts,date = datetime.now , image = files_image)
+    return render(request, "create_post.html", context)
 
 
 def home_page(request):

@@ -9,7 +9,7 @@ window.onload = function () {
         animationEnabled: true,
         theme: "dark2",
         title: {
-            text: "Website Audience Comparison"
+            text: "VSTeam user"
         },
         axisX: {
             valueFormatString: "MMM"
@@ -27,16 +27,24 @@ window.onload = function () {
         },
         data: [{
             type: "line",
-            name: "Банан",
+            name: "2023",
             showInLegend: true,
             yValueFormatString: "#,##0",
-            dataPoints: {{ user_data_2020|safe }}
+            dataPoints: [
+    {% for data_point in user_data_2023 %}
+        { x: new Date("{{ data_point.month|date:'Y-m-01' }}"), y: {{ data_point.user_count }} },
+    {% endfor %}
+]
         },{
             type: "line",
-            name: "2021",
+            name: "2024",
             showInLegend: true,
             yValueFormatString: "#,##0",
-            dataPoints: {{ user_data_2021|safe }}
+            dataPoints: [
+    {% for data_point in user_data_2024 %}
+        { x: new Date("{{ data_point.month|date:'Y-m-01' }}"), y: {{ data_point.user_count }} },
+    {% endfor %}
+]
         }]
     });
     chart.render();
