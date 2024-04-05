@@ -49,5 +49,5 @@ urlpatterns = [
     path("api/v1/user/change_avatar/", views.api_v1_user_upload_avatar),
     path("social_network/", views.social_network, name="social_network"),
     path("charts/", views.charts, name="charts"),
-    path("create_post", views.create_post, name = "crate_post")
+    path("create_post", views.create_post, name = "create_post")
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
