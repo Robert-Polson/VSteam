@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Профиль пользователя</title>
-    <link href="{% static 'friends_profile_style.css' %}" rel="stylesheet">
+    <title>Title</title>
 </head>
 <body>
 {% if user == main_user %}
@@ -29,138 +28,61 @@
 {% endif %}
 
 <h2>Friends:</h2>
-<ul>
+<ul class="horizontal-friends">
     {% for friend in friends %}
         <li>
-            {{ friend.username }} (Nickname: {{ friend.niknem }})
+            <div class="rounded-border-green">
+                {{ friend.username }} (Nickname: {{ friend.niknem }})
+                <a href="{% url 'polzovatels_account' user_id=friend.id %}">Перейти</a>
+            </div>
         </li>
     {% empty %}
         <li>No friends yet</li>
     {% endfor %}
 </ul>
-<style>
-    /* ... */
-    .friend-card {
-        background-color: #333333;
-        border-radius: 10px;
-        overflow: hidden;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        width: 500px;
-        margin: auto;
-        display: flex;
-        flex-direction: row;
-    }
 
-    /* These styles are added to style the "friend-info" section */
-    .friend-info {
-        padding: 20px;
-        padding-left: 0;
-        flex-grow: 1;
-    }
-    @import url('https://fonts.cdnfonts.com/css/retron2000');
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Rocher';
-      background-color: grey;
-      color: #ffffff;
-      margin: 0;
-      padding: 0;
-    }
-
-    .container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      padding: 20px;
-    }
-
-    .user-card {
-      background-color: #333333;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      width: 300px;
-    }
-
-    .user-card img {
-      width: 100%;
-      height: auto;
-      border-bottom: 2px solid #ffffff;
-    }
-
-    .user-info {
-      padding: 20px;
-    }
-
-    .user-info h2 {
-      margin-top: 0;
-      font-size: 24px;
-    }
-
-    .user-info p {
-      margin: 5px 0;
-      font-size: 18px;
-    }
-
-    .container1 {
-      width: 90%;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .dark-rounded-input {
-        background-color: #333;
-        color: #fff;
-        padding: 10px;
-        border-radius: 20px;
-        border-color: #444;
-        border-style: solid;
-        outline: none;
-        margin: auto;
-    }
-
-    .user-avatar {
-      float: right;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background-color: #555; /* Заглушка для аватарки */
-    }
-
-    header {
-      padding: 20px 0;
-    }
-
-    header h1 {
-      font-size: 24px;
-    }
-
-    nav ul {
-      list-style-type: none;
-    }
-
-    nav ul li {
-      display: inline;
-      margin-right: 20px;
-    }
-
-    nav ul li a {
-      color: #fff;
-      text-decoration: none;
-    }
-</style>
 <script>
-    function searchButton()
-    {
+    function searchButton() {
         window.location.href = "/find_users?query=" + document.getElementById("query").value;
     }
 </script>
+
+<style>
+    @import "https://unpkg.com/open-props" layer(design.system);
+    @import "https://unpkg.com/open-props/normalize.min.css" layer(demo.support);
+
+    @layer demo {
+        .rounded-border-green {
+            inline-size: var(--size-content-1);
+            aspect-ratio: var(--ratio-widescreen);
+            border: solid var(--size-1) green;
+            border-radius: var(--radius-2);
+            padding: var(--size-3);
+            margin: var(--size-2);
+        }
+    }
+
+    @layer demo.support {
+        body {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            place-content: center;
+            padding: var(--size-4);
+            gap: var(--size-4);
+        }
+
+        .horizontal-friends {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .horizontal-friends li {
+            margin: 5px;
+        }
+    }
+</style>
 </body>
 </html>

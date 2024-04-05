@@ -1,0 +1,68 @@
+<!-- index.html -->
+{% load static %}
+<html>
+<head>
+<script>
+window.onload = function () {
+    var chart = new CanvasJS.Chart("chartContainer", {
+        exportEnabled: true,
+        animationEnabled: true,
+        theme: "dark2",
+        title: {
+            text: "VSTeam user"
+        },
+        axisX: {
+            valueFormatString: "MMM"
+        },
+        axisY: {
+            title: "User Count"
+        },
+        toolTip: {
+            shared: true
+        },
+        legend: {
+            cursor: "pointer",
+            verticalAlign: "top",
+            itemclick: toggleDataSeries
+        },
+        data: [{
+            type: "line",
+            name: "2023",
+            showInLegend: true,
+            yValueFormatString: "#,##0",
+            dataPoints: [
+    {% for data_point in user_data_2023 %}
+        { x: new Date("{{ data_point.month|date:'Y-m-01' }}"), y: {{ data_point.user_count }} },
+    {% endfor %}
+]
+        },{
+            type: "line",
+            name: "2024",
+            showInLegend: true,
+            yValueFormatString: "#,##0",
+            dataPoints: [
+    {% for data_point in user_data_2024 %}
+        { x: new Date("{{ data_point.month|date:'Y-m-01' }}"), y: {{ data_point.user_count }} },
+    {% endfor %}
+]
+        }]
+    });
+    chart.render();
+
+    function toggleDataSeries(e) {
+        if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+            e.dataSeries.visible = false;
+        } else {
+            e.dataSeries.visible = true;
+        }
+        e.chart.render();
+    }
+
+}
+</script>
+</head>
+<body>
+    <div id="chartContainer" style="width: 100%; height: 360px;"></div>
+    <script src="{% static 'canvasjs.stock.min.js' %}"></script>
+</body>
+</html>
