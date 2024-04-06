@@ -66,7 +66,7 @@ class Post1(models.Model):
     title = models.CharField(max_length=65)
     text = models.CharField(max_length=150)
     date = models.DateField(blank='true', auto_now_add=True)
-    image = models.FileField(blank='true')
+    image = models.ImageField(upload_to="images/", blank=True, null=True)
 
 
     def __str__(self):

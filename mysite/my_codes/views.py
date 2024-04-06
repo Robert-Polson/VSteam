@@ -362,19 +362,24 @@ def create_post(request):
         topic = request.POST.get('topic')
         texts = request.POST.get('texts')
         files_image = request.FILES.get('file_image')
-        context  = {
-            "topic": topic,
-            "texts": texts,
-            "files_image": files_image
-        }
-        post_author = Post1(author = request.user, title = topic, text = texts,date = datetime.now , image = files_image)
+        post_author = Post1(author=request.user, title=topic, text=texts, date=datetime.now(), image=files_image)
+        post_author.save()
     return render(request, "create_post.html", context)
 
-
 def home_page(request):
-    posts = Post1.objects.all().order_by()
     context = {
-        "account": request.user,
-        'posts': posts
+        'account': request.user
     }
+    posts = Post1.objects.filter(author = request.user)
+    context["posts"] = posts
+
+    friend_instance = Friend.objects.filter(current_user=request.user).first()
+
+    if friend_instance:
+        friends = friend_instance.users.all()
+        friend_posts = Post1.objects.filter(author__in=friends)
+        context["friend_posts"] = friend_posts
+
     return render(request, 'homePage.html', context)
+
+

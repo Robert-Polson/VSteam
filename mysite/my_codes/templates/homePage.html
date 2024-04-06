@@ -17,7 +17,8 @@
 <div style="display: flex; ">
 
         <input type="search" class="dark-rounded-input" placeholder="Search the POST" style="color: green;">
-      </div>
+
+</div>
   <div class="sidebar close">
     <div class="logo-details">
       <img class="imgh" src="{% user_avatar account.id %}" width="64px" height="64px">
@@ -131,6 +132,26 @@
     <div class="home-content">
       <i class='bx bx-menu' ></i>
       <span class="text">OPTIONS</span>
+    </div>
+    <div style="display: flex;">
+        {% for post in posts %}
+            <div style="padding:30px;">
+                <h1>{{post.author}}</h1>
+                <h2 style="color:black">{{ post.title }}</h2>
+                <p>{{ post.text }}</p>
+              <input type="image">
+            </div>
+        {% endfor %}
+
+    {% for friends in friend_posts %}
+    <div style="display:flex; padding: 10px;">
+
+      <h1>{{friends.author}}</h1>
+      <h1>{{friends.title}}</h1>
+      <p>{{friends.text}}</p>
+
+    </div>
+    {% endfor %}
     </div>
   </section>
 

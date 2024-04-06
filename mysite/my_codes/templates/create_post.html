@@ -27,7 +27,7 @@
 		</button>
 	</div>
 	<div class="modal-body">
-		<form method="post">
+		<form method="post" action="{% url 'create_post' %}" enctype="multipart/form-data">
 			{% csrf_token %}
 		<label>WRITE INFORMATION ABOUT YOUR POST</label>
 		<input type="text" name="topic" placeholder="write a topic...">
