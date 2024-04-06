@@ -1,11 +1,10 @@
+"""File with models for every page"""
 from django.contrib.auth.models import User
 from django.db import models
 
 
-# Create your models here.
-
-
-class nickname(models.Model):
+class Nickname(models.Model):
+    """Class that work with nickname of user"""
     objects = None
     nickname = models.CharField(max_length=30, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
@@ -15,8 +14,10 @@ class nickname(models.Model):
 
 
 class Friend(models.Model):
+    """Class that work with friends of user"""
     objects = None
-    current_user = models.ForeignKey(User, related_name='owner', on_delete=models.CASCADE, null=True)
+    current_user = models.ForeignKey(
+        User, related_name='owner', on_delete=models.CASCADE, null=True)
     users = models.ManyToManyField(User, related_name='friends')
 
     # nickname = models.CharField(null=True,max_length=50)
@@ -26,6 +27,7 @@ class Friend(models.Model):
 
     @classmethod
     def make_friend(cls, current_user, new_friend):
+        """Function to make friends"""
         friend, created = cls.objects.get_or_create(
             current_user=current_user
         )
@@ -33,6 +35,7 @@ class Friend(models.Model):
 
     @classmethod
     def lose_friend(cls, current_user, friend_to_lose):
+        """Function to lose friends"""
         friend, created = cls.objects.get_or_create(
             current_user=current_user
         )
@@ -43,6 +46,7 @@ class Friend(models.Model):
 
     @classmethod
     def get_friends(cls, current_user):
+        """Function to get friends"""
         friend, created = cls.objects.get_or_create(
             current_user=current_user
         )
@@ -50,6 +54,7 @@ class Friend(models.Model):
 
 
 class Turnir(models.Model):
+    """Class that work with turnirs"""
     objects = None
     date = models.DateField()
     name = models.CharField(max_length=50)
@@ -58,14 +63,18 @@ class Turnir(models.Model):
 
 
 class Reviews(models.Model):
+    """Class that work with reviews"""
     objects = None
-    id_commentator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_id_commentator')
+    id_commentator = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='user_id_commentator')
     id_topic_comm = models.CharField(max_length=20, null=True)
     text_id_comm = models.CharField(max_length=300)
-    id_commented = models.ForeignKey(User, on_delete=models.CASCADE, related_name="id_commented", null=True)
+    id_commented = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="id_commented", null=True)
 
 
 class Post1(models.Model):
+    """Class that work with posts"""
     objects = None
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=65)
@@ -73,15 +82,17 @@ class Post1(models.Model):
     date = models.DateField(blank='true', auto_now_add=True)
     image = models.ImageField(upload_to="images/", blank=True, null=True)
 
-
     def __str__(self):
         return self.title
 
+
 class Likes:
-    other_user_id_likes = models.ForeignKey(User, on_delete= models.CASCADE)
+    """Class that work with likes for user"""
+    other_user_id_likes = models.ForeignKey(User, on_delete=models.CASCADE)
     likes = models.IntegerField(blank=True, default='0')
 
 
 class Comm:
-    other_user_id_comm = models.ForeignKey(User,on_delete=models.CASCADE)
+    """Class that work with comments"""
+    other_user_id_comm = models.ForeignKey(User, on_delete=models.CASCADE)
     comm = models.IntegerField(blank=True, default='0')

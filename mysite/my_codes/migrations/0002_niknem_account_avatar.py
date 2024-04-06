@@ -14,14 +14,20 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='niknem',
             name='account',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='my_codes.account'),
+            field=models.ForeignKey(
+                null=True, on_delete=django.db.models.deletion.CASCADE,
+                to='my_codes.account'),
         ),
         migrations.CreateModel(
             name='Avatar',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(
+                    auto_created=True, primary_key=True, serialize=False,
+                    verbose_name='ID')),
                 ('new_image', models.ImageField(upload_to='')),
-                ('account', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='my_codes.account')),
+                ('account', models.ForeignKey(
+                    null=True, on_delete=django.db.models.deletion.CASCADE,
+                    to='my_codes.account')),
             ],
         ),
     ]

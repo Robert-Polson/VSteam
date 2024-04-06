@@ -1,4 +1,4 @@
-"""imports from other files + libraries"""
+"""File that connect pages"""
 from datetime import datetime
 from io import BytesIO
 from sqlite3 import IntegrityError
@@ -14,7 +14,8 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import LoginForm, RegisterForm, RememberPassword
 from .forms import SearchUserForm
-from .models import nickname, Friend, Turnir, Reviews, Post1
+from .models import Nickname, Friend, Turnir, Reviews, Post1
+
 
 
 def register_page(request):
@@ -33,7 +34,7 @@ def register_page(request):
             request.session["username"] = user.username
             request.session["email"] = user.email
 
-            nickname_item = nickname(user=user)
+            nickname_item = Nickname(user=user)
             nickname_item.save()
 
             messages.success(request, "You have signed up successfully.")
@@ -152,7 +153,6 @@ def api_v1_user_upload_avatar(request):
 def account_page(request, username):
     """Module providing a function for account_page."""
     social_links = request.session.get("social_links", {})
-    instagram_link = social_links.get("instagram_link")
     twitter_link = social_links.get("twitter_link")
     twitch_link = social_links.get("twitch_link")
     codepen_link = social_links.get("codepen_link")
@@ -163,7 +163,7 @@ def account_page(request, username):
         friends_count = friends.count()
         if not user:
             raise User.DoesNotExist
-        nickname = nickname.objects.filter(user=user).first()
+        nickname = Nickname.objects.filter(user=user).first()
         context = {
             "twitter_link": twitter_link,
             "twitch_link": twitch_link,
@@ -197,8 +197,7 @@ def remember_password(request):
                 messages.success(
                     request, f"Password changed successfully for {user.username}!")
                 return redirect("login")
-            else:
-                messages.error(request, "User not found with the provided username and email")
+            messages.error(request, "User not found with the provided username and email")
 
     return render(request, "remember_password.html", {"form": form})
 
@@ -223,10 +222,10 @@ def find_users_page(request):
         query = request.GET.get("query", "")
         page = max(0, int(request.GET.get("page", 1)) - 1)
 
-    all_accounts_count = nickname.objects.filter(nickname__contains=query).count()
+    all_accounts_count = Nickname.objects.filter(nickname__contains=query).count()
 
     current_user = request.user
-    accounts = nickname.objects.filter(niknem__contains=query).exclude(
+    accounts = Nickname.objects.filter(niknem__contains=query).exclude(
         user=current_user)[page * 10: page * 10 + 10]
 
     context["page"] = page + 1
@@ -260,7 +259,6 @@ def tournament_page(request):
 
 def reviews(request, user_id=None):
     """Module providing a function for reviews."""
-    bad_words = ['']
     try:
         user1 = User.objects.get(id=user_id)
         current_user = request.user
@@ -275,8 +273,7 @@ def reviews(request, user_id=None):
             id_table.save()
             context = {"account": user1}
             return render(request, "reviews.html", context)
-        else:
-            return render(request, "reviews.html", {"error_message": "id_topic is required"})
+        return render(request, "reviews.html", {"error_message": "id_topic is required"})
     except IntegrityError as e:
         return render(request, "reviews.html", {"error_message": f"IntegrityError: {e}"})
 
@@ -285,7 +282,7 @@ def settings_page(request, user_id=None):
     """Module providing a function for settings_page."""
     try:
         user = User.objects.get(id=user_id)
-        nickname = nickname.objects.filter(user=user).first()
+        nickname = Nickname.objects.filter(user=user).first()
         reviews = Reviews.objects.filter(id_commented=user_id)
         context = {"account": user,
                    "nickname": nickname,
@@ -322,7 +319,7 @@ def profile(request, username=None):
         for friend_obj in friends:
             friend_data = dict()
             friend_data["username"] = friend_obj.username
-            friend_data["nickname"] = nickname.objects.filter(user=friend_obj).first()
+            friend_data["nickname"] = Nickname.objects.filter(user=friend_obj).first()
             friend_data["id"] = friend_obj.id
             friends_data.append(friend_data)
 
