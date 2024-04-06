@@ -11,16 +11,16 @@ Class-based views
     1. Add an import:  from other_app.views import Home
     2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
 Including another URLconf
-    1. Import  function: from django.urls import include, path
+    1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.template.defaulttags import url
 from django.urls import path
 
 from my_codes import views
+from my_codes.api_views import v1 as api_v1
 
 from mysite import settings
 
@@ -47,6 +47,7 @@ urlpatterns = [
     path("change-friends/<str:operation>/<int:pk>/", views.change_friends, name="change_friends"),
     path("polzovatels_account/<int:user_id>/", views.settings_page, name="polzovatels_account"),
     path("api/v1/user/change_avatar/", views.api_v1_user_upload_avatar),
+    path('api/v1/user/publish_post/', api_v1.user_publish_post),
     path("social_network/", views.social_network, name="social_network"),
     path("charts/", views.charts, name="charts"),
     path("create_post", views.create_post, name = "create_post")

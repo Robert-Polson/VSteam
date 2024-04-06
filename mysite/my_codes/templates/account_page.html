@@ -116,7 +116,6 @@
 </head>
 <body>
 <header>
-
     <a href="{% url 'homePage' %}"><button style="top:10px;">Вернутся обратно</button></a>
     </header>
     <div class="card">
@@ -137,10 +136,8 @@
     <p>No NickName</p>
 {% endif %}
 <div class="grid-container">
-
     <div class="grid-child-posts">156 Posts</div>
     <div class="grid-child-followers">1012 Likes</div>
-    <div class="grid-child-friends" >Friends: {{friends_count}}</div>
 </div>
 <ul class="social-icons">
     {% if instagram_link %}
@@ -160,23 +157,18 @@
     <input type="file" name="avatarInput" style="display: none;" onchange="previewImage(event)">
     {% if is_owner_of_account == True %}
         <button class="btn" type="button" onclick="uploadAvatar()">Change Avatar</button>
-        <button class="btn">Publish the post</button>
         <button class="btn"><a href="{% url 'social_network' %}" style="text-decoration: none; color: white;">About me</a></button>
         <button class="btn" type="button" onclick="dostiz();">Achievements</button>
-
+        <button class="btn"><a href="{% url 'profile_pk' username=user.username %}" style="text-decoration: none; color: white;">My friends</a></button>
+        <button class="btn" type="button" onclick="addFilesToPost()">Upload files to post</button>
+        <input type="text" id="postText">
+        <button class="btn" type="button" onclick="publishPost()">Publish the post</button>
     {% endif %}
-            <button class="btn"><a href="{% url 'profile_pk' username=user.username %}" style="text-decoration: none; color: white;">My friends</a></button>
-            {% if show_sett_acc_page == True %}
+
+    {% if show_sett_acc_page == True %}
         <form method="post" action="{% url 'change_friends' operation='add' pk=account.id %}">
     {% csrf_token %}
-    <button class="btn" type="submit">
-    {% if account.id %}
-        <a href="{% url 'reviews' account.id %}" style="color: white; text-decoration: none;">Comment about person</a>
-    {% else %}
-        <a href="#" style="color: white; text-decoration: none;">Comment about me</a>
-    {% endif %}
-</button>
-
+    <button class="btn" type="submit"><a href="http://127.0.0.1:8000/reviews/" style="color: white; text-decoration: none;">Comment about person</a></button>
 </form>
         <button class="btn">Message</button>
         <button class="btn" >Achievements</button>
@@ -185,14 +177,6 @@
 
     </div>
     <div class="theme-btn-container"></div>
-{% for review in reviews %}
-<div class="reviewss">
-    <label>Комментатор: <p style="color: black">{{review.id_commentator}}</p></label>
-    <label>Тема: <p style="color: black"> {{review.id_topic_comm}} </p></label>
-    <label>Текст комментария: <p style="color: black"> {{review.text_id_comm}}</p></label>
-    <label>Получатель: <p style="color: black">{{review.id_commented}}</p></label>
-</div>
-{% endfor %}
 <script>
     function dostiz() {
     window.location.href="http://127.0.0.1:8000/achievements//"
@@ -237,6 +221,51 @@
             })
             .catch(error => console.error(error));
         }
+    }
+    let publishPostData = new FormData();
+    let postFileIncrement = 0;
+    function addFilesToPost(event) {
+        let input = document.createElement('input');
+        input.type = 'file';
+        input.click();
+
+        input.onchange = function() {
+            let file = input.files[0];
+            if(publishPostData.length >= 10) {
+                return alert('Не более 10 файлов');
+            }
+
+            if(file.size > 10*1024*1024) {
+                return alert('Не более 10МБ');
+            }
+
+            publishPostData.append("file_" + postFileIncrement, file);
+            postFileIncrement++;
+
+            for (const [key, value] of publishPostData) {
+                console.log(key);
+                console.log(value);
+            }
+        }
+    }
+    function publishPost(event) {
+        let csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        publishPostData.append('text', document.getElementById('postText').value);
+        fetch('/api/v1/user/publish_post/', {
+                method: 'POST',
+                body: publishPostData,
+                headers: {
+                    'X-CSRFToken': csrftoken
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    alert('Ошибка');
+                }
+            })
+            .catch(error => console.error(error));
     }
 const themes = [
     {
