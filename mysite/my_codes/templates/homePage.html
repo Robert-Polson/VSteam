@@ -142,6 +142,16 @@
               <input type="image">
             </div>
         {% endfor %}
+
+    {% for friends in friend_posts %}
+    <div style="display:flex; padding: 10px;">
+
+      <h1>{{friends.author}}</h1>
+      <h1>{{friends.title}}</h1>
+      <p>{{friends.text}}</p>
+
+    </div>
+    {% endfor %}
     </div>
   </section>
 

@@ -372,4 +372,14 @@ def home_page(request):
     }
     posts = Post1.objects.filter(author = request.user)
     context["posts"] = posts
+
+    friend_instance = Friend.objects.filter(current_user=request.user).first()
+
+    if friend_instance:
+        friends = friend_instance.users.all()
+        friend_posts = Post1.objects.filter(author__in=friends)
+        context["friend_posts"] = friend_posts
+
     return render(request, 'homePage.html', context)
+
+
