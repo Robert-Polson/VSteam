@@ -5,22 +5,24 @@ from django.db import models
 # Create your models here.
 
 
-class NIKNEM(models.Model):
-    niknem = models.CharField(max_length=30, null=True)
+class nickname(models.Model):
+    objects = None
+    nickname = models.CharField(max_length=30, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.niknem
+        return self.nickname
 
 
 class Friend(models.Model):
+    objects = None
     current_user = models.ForeignKey(User, related_name='owner', on_delete=models.CASCADE, null=True)
     users = models.ManyToManyField(User, related_name='friends')
 
-    # niknem = models.CharField(null=True,max_length=50)
+    # nickname = models.CharField(null=True,max_length=50)
 
-    # def get_niknem(self):
-    #     self.niknem = NIKNEM.objects.get(user=self.users.first()).niknem
+    # def get_nickname(self):
+    #     self.nickname = nickname.objects.get(user=self.users.first()).nickname
 
     @classmethod
     def make_friend(cls, current_user, new_friend):
@@ -48,6 +50,7 @@ class Friend(models.Model):
 
 
 class Turnir(models.Model):
+    objects = None
     date = models.DateField()
     name = models.CharField(max_length=50)
     participants = models.IntegerField()
@@ -55,6 +58,7 @@ class Turnir(models.Model):
 
 
 class Reviews(models.Model):
+    objects = None
     id_commentator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_id_commentator')
     id_topic_comm = models.CharField(max_length=20, null=True)
     text_id_comm = models.CharField(max_length=300)
@@ -62,6 +66,7 @@ class Reviews(models.Model):
 
 
 class Post1(models.Model):
+    objects = None
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=65)
     text = models.CharField(max_length=150)

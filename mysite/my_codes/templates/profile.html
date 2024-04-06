@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Профиль пользователя</title>
+    <link href="{% static 'friends_profile_style.css' %}" rel="stylesheet">
 </head>
 <body>
 {% if user == main_user %}
@@ -84,5 +85,11 @@
         }
     }
 </style>
+<script>
+    function searchButton()
+    {
+        window.location.href = "/find_users?query=" + document.getElementById("query").value;
+    }
+</script>
 </body>
 </html>

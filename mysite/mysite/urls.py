@@ -27,7 +27,7 @@ from mysite import settings
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", views.open_page),
-    path("mainsss/", views.niknem_page, name="mainssss"),
+    path("mainsss/", views.nickname_page, name="mainssss"),
     path("login_pages/", views.login_page, name="login"),
     path("register_page/", views.register_page, name="register"),
     path("account_pages/", views.account_page, name="account_page"),
