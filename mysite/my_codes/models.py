@@ -1,6 +1,10 @@
+import os
+import uuid
+from io import BytesIO
+
 from django.contrib.auth.models import User
 from django.db import models
-
+from PIL import UnidentifiedImageError, Image
 
 # Create your models here.
 
@@ -80,3 +84,37 @@ class Likes:
 class Comm:
     other_user_id_comm = models.ForeignKey(User,on_delete=models.CASCADE)
     comm = models.IntegerField(blank=True, default='0')
+
+class Avatar(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='avatar')
+    image = models.ImageField(upload_to='avatars', default='avatars/default.png')
+
+    @staticmethod
+    def save_avatar(user: User, image):
+
+        with BytesIO(image.read()) as f:
+            image_handle = Image.open(f)
+            image_handle.verify()
+
+            image_handle = Image.open(f)
+            image_handle = image_handle.resize((256, 256), Image.Resampling.LANCZOS)
+
+            image.name = str(user.id) + '-' + str(uuid.uuid4())
+
+
+
+            try:
+                avatar = Avatar.objects.get(user=user)
+                default_value = Avatar._meta.get_field('image').get_default()
+                if avatar.image != default_value:
+                    os.remove(avatar.image.path)
+
+                avatar.image = None
+                avatar.save()
+                avatar.image = image
+                avatar.save()
+            except Avatar.DoesNotExist:
+                avatar = Avatar()
+                avatar.user = user
+                avatar.image = image
+                avatar.save()

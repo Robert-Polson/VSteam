@@ -16,7 +16,7 @@ from mysite.settings import MEDIA_ROOT
 
 from .forms import LoginForm, RegisterForm, RememberPassword, PostForm
 from .forms import SearchUserForm
-from .models import NIKNEM, Friend, Turnir, Reviews, Post1
+from .models import NIKNEM, Friend, Turnir, Reviews, Post1, Avatar
 import requests
 
 
@@ -110,6 +110,28 @@ def open_page(request):
     return render(request, "open_page.html", context)
 
 
+def api_v1_user_upload_avatar(request):
+    if request.method != "POST":
+        return HttpResponse(status=405)
+
+    uploaded_file = request.FILES.get("avatar", None)
+
+    if not uploaded_file:
+        return HttpResponse(status=400)
+
+    if not uploaded_file.content_type.startswith("image/"):
+        return HttpResponse(status=415)
+
+    user = request.user
+
+    if not user.is_authenticated:
+        return HttpResponse(status=401)
+
+    Avatar.save_avatar(user, uploaded_file)
+
+    return HttpResponse(status=200)
+
+
 def account_page(request, username):
     friends_count = 0
     social_links = request.session.get("social_links", {})
@@ -122,7 +144,7 @@ def account_page(request, username):
         reviews = Reviews.objects.filter(id_commented=user.id)
         # friends = Friend.objects.filter(current_user=user)
         # friends_count = friends.count()
-        friends  = Friend.get_friends(current_user=user)
+        friends = Friend.get_friends(current_user=user)
         friends_count = friends.count()
         if not user:
             raise User.DoesNotExist
@@ -288,7 +310,6 @@ def profile(request, username=None):
     return render(request, "profile.html", args)
 
 
-
 def change_friends(request, operation, pk):
     friend = get_object_or_404(User, pk=pk)
     if operation == "add":
@@ -315,11 +336,14 @@ def social_network(request):
     return render(request, "social_network.html", context)
 
 
-
 def charts(request):
-    user_data_2023 = list(User.objects.annotate(month=TruncMonth('date_joined')).filter(date_joined__year=2023).values('month').annotate(user_count=Count('id')).order_by('month'))
-    user_data_2024 = list(User.objects.annotate(month=TruncMonth('date_joined')).filter(date_joined__year=2024).values('month').annotate(user_count=Count('id')).order_by('month'))
-    return render(request, 'charts.html', { "user_data_2023": user_data_2023, "user_data_2024": user_data_2024 })
+    user_data_2023 = list(
+        User.objects.annotate(month=TruncMonth('date_joined')).filter(date_joined__year=2023).values('month').annotate(
+            user_count=Count('id')).order_by('month'))
+    user_data_2024 = list(
+        User.objects.annotate(month=TruncMonth('date_joined')).filter(date_joined__year=2024).values('month').annotate(
+            user_count=Count('id')).order_by('month'))
+    return render(request, 'charts.html', {"user_data_2023": user_data_2023, "user_data_2024": user_data_2024})
 
 
 def create_post(request):
@@ -332,11 +356,12 @@ def create_post(request):
         post_author.save()
     return render(request, "create_post.html", context)
 
+
 def home_page(request):
     context = {
         'account': request.user
     }
-    posts = Post1.objects.filter(author = request.user)
+    posts = Post1.objects.filter(author=request.user)
     context["posts"] = posts
 
     friend_instance = Friend.objects.filter(current_user=request.user).first()
@@ -347,5 +372,3 @@ def home_page(request):
         context["friend_posts"] = friend_posts
 
     return render(request, 'homePage.html', context)
-
-

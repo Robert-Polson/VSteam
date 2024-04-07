@@ -138,6 +138,7 @@
 <div class="grid-container">
     <div class="grid-child-posts">156 Posts</div>
     <div class="grid-child-followers">1012 Likes</div>
+    <div class="grid-child-friends" >Friends: {{friends_count}}</div>
 </div>
 <ul class="social-icons">
     {% if instagram_link %}
@@ -161,14 +162,13 @@
         <button class="btn" type="button" onclick="dostiz();">Achievements</button>
         <button class="btn"><a href="{% url 'profile_pk' username=user.username %}" style="text-decoration: none; color: white;">My friends</a></button>
         <button class="btn" type="button" onclick="addFilesToPost()">Upload files to post</button>
-        <input type="text" id="postText">
-        <button class="btn" type="button" onclick="publishPost()">Publish the post</button>
+        <button class="btn" type="button"><a href="{% url 'create_post' %}" style="text-decoration: none; color: white;">Publish the post</a></button>
     {% endif %}
 
     {% if show_sett_acc_page == True %}
         <form method="post" action="{% url 'change_friends' operation='add' pk=account.id %}">
     {% csrf_token %}
-    <button class="btn" type="submit"><a href="http://127.0.0.1:8000/reviews/" style="color: white; text-decoration: none;">Comment about person</a></button>
+    <button class="btn" type="submit"><a href="{% url 'reviews' account.id %}" style="color: white; text-decoration: none;">Comment about person</a></button>
 </form>
         <button class="btn">Message</button>
         <button class="btn" >Achievements</button>
@@ -177,6 +177,15 @@
 
     </div>
     <div class="theme-btn-container"></div>
+{% for review in reviews %}
+<div class="reviewss">
+    <label>Комментатор: <p style="color: black">{{review.id_commentator}}</p></label>
+    <label>Тема: <p style="color: black"> {{review.id_topic_comm}} </p></label>
+    <label>Текст комментария: <p style="color: black"> {{review.text_id_comm}}</p></label>
+    <label>Получатель: <p style="color: black">{{review.id_commented}}</p></label>
+</div>
+{% endfor %}
+
 <script>
     function dostiz() {
     window.location.href="http://127.0.0.1:8000/achievements//"

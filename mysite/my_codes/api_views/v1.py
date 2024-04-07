@@ -8,7 +8,7 @@ from my_codes.utils import ApiHttpResponse
 
 from mysite.settings import MEDIA_ROOT
 
-from my_codes.models import Post
+from my_codes.models import Post1
 
 
 @csrf_exempt
