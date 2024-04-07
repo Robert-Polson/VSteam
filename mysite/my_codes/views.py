@@ -134,6 +134,7 @@ def api_v1_user_upload_avatar(request):
 
 def account_page(request, username):
     friends_count = 0
+    posts_count = 0
     social_links = request.session.get("social_links", {})
     instagram_link = social_links.get("instagram_link")
     twitter_link = social_links.get("twitter_link")
@@ -146,6 +147,8 @@ def account_page(request, username):
         # friends_count = friends.count()
         friends = Friend.get_friends(current_user=user)
         friends_count = friends.count()
+        posts  = Post1.objects.filter(author = user)
+        posts_count = posts.count()
         if not user:
             raise User.DoesNotExist
         niknem = NIKNEM.objects.filter(user=user).first()
@@ -158,6 +161,7 @@ def account_page(request, username):
             "niknem": niknem.niknem if niknem is not None else "No NickName",
             "is_owner_of_account": user == request.user,
             "reviews": reviews,
+            "posts_count": posts_count,
             "friends_count": friends_count
         }
         return render(request, "account_page.html", context)
@@ -371,4 +375,5 @@ def home_page(request):
         friend_posts = Post1.objects.filter(author__in=friends)
         context["friend_posts"] = friend_posts
 
+    form = SearchUserForm()
     return render(request, 'homePage.html', context)
