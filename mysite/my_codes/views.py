@@ -46,8 +46,8 @@ def register_page(request):
 
 
 def niknem_page(request):
-    username = request.session.get("username")
-    email = request.session.get("email")
+    username = request.session.get('username')
+    email = request.session.get('email')
     print(request.user.username)
     try:
         user = User.objects.get(username=username, email=email)
@@ -147,7 +147,7 @@ def account_page(request, username):
         # friends_count = friends.count()
         friends = Friend.get_friends(current_user=user)
         friends_count = friends.count()
-        posts  = Post1.objects.filter(author = user)
+        posts = Post1.objects.filter(author = user)
         posts_count = posts.count()
         if not user:
             raise User.DoesNotExist
@@ -161,7 +161,7 @@ def account_page(request, username):
             "niknem": niknem.niknem if niknem is not None else "No NickName",
             "is_owner_of_account": user == request.user,
             "reviews": reviews,
-            "posts_count": posts_count,
+            "post_count": posts_count,
             "friends_count": friends_count
         }
         return render(request, "account_page.html", context)
@@ -375,5 +375,4 @@ def home_page(request):
         friend_posts = Post1.objects.filter(author__in=friends)
         context["friend_posts"] = friend_posts
 
-    form = SearchUserForm()
     return render(request, 'homePage.html', context)
