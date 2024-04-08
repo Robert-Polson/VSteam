@@ -45,6 +45,7 @@ def register_page(request):
             return render(request, "register.html", {"form": form})
 
 
+
 def niknem_page(request):
     username = request.session.get('username')
     email = request.session.get('email')
