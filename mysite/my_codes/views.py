@@ -319,7 +319,6 @@ def logout_page(request):
 def profile(request, username=None):
     friend_instance = Friend.objects.filter(current_user=request.user).first()
     friends_data = []
-
     if friend_instance:
         friends = friend_instance.users.all()
         for friend_obj in friends:
@@ -339,7 +338,15 @@ def profile(request, username=None):
         "friends": friends_data,
     }
 
+    if request.method == "POST":
+        friend_id = request.POST.get("friend_id")
+        friend = get_object_or_404(User, id=friend_id)
+        Friend.lose_friend(request.user, friend)
+        return redirect('profile_pk' , username = username)
+
     return render(request, "profile.html", args)
+
+
 
 
 def change_friends(request, operation, pk):

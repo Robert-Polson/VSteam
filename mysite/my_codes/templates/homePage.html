@@ -138,7 +138,7 @@
     </div>
     <div style="display: flex;">
         {% for post in posts %}
-            <div style="padding:30px;">
+            <div style="padding:30px; border: 1px solid black;">
                 <h1>{{post.author}}</h1>
                 <h2 style="color:black">{{ post.title }}</h2>
                 <p>{{ post.text }}</p>
@@ -147,7 +147,7 @@
         {% endfor %}
 
     {% for friends in friend_posts %}
-    <div style="display:flex; padding: 10px;">
+    <div style="display:flex; padding: 10px; border: 1px solid black;">
 
       <h1>{{friends.author}}</h1>
       <h1>{{friends.title}}</h1>
