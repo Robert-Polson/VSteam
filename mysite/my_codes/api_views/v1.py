@@ -13,21 +13,23 @@ from my_codes.models import Post1
 
 @csrf_exempt
 def user_upload_avatar(request):
-    if request.method != 'POST':
-        return ApiHttpResponse(status=405, error_message='Method not allowed. Use POST.')
+    if request.method != "POST":
+        return ApiHttpResponse(
+            status=405, error_message="Method not allowed. Use POST."
+        )
 
-    uploaded_file = request.FILES.get('avatar', None)
+    uploaded_file = request.FILES.get("avatar", None)
 
     if not uploaded_file:
-        return ApiHttpResponse(status=400, error_message='File is not found.')
+        return ApiHttpResponse(status=400, error_message="File is not found.")
 
-    if not uploaded_file.content_type.startswith('image/'):
-        return ApiHttpResponse(status=415, error_message='File is not image.')
+    if not uploaded_file.content_type.startswith("image/"):
+        return ApiHttpResponse(status=415, error_message="File is not image.")
 
     user = request.user
 
     if not user.is_authenticated:
-        return ApiHttpResponse(status=401, error_message='Unauthorized.')
+        return ApiHttpResponse(status=401, error_message="Unauthorized.")
 
     try:
         with BytesIO(uploaded_file.read()) as f:
@@ -38,29 +40,31 @@ def user_upload_avatar(request):
 
             image = image.resize((256, 256), Image.Resampling.LANCZOS)
 
-            path = MEDIA_ROOT + '/avatars/' + str(user.id) + '.png'
+            path = MEDIA_ROOT + "/avatars/" + str(user.id) + ".png"
 
             image.save(path)
         return ApiHttpResponse(status=200)
     except [UnidentifiedImageError, EOFError, DecompressionBombError]:
-        return ApiHttpResponse(status=400, error_message='Image is invalid.')
+        return ApiHttpResponse(status=400, error_message="Image is invalid.")
     except Exception:
-        return ApiHttpResponse(status=500, error_message='Server error.')
+        return ApiHttpResponse(status=500, error_message="Server error.")
 
 
 @csrf_exempt
 def user_publish_post(request):
-    if request.method != 'POST':
-        return ApiHttpResponse(status=405, error_message='Method not allowed. Use POST.')
+    if request.method != "POST":
+        return ApiHttpResponse(
+            status=405, error_message="Method not allowed. Use POST."
+        )
 
     user = request.user
 
     if not user.is_authenticated:
-        return ApiHttpResponse(status=401, error_message='Unauthorized.')
+        return ApiHttpResponse(status=401, error_message="Unauthorized.")
 
     post = Post()
     post.user = request.user
-    post.text = request.POST.get('text', '')
+    post.text = request.POST.get("text", "")
     post.save()
 
     """for uploaded_file in request.FILES:

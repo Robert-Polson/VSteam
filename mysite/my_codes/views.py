@@ -45,10 +45,9 @@ def register_page(request):
             return render(request, "register.html", {"form": form})
 
 
-
 def niknem_page(request):
-    username = request.session.get('username')
-    email = request.session.get('email')
+    username = request.session.get("username")
+    email = request.session.get("email")
     print(request.user.username)
     try:
         user = User.objects.get(username=username, email=email)
@@ -103,9 +102,9 @@ def open_page(request):
     context = {}
     context = {
         "text": "Добро пожаловать в мир возможностей и новых знакомств! Здесь каждый может найти не только друзей, "
-                "но и надежных игровых партнеров для захватывающих приключений. Давайте создадим незабываемые "
-                "воспоминания вместе! Добро пожаловать в наше сообщество, где дружба и игры ждут вас на каждом шагу. "
-                "Присоединяйтесь и откройте для себя мир новых возможностей!"
+        "но и надежных игровых партнеров для захватывающих приключений. Давайте создадим незабываемые "
+        "воспоминания вместе! Добро пожаловать в наше сообщество, где дружба и игры ждут вас на каждом шагу. "
+        "Присоединяйтесь и откройте для себя мир новых возможностей!"
     }
 
     return render(request, "open_page.html", context)
@@ -148,7 +147,7 @@ def account_page(request, username):
         # friends_count = friends.count()
         friends = Friend.get_friends(current_user=user)
         friends_count = friends.count()
-        posts = Post1.objects.filter(author = user)
+        posts = Post1.objects.filter(author=user)
         posts_count = posts.count()
         if not user:
             raise User.DoesNotExist
@@ -163,7 +162,7 @@ def account_page(request, username):
             "is_owner_of_account": user == request.user,
             "reviews": reviews,
             "post_count": posts_count,
-            "friends_count": friends_count
+            "friends_count": friends_count,
         }
         return render(request, "account_page.html", context)
 
@@ -180,14 +179,20 @@ def remember_password(request):
             username = form.cleaned_data.get("username")
             email = form.cleaned_data.get("email")
             password = form.cleaned_data.get("password")
-            user = User.objects.filter(username=username.lower(), email=email.lower()).first()
+            user = User.objects.filter(
+                username=username.lower(), email=email.lower()
+            ).first()
             if user:
                 user.set_password(password)
                 user.save()
-                messages.success(request, f"Password changed successfully for user {user.username}!")
+                messages.success(
+                    request, f"Password changed successfully for user {user.username}!"
+                )
                 return redirect("login")
             else:
-                messages.error(request, "User not found with the provided username and email")
+                messages.error(
+                    request, "User not found with the provided username and email"
+                )
 
     return render(request, "remember_password.html", {"form": form})
 
@@ -214,7 +219,9 @@ def find_users_page(request):
     all_accounts_count = NIKNEM.objects.filter(niknem__contains=query).count()
 
     current_user = request.user
-    accounts = NIKNEM.objects.filter(niknem__contains=query).exclude(user=current_user)[page * 10: page * 10 + 10]
+    accounts = NIKNEM.objects.filter(niknem__contains=query).exclude(user=current_user)[
+        page * 10 : page * 10 + 10
+    ]
 
     context["page"] = page + 1
     context["accounts"] = accounts
@@ -237,14 +244,16 @@ def tournament_page(request):
         name = request.POST.get("Name")
         participants = request.POST.get("Participants")
         placeToWatch = request.POST.get("PlaceToWatch")
-        turnir = Turnir.objects.create(date=date, name=name, participants=participants, placeToWatch=placeToWatch)
+        turnir = Turnir.objects.create(
+            date=date, name=name, participants=participants, placeToWatch=placeToWatch
+        )
 
     context["turnirs"] = Turnir.objects
     return render(request, "tournament.html")
 
 
 def reviews(request, user_id=None):
-    bad_words = ['']
+    bad_words = [""]
     try:
         user1 = User.objects.get(id=user_id)
         current_user = request.user
@@ -253,15 +262,22 @@ def reviews(request, user_id=None):
 
         if id_topic:
             id_table = Reviews(
-                id_commentator=current_user, id_topic_comm=id_topic, text_id_comm=id_comm, id_commented=user1
+                id_commentator=current_user,
+                id_topic_comm=id_topic,
+                text_id_comm=id_comm,
+                id_commented=user1,
             )
             id_table.save()
             context = {"account": user1}
             return render(request, "reviews.html", context)
         else:
-            return render(request, "reviews.html", {"error_message": "id_topic is required"})
+            return render(
+                request, "reviews.html", {"error_message": "id_topic is required"}
+            )
     except IntegrityError as e:
-        return render(request, "reviews.html", {"error_message": f"IntegrityError: {e}"})
+        return render(
+            request, "reviews.html", {"error_message": f"IntegrityError: {e}"}
+        )
 
 
 def settings_page(request, user_id=None):
@@ -269,7 +285,18 @@ def settings_page(request, user_id=None):
         user = User.objects.get(id=user_id)
         niknem = NIKNEM.objects.filter(user=user).first()
         reviews = Reviews.objects.filter(id_commented=user_id)
-        context = {"account": user, "niknem": niknem, "show_sett_acc_page": True, 'reviews': reviews}
+        friends = Friend.get_friends(current_user=user)
+        friends_count = friends.count()
+        posts = Post1.objects.filter(author=user)
+        posts_count = posts.count()
+        context = {
+            "account": user,
+            "niknem": niknem,
+            "show_sett_acc_page": True,
+            "reviews": reviews,
+            "friends_count": friends_count,
+            "post_count": posts_count,
+        }
         return render(request, "account_page.html", context)
     except User.DoesNotExist:
         context = {"error": "Такого пользователя нет"}
@@ -343,29 +370,45 @@ def social_network(request):
 
 def charts(request):
     user_data_2023 = list(
-        User.objects.annotate(month=TruncMonth('date_joined')).filter(date_joined__year=2023).values('month').annotate(
-            user_count=Count('id')).order_by('month'))
+        User.objects.annotate(month=TruncMonth("date_joined"))
+        .filter(date_joined__year=2023)
+        .values("month")
+        .annotate(user_count=Count("id"))
+        .order_by("month")
+    )
     user_data_2024 = list(
-        User.objects.annotate(month=TruncMonth('date_joined')).filter(date_joined__year=2024).values('month').annotate(
-            user_count=Count('id')).order_by('month'))
-    return render(request, 'charts.html', {"user_data_2023": user_data_2023, "user_data_2024": user_data_2024})
+        User.objects.annotate(month=TruncMonth("date_joined"))
+        .filter(date_joined__year=2024)
+        .values("month")
+        .annotate(user_count=Count("id"))
+        .order_by("month")
+    )
+    return render(
+        request,
+        "charts.html",
+        {"user_data_2023": user_data_2023, "user_data_2024": user_data_2024},
+    )
 
 
 def create_post(request):
     context = {}
     if request.method == "POST":
-        topic = request.POST.get('topic')
-        texts = request.POST.get('texts')
-        files_image = request.FILES.get('file_image')
-        post_author = Post1(author=request.user, title=topic, text=texts, date=datetime.now(), image=files_image)
+        topic = request.POST.get("topic")
+        texts = request.POST.get("texts")
+        files_image = request.FILES.get("file_image")
+        post_author = Post1(
+            author=request.user,
+            title=topic,
+            text=texts,
+            date=datetime.now(),
+            image=files_image,
+        )
         post_author.save()
     return render(request, "create_post.html", context)
 
 
 def home_page(request):
-    context = {
-        'account': request.user
-    }
+    context = {"account": request.user}
     posts = Post1.objects.filter(author=request.user)
     context["posts"] = posts
 
@@ -376,4 +419,4 @@ def home_page(request):
         friend_posts = Post1.objects.filter(author__in=friends)
         context["friend_posts"] = friend_posts
 
-    return render(request, 'homePage.html', context)
+    return render(request, "homePage.html", context)

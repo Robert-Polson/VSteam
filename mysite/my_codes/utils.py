@@ -7,16 +7,21 @@ class ApiHttpResponse(JsonResponse):
 
         if is_error_status:
             json = {
-                'type': 'error',
-                'error': error_message if error_message is not None else 'Error message undefined.'
+                "type": "error",
+                "error": (
+                    error_message
+                    if error_message is not None
+                    else "Error message undefined."
+                ),
             }
         else:
             json = body if body is not None else {}
-            json['type'] = 'success'
+            json["type"] = "success"
 
-        json['status'] = status
+        json["status"] = status
 
         super().__init__(json, status=status)
+
 
 def create_post(user, text, files):
     return False

@@ -14,6 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.template.defaulttags import url
@@ -36,18 +37,28 @@ urlpatterns = [
     path("achievements//", views.achievements),
     path("open_page", views.open_page, name="open_page"),
     path("home_pages/", views.home_page, name="homePage"),
-    path("tournament_page/", views.tournament_page , name="tournament"),
+    path("tournament_page/", views.tournament_page, name="tournament"),
     path("reviews/<int:user_id>/", views.reviews, name="reviews"),
     path("settings/", views.settings_page),
     path("user/<str:username>", views.account_page, name="user_profile"),
     path("my_profile/", views.my_profile, name="my_profile"),
     path("logout/", views.logout_page, name="logout"),
     path("profile/<str:username>/", views.profile, name="profile_pk"),
-    path("connect/<str:operation>/<int:pk>/", views.change_friends, name="change_friends"),
-    path("change-friends/<str:operation>/<int:pk>/", views.change_friends, name="change_friends"),
-    path("polzovatels_account/<int:user_id>/", views.settings_page, name="polzovatels_account"),
-    path('api/v1/user/publish_post/', api_v1.user_publish_post),
+    path(
+        "connect/<str:operation>/<int:pk>/", views.change_friends, name="change_friends"
+    ),
+    path(
+        "change-friends/<str:operation>/<int:pk>/",
+        views.change_friends,
+        name="change_friends",
+    ),
+    path(
+        "polzovatels_account/<int:user_id>/",
+        views.settings_page,
+        name="polzovatels_account",
+    ),
+    path("api/v1/user/publish_post/", api_v1.user_publish_post),
     path("social_network/", views.social_network, name="social_network"),
     path("charts/", views.charts, name="charts"),
-    path("create_post", views.create_post, name = "create_post")
+    path("create_post", views.create_post, name="create_post"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
