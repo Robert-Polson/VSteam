@@ -14,11 +14,14 @@
    </head>
 <body>
 
-<div style="display: flex; ">
-
-        <input type="search" class="dark-rounded-input" placeholder="Search the POST" style="color: green;">
-
+<div style="text-align: center;">
+    <form method="post" action="{% url 'homePage' %}">
+        {% csrf_token %}
+        <input type="search" name="username" class="dark-rounded-input" placeholder="Search by Username" style="color: green;">
+        <button type="submit">Search</button>
+    </form>
 </div>
+
   <div class="sidebar close">
     <div class="logo-details">
       <img class="imgh" src="{% user_avatar account.id %}" width="64px" height="64px">

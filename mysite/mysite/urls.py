@@ -21,7 +21,7 @@ from django.template.defaulttags import url
 from django.urls import path
 
 from my_codes import views
-from my_codes.api_views import v1 as api_v1
+
 
 from mysite import settings
 
@@ -44,6 +44,7 @@ urlpatterns = [
     path("my_profile/", views.my_profile, name="my_profile"),
     path("logout/", views.logout_page, name="logout"),
     path("profile/<str:username>/", views.profile, name="profile_pk"),
+    path("api/v1/user/change_avatar/", views.api_v1_user_upload_avatar),
     path(
         "connect/<str:operation>/<int:pk>/", views.change_friends, name="change_friends"
     ),
@@ -57,7 +58,7 @@ urlpatterns = [
         views.settings_page,
         name="polzovatels_account",
     ),
-    path("api/v1/user/publish_post/", api_v1.user_publish_post),
+
     path("social_network/", views.social_network, name="social_network"),
     path("charts/", views.charts, name="charts"),
     path("create_post", views.create_post, name="create_post"),

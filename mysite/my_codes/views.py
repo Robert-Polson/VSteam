@@ -408,15 +408,26 @@ def create_post(request):
 
 
 def home_page(request):
+    if request.method == 'POST':
+        form = SearchUserForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            user = User.objects.get(username=username)
+            posts = Post1.objects.filter(author=user)
+            context = {"account": request.user, "posts": posts}
+            return render(request, "homePage.html", context)
+    else:
+        form = SearchUserForm()
+
     context = {"account": request.user}
     posts = Post1.objects.filter(author=request.user)
     context["posts"] = posts
-
     friend_instance = Friend.objects.filter(current_user=request.user).first()
-
     if friend_instance:
         friends = friend_instance.users.all()
         friend_posts = Post1.objects.filter(author__in=friends)
         context["friend_posts"] = friend_posts
+    context["form"] = form
 
     return render(request, "homePage.html", context)
+

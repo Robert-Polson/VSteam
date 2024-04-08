@@ -8,7 +8,7 @@ from my_codes.models import Post1
 
 
 class SearchUserForm(forms.Form):
-    query = CharField(required=True, label="")
+    query = CharField(required=True, label="Username")
 
 
 class RememberPassword(forms.Form):
