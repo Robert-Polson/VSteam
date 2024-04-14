@@ -2,6 +2,12 @@
 {% load static %}
 <html>
 <head>
+    <header>
+        <div class="Starter">
+
+            <h1 id="output" style="color: white; text-align: center; margin-bottom: 80px; margin-top: 50px;"></h1>
+        </div>
+    </header>
 <script>
 window.onload = function () {
     var chart = new CanvasJS.Chart("chartContainer", {
@@ -59,10 +65,36 @@ window.onload = function () {
     }
 
 }
+const text = "Добро пожаловать на страницу чартов! Здесь вы найдете графики, отражающие количество зарегистрированных пользователей. Давайте вместе изучим данные и сделаем интересные выводы. Поехали!";
+let index = 0;
+
+function typeText() {
+    document.getElementById('output').innerHTML += text[index];
+    index++;
+    if (index < text.length) {
+        setTimeout(typeText, 50);
+    }
+}
+
+typeText();
+
 </script>
 </head>
 <body>
     <div id="chartContainer" style="width: 100%; height: 360px;"></div>
     <script src="{% static 'canvasjs.stock.min.js' %}"></script>
+<style>
+body {
+background-color: black;
+}
+    @font-face {
+  font-family: 'Rocher';
+  src: url(https://assets.codepen.io/9632/RocherColorGX.woff2);
+}
+.Starter{
+
+    font-family: 'Rocher';
+    }
+</style>
 </body>
 </html>
