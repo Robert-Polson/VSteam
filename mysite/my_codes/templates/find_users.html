@@ -6,14 +6,18 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link href="{% static 'find_users_style.css' %}" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/retron2000" rel="stylesheet">
 </head>
 <body>
+
 <header>
     <a href="{% url 'homePage' %}"><button>Вернутся обратно</button></a>
         <div class="container1">
           <div style="display: flex; ">
-            <h1 style="color: green;">VSTeam</h1>
-            <input type="text" id="query" class="dark-rounded-input" placeholder="Search the friends" style="width: 500px;" name="query">
+              <div class="h11_s">
+            <h1 >VSTeam</h1>
+          </div>
+            <input type="text" id="query" class="dark-rounded-input" placeholder="Search the friends.Please enter a nickname..." style="width: 500px;" name="query">
               <button onclick="searchButton()" class="glow-on-hover">Поиск</button>
           </div>
 
@@ -47,7 +51,7 @@
 {% endif %}
 
     {% if accounts|length > 0 %}
-        <div class="paginator">
+        <div class="paginator" style="text-align:center;">
             {% if page > 1 %}
                 <a href="/find_users?query={{ query }}&page={{ page|add:-1 }}">Назад</a>
             {% endif %}
@@ -58,7 +62,17 @@
         </div>
     {% endif %}
 <style>
-    @import url('https://fonts.cdnfonts.com/css/retron2000');
+@import url('https://fonts.cdnfonts.com/css/retron2000');
+@font-face {
+  font-family: 'Rocher';
+  src: url(https://assets.codepen.io/9632/RocherColorGX.woff2);
+}
+    .h11_s {
+    color: blue;
+    left: 20px;
+    font-family: ""
+    }
+
 
     * {
       margin: 0;
@@ -68,7 +82,7 @@
 
     body {
       font-family: 'Rocher';
-      background-color: grey;
+      background-color: black;
       color: #ffffff;
       margin: 0;
       padding: 0;
