@@ -9,13 +9,12 @@
     <link href="https://fonts.cdnfonts.com/css/retron2000" rel="stylesheet">
 </head>
 <body>
-
+<a href="{% url 'homePage' %}" style="text-decoration: none; size: 20px;"><h1 style="font-family: 'Rocher';">VSTeam</h1></a>
 <header>
-    <a href="{% url 'homePage' %}"><button>Вернутся обратно</button></a>
         <div class="container1">
           <div style="display: flex; ">
               <div class="h11_s">
-            <h1 >VSTeam</h1>
+
           </div>
             <input type="text" id="query" class="dark-rounded-input" placeholder="Search the friends.Please enter a nickname..." style="width: 500px;" name="query">
               <button onclick="searchButton()" class="glow-on-hover">Поиск</button>
