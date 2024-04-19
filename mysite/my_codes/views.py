@@ -8,7 +8,8 @@ from PIL.Image import DecompressionBombError
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
-from django.db.models import Count
+from django.core import serializers
+from django.db.models import Count, Q
 from django.db.models.functions import TruncMonth
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -16,8 +17,7 @@ from mysite.settings import MEDIA_ROOT
 
 from .forms import LoginForm, RegisterForm, RememberPassword, PostForm
 from .forms import SearchUserForm
-from .models import NIKNEM, Friend, Turnir, Reviews, Post1, Avatar
-import requests
+from .models import NIKNEM, Friend, Turnir, Reviews, Post1, Avatar, Message
 
 
 def register_page(request):
@@ -102,9 +102,9 @@ def open_page(request):
     context = {}
     context = {
         "text": "Добро пожаловать в мир возможностей и новых знакомств! Здесь каждый может найти не только друзей, "
-        "но и надежных игровых партнеров для захватывающих приключений. Давайте создадим незабываемые "
-        "воспоминания вместе! Добро пожаловать в наше сообщество, где дружба и игры ждут вас на каждом шагу. "
-        "Присоединяйтесь и откройте для себя мир новых возможностей!"
+                "но и надежных игровых партнеров для захватывающих приключений. Давайте создадим незабываемые "
+                "воспоминания вместе! Добро пожаловать в наше сообщество, где дружба и игры ждут вас на каждом шагу. "
+                "Присоединяйтесь и откройте для себя мир новых возможностей!"
     }
 
     return render(request, "open_page.html", context)
@@ -220,8 +220,8 @@ def find_users_page(request):
 
     current_user = request.user
     accounts = NIKNEM.objects.filter(niknem__contains=query).exclude(user=current_user)[
-        page * 10 : page * 10 + 10
-    ]
+               page * 10: page * 10 + 10
+               ]
 
     context["page"] = page + 1
     context["accounts"] = accounts
@@ -342,11 +342,9 @@ def profile(request, username=None):
         friend_id = request.POST.get("friend_id")
         friend = get_object_or_404(User, id=friend_id)
         Friend.lose_friend(request.user, friend)
-        return redirect('profile_pk' , username = username)
+        return redirect('profile_pk', username=username)
 
     return render(request, "profile.html", args)
-
-
 
 
 def change_friends(request, operation, pk):
@@ -438,3 +436,76 @@ def home_page(request):
 
     return render(request, "homePage.html", context)
 
+
+def api_v1_user_send_message(request):
+    if request.method != "POST":
+        return HttpResponse(status=405)
+
+    user = request.user
+
+    if not user.is_authenticated:
+        return HttpResponse(status=401)
+
+    text = request.POST.get('text', None)
+    recipient = request.POST.get('recipient', None)
+
+    if text is None or recipient is None:
+        return HttpResponse(status=400)
+
+    message = Message()
+    message.author = request.user
+    message.text = text
+    message.recipient = User.objects.filter(username=recipient).first()
+    message.save()
+
+    return HttpResponse(status=200)
+
+
+def api_v1_user_update_chat(request):
+    if request.method != "GET":
+        return HttpResponse(status=405)
+
+    user = request.user
+
+    if not user.is_authenticated:
+        return HttpResponse(status=401)
+
+    recipient = request.GET.get('recipient', None)
+    last_message = request.GET.get('last_message', None)
+
+    if recipient is None or last_message is None:
+        return HttpResponse(status=400)
+
+    print(recipient, last_message)
+
+    recipient = User.objects.filter(username=recipient).first()
+
+    messages_list = Message.objects.filter(Q(author=user, recipient=recipient) | Q(author=recipient, recipient=user)).filter(id__gt=last_message).order_by(
+            'timestamp')
+
+    print(messages_list)
+
+    serialized_messages = serializers.serialize('json', messages_list)
+
+    return HttpResponse(serialized_messages, content_type='application/json')
+
+
+def chat_page(request, username):
+    user = request.user
+
+    context = {}
+
+    if username is None:
+        return HttpResponse(status=400)
+
+    recipient = User.objects.filter(username=username).first()
+
+    messages_list = list(
+        Message.objects.filter(Q(author=user, recipient=recipient) | Q(author=recipient, recipient=user)).order_by(
+            'timestamp'))
+
+    print(messages_list)
+
+    context['messages'] = messages_list
+
+    return render(request, 'chat.html', context)

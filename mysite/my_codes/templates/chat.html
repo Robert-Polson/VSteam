@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div class="message-container">
+        {% for message in messages %}
+        <div class="message">{{ message.timestamp }} {{ message.author }}: {{ message.text }}</div>
+        {% endfor %}
+    </div>
+    {% csrf_token %}
+    <input type="text" id="message">
+    <button onclick="sendMessage()">Отправить сообщение</button>
+</body>
+<script>
+    {% with last_message=messages|last %}
+    let lastMessage = {{ last_message.id }}0;
+    {% endwith %}
+
+    lastMessage = lastMessage / 10;
+
+    if (lastMessage == 0) {
+        lastMessage = -1;
+    }
+
+    function sendMessage(event) {
+        let text = document.getElementById("message").value;
+
+        let recipient = window.location.href.split('/');
+        recipient = recipient[recipient.length - 1];
+
+        let formData = new FormData();
+        formData.append("text", text);
+        formData.append("recipient", recipient);
+
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        fetch('/api/v1/user/send_message/', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': csrftoken
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                alert('Ошибка');
+            }
+        })
+        .catch(error => console.error(error));
+    }
+
+    function updateChat(event) {
+        let formData = new FormData();
+
+        formData.append("last_message", lastMessage);
+
+        let recipient = window.location.href.split('/');
+        recipient = recipient[recipient.length - 1];
+
+        formData.append("recipient", recipient);
+
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        fetch('/api/v1/user/update_chat/?recipient=' + recipient.toString() + '&last_message=' + lastMessage.toString()).
+        then(response => response.json()).
+        then(data => {
+            console.log(data);
+
+            if (data.length > 0) {
+                let element = document.getElementsByClassName('message-container')[0];
+
+                data.forEach(function(message) {
+                    let fields = message.fields;
+                    let newData = document.createElement('div');
+                    newData.className = "message-container";
+                    newData.textContent = fields.timestamp + fields.text;
+                    element.parentNode.insertBefore(newData, element.nextSibling);
+                });
+
+                lastMessage = data[data.length - 1].pk;
+            }
+        }).
+        catch(error => console.error(error));
+    }
+
+    setInterval(updateChat, 2000);
+
+</script>
+</html>

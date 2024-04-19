@@ -62,4 +62,7 @@ urlpatterns = [
     path("social_network/", views.social_network, name="social_network"),
     path("charts/", views.charts, name="charts"),
     path("create_post", views.create_post, name="create_post"),
+    path("chat/<str:username>", views.chat_page, name="chat"),
+    path("api/v1/user/send_message/", views.api_v1_user_send_message),
+    path("api/v1/user/update_chat/", views.api_v1_user_update_chat),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
