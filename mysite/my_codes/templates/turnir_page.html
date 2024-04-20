@@ -161,9 +161,7 @@
                <tr>
                    <th>Date</th>
                    <th>Next Tournaments</th>
-                   <th>Participants</th>
-                   <th>Where to Watch</th>
-                   <th>ID</th>
+                   <th>Prize</th>
                </tr>
            </thead>
            <tbody>
@@ -171,36 +169,10 @@
                     <tr>
                         <td>{{i.date}}</td>
                         <td>{{i.name}}</td>
-                        <td>{{i.participants}}</td>
-                        <td>{{i.placeToWatch}}</td>
-                        <td>{{i.id}}</td>
+                        <td>{{i.prize}}</td>
                     </tr>
                {% endfor %}
            </tbody>
 
        </table>
-        <button onclick="add_turnir()">Add Tournament</button>
-        <button onclick="del_turnir()">Delete Tournament</button>
 </body>
-<script>
-    function add_turnir() {
-        let div = document.createElement('div')
-        div.innerHTML = `<form method="post">
-        {% csrf_token %}
-            <p>Date: <input type="date" name="Date"></p>
-            <p>Name: <input type="text" name="Name"></p>
-            <p>Participants: <input type="number" name="Participants"></p>
-            <p>Place to watch: <input type="text" name="PlaceToWatch"></p>
-            <input type="submit" value="ADD!">
-        </form>`
-        document.body.append(div)
-    }
-    function del_turnir() {
-        let div = document.createElement('div')
-        div.innerHTML = `<form method="post">
-        {% csrf_token %}
-            <p>Date: <input type="date" name="Date"></p>
-            <input type="submit" value="ADD!">
-        </form>`
-    }
-</script>
