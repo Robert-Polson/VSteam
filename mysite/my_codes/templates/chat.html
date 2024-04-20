@@ -16,13 +16,13 @@
 </body>
 <script>
     {% with last_message=messages|last %}
-    let lastMessage = {{ last_message.id }}0;
+    let lastMessage = "{{ last_message.id }}";
     {% endwith %}
 
-    lastMessage = lastMessage / 10;
-
-    if (lastMessage == 0) {
+    if (lastMessage == "") {
         lastMessage = -1;
+    } else {
+        lastMessage = parseInt(lastMessage)
     }
 
     function sendMessage(event) {
@@ -67,26 +67,25 @@
         fetch('/api/v1/user/update_chat/?recipient=' + recipient.toString() + '&last_message=' + lastMessage.toString()).
         then(response => response.json()).
         then(data => {
-            console.log(data);
 
             if (data.length > 0) {
-                let element = document.getElementsByClassName('message-container')[0];
+                let messageContainer = document.getElementsByClassName('message-container')[0];
 
                 data.forEach(function(message) {
-                    let fields = message.fields;
-                    let newData = document.createElement('div');
-                    newData.className = "message-container";
-                    newData.textContent = fields.timestamp + fields.text;
-                    element.parentNode.insertBefore(newData, element.nextSibling);
+                    let message_div = document.createElement('div');
+                    message_div.className = "message";
+                    let date = new Date(message.timestamp * 1000);
+                    message_div.textContent = date.toString() + ' ' + message.author  + ': '  + message.text;
+                    messageContainer.appendChild(message_div);
                 });
 
-                lastMessage = data[data.length - 1].pk;
+                lastMessage = data[data.length - 1].id;
             }
         }).
         catch(error => console.error(error));
     }
 
-    setInterval(updateChat, 2000);
+    setInterval(updateChat, 1000);
 
 </script>
 </html>

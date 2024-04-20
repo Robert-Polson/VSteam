@@ -476,18 +476,22 @@ def api_v1_user_update_chat(request):
     if recipient is None or last_message is None:
         return HttpResponse(status=400)
 
-    print(recipient, last_message)
-
     recipient = User.objects.filter(username=recipient).first()
 
     messages_list = Message.objects.filter(Q(author=user, recipient=recipient) | Q(author=recipient, recipient=user)).filter(id__gt=last_message).order_by(
             'timestamp')
 
-    print(messages_list)
+    messages = []
+    for message in messages_list:
+        message_dict = {}
+        message_dict['id'] = message.id
+        message_dict['timestamp'] = int(message.timestamp.timestamp())
+        author = message.author
+        message_dict['author'] = author.username
+        message_dict['text'] = message.text
+        messages.append(message_dict)
 
-    serialized_messages = serializers.serialize('json', messages_list)
-
-    return HttpResponse(serialized_messages, content_type='application/json')
+    return JsonResponse(messages, safe=False)
 
 
 def chat_page(request, username):
