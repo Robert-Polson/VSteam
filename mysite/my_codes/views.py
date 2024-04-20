@@ -13,12 +13,9 @@ from django.db.models.functions import TruncMonth
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from mysite.settings import MEDIA_ROOT
-
 from .forms import LoginForm, RegisterForm, RememberPassword, PostForm
 from .forms import SearchUserForm
 from .models import NIKNEM, Friend, Turnir, Reviews, Post1, Avatar
-import requests
-
 
 def register_page(request):
     if request.method == "GET":
