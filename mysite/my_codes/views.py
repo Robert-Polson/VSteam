@@ -508,8 +508,6 @@ def chat_page(request, username):
         Message.objects.filter(Q(author=user, recipient=recipient) | Q(author=recipient, recipient=user)).order_by(
             'timestamp'))
 
-    print(messages_list)
-
     context['messages'] = messages_list
 
     return render(request, 'chat.html', context)

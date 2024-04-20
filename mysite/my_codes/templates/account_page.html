@@ -127,7 +127,7 @@
     </label>
     <div class="">
     <label>ИМЯ И ФАМИЛИЯ</label>:
-    <p class="card__name">{{ account.username }}</p>
+    <p class="card__name">{{ c }}</p>
 </div>
 <label>NIKNEM</label>:
 {% if niknem %}
@@ -170,7 +170,7 @@
     {% csrf_token %}
     <button class="btn" type="submit"><a href="{% url 'reviews' account.id %}" style="color: white; text-decoration: none;">Comment about person</a></button>
 </form>
-        <button class="btn">Message</button>
+            <a href="{% url 'chat' account.username %}"><button class="btn">Message</button></a>
         <button class="btn" >Achievements</button>
     {% endif %}
 </form>
