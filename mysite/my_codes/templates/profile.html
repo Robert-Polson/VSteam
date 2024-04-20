@@ -10,10 +10,9 @@
     <h2>Мои друзья:</h2>
     {% for friend in main_user.friends.all %}
         <div class="friend-card">
-            <div class="friend-info">
-                <p>{{ friend.username }}</p>
-                <p> {{ friend.get_niknem }}</p>
-            </div>
+
+            <p>{{ friend.username }}</p>
+            <p> {{friend.get_niknem</p>
         </div>
     {% endfor %}
 {% else %}
@@ -35,6 +34,11 @@
             <div class="rounded-border-green">
                 {{ friend.username }} (Nickname: {{ friend.niknem }})
                 <a href="{% url 'polzovatels_account' user_id=friend.id %}">Перейти</a>
+                <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="friend_id" value="{{ friend.id }}">
+        <button class="btn" type="submit" name="delete_friend">Delete a friend</button>
+    </form>
             </div>
         </li>
     {% empty %}

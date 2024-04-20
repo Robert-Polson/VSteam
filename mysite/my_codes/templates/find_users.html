@@ -6,33 +6,30 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link href="{% static 'find_users_style.css' %}" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/retron2000" rel="stylesheet">
 </head>
 <body>
+<a href="{% url 'homePage' %}" style="text-decoration: none; size: 20px;"><h1 style="font-family: 'Rocher';">VSTeam</h1></a>
 <header>
-    <a href="{% url 'homePage' %}"><button>Вернутся обратно</button></a>
         <div class="container1">
           <div style="display: flex; ">
-            <h1 style="color: green;">TEAM DER</h1>
-            <input type="text" id="query" class="dark-rounded-input" placeholder="Search the friends" style="width: 500px;" name="query">
+              <div class="h11_s">
+
+          </div>
+            <input type="text" id="query" class="dark-rounded-input" placeholder="Search the friends.Please enter a nickname..." style="width: 500px;" name="query">
               <button onclick="searchButton()" class="glow-on-hover">Поиск</button>
           </div>
-          <nav>
-            <ul>
-              <li><a href="#">Друзья</a></li>
-              <li><a href="#">Игры</a></li>
-              <li><a href="#">Сообщество</a></li>
-            </ul>
-          </nav>
+
           <div class="user-avatar">
-            <!-- Здесь будет аватарка пользователя -->
+
           </div>
         </div>
     </header>
     {% if accounts|length > 0 %}
-        <div class="container">
+<div class="container">
     {% for account in accounts %}
     <div class="user-card">
-        <img src="{% user_avatar account.user.id %}" alt="User Avatar" style="border-radius: 30px; width: 100px;">
+        <img src="{% user_avatar account.user.id %}" alt="User Avatar" style="border-radius: 50%; width: 100px;">
         <div class="user-info">
             <h2>{{ account.user.username }}</h2>
             <p>Nickname: {{ account.niknem }}</p>
@@ -42,17 +39,18 @@
                 <button class="btn" type="submit" name="add_friend">Invite a friend</button>
             </form>
             {% if account.user %}
-                <a href="{% url 'polzovatels_account' account.user.id %}" style="text-decoration: none; color: red;"><p>перейти</p></a>
+                <a href="{% url 'polzovatels_account' account.user.id %}" style="text-decoration: none; color: blue;"><p>перейти</p></a>
             {% endif %}
         </div>
     </div>
-{% endfor %}
+    {% endfor %}
 </div>
-    {% else %}
-    <h1>Ничего не найдено</h1>
-    {% endif %}
+{% else %}
+<h1>Ничего не найдено</h1>
+{% endif %}
+
     {% if accounts|length > 0 %}
-        <div class="paginator">
+        <div class="paginator" style="text-align:center;">
             {% if page > 1 %}
                 <a href="/find_users?query={{ query }}&page={{ page|add:-1 }}">Назад</a>
             {% endif %}
@@ -63,7 +61,17 @@
         </div>
     {% endif %}
 <style>
-    @import url('https://fonts.cdnfonts.com/css/retron2000');
+@import url('https://fonts.cdnfonts.com/css/retron2000');
+@font-face {
+  font-family: 'Rocher';
+  src: url(https://assets.codepen.io/9632/RocherColorGX.woff2);
+}
+    .h11_s {
+    color: blue;
+    left: 20px;
+    font-family: ""
+    }
+
 
     * {
       margin: 0;
@@ -73,7 +81,7 @@
 
     body {
       font-family: 'Rocher';
-      background-color: grey;
+      background-color: black;
       color: #ffffff;
       margin: 0;
       padding: 0;

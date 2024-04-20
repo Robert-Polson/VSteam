@@ -1,24 +1,32 @@
 """File with models for every page"""
+import os
+import uuid
+from io import BytesIO
+
 from django.contrib.auth.models import User
 from django.db import models
+from PIL import UnidentifiedImageError, Image
+
+# Create your models here.
 
 
-class Nickname(models.Model):
+class NIKNEM(models.Model):
     """Class that work with nickname of user"""
     objects = None
-    nickname = models.CharField(max_length=30, null=True)
+    niknem = models.CharField(max_length=30, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.nickname
+        return self.niknem
 
 
 class Friend(models.Model):
     """Class that work with friends of user"""
     objects = None
     current_user = models.ForeignKey(
-        User, related_name='owner', on_delete=models.CASCADE, null=True)
-    users = models.ManyToManyField(User, related_name='friends')
+        User, related_name="owner", on_delete=models.CASCADE, null=True
+    )
+    users = models.ManyToManyField(User, related_name="friends")
 
     # nickname = models.CharField(null=True,max_length=50)
 
@@ -28,17 +36,13 @@ class Friend(models.Model):
     @classmethod
     def make_friend(cls, current_user, new_friend):
         """Function to make friends"""
-        friend, created = cls.objects.get_or_create(
-            current_user=current_user
-        )
+        friend, created = cls.objects.get_or_create(current_user=current_user)
         friend.users.add(new_friend)
 
     @classmethod
     def lose_friend(cls, current_user, friend_to_lose):
         """Function to lose friends"""
-        friend, created = cls.objects.get_or_create(
-            current_user=current_user
-        )
+        friend, created = cls.objects.get_or_create(current_user=current_user)
         friend.users.remove(friend_to_lose)
 
     def __str__(self):
@@ -47,9 +51,7 @@ class Friend(models.Model):
     @classmethod
     def get_friends(cls, current_user):
         """Function to get friends"""
-        friend, created = cls.objects.get_or_create(
-            current_user=current_user
-        )
+        friend, created = cls.objects.get_or_create(current_user=current_user)
         return friend.users
 
 
@@ -79,7 +81,7 @@ class Post1(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=65)
     text = models.CharField(max_length=150)
-    date = models.DateField(blank='true', auto_now_add=True)
+    date = models.DateField(blank="true", auto_now_add=True)
     image = models.ImageField(upload_to="images/", blank=True, null=True)
 
     def __str__(self):
@@ -89,10 +91,43 @@ class Post1(models.Model):
 class Likes:
     """Class that work with likes for user"""
     other_user_id_likes = models.ForeignKey(User, on_delete=models.CASCADE)
-    likes = models.IntegerField(blank=True, default='0')
+    likes = models.IntegerField(blank=True, default="0")
 
 
 class Comm:
     """Class that work with comments"""
     other_user_id_comm = models.ForeignKey(User, on_delete=models.CASCADE)
-    comm = models.IntegerField(blank=True, default='0')
+    comm = models.IntegerField(blank=True, default="0")
+
+
+class Avatar(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="avatar")
+    image = models.ImageField(upload_to="avatars", default="avatars/default.png")
+
+    @staticmethod
+    def save_avatar(user: User, image):
+
+        with BytesIO(image.read()) as f:
+            image_handle = Image.open(f)
+            image_handle.verify()
+
+            image_handle = Image.open(f)
+            image_handle = image_handle.resize((256, 256), Image.Resampling.LANCZOS)
+
+            image.name = str(user.id) + "-" + str(uuid.uuid4())
+
+            try:
+                avatar = Avatar.objects.get(user=user)
+                default_value = Avatar._meta.get_field("image").get_default()
+                if avatar.image != default_value:
+                    os.remove(avatar.image.path)
+
+                avatar.image = None
+                avatar.save()
+                avatar.image = image
+                avatar.save()
+            except Avatar.DoesNotExist:
+                avatar = Avatar()
+                avatar.user = user
+                avatar.image = image
+                avatar.save()

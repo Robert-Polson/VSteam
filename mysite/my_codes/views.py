@@ -1,5 +1,6 @@
 """File that connect pages"""
 from datetime import datetime
+import json
 from io import BytesIO
 from sqlite3 import IntegrityError
 
@@ -14,8 +15,8 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import LoginForm, RegisterForm, RememberPassword
 from .forms import SearchUserForm
-from .models import Nickname, Friend, Turnir, Reviews, Post1
-
+from .models import NIKNEM, Friend, Turnir, Reviews, Post1, Avatar
+import requests
 
 
 def register_page(request):
@@ -34,8 +35,8 @@ def register_page(request):
             request.session["username"] = user.username
             request.session["email"] = user.email
 
-            nickname_item = Nickname(user=user)
-            nickname_item.save()
+            niknem_item = NIKNEM(user=user)
+            niknem_item.save()
 
             messages.success(request, "You have signed up successfully.")
             print(messages.success(request, "You have signed up successfully."))
@@ -43,7 +44,7 @@ def register_page(request):
         return render(request, "register.html", {"form": form})
 
 
-def nickname_page(request):
+def niknem_page(request):
     """Module providing a function for nickname_page."""
     username = request.session.get("username")
     email = request.session.get("email")
@@ -56,16 +57,16 @@ def nickname_page(request):
     context = {}
 
     if request.method == "POST":
-        nickname = request.POST.get("nickname")
-        if not nickname:
+        niknem = request.POST.get("niknem")
+        if not niknem:
             context["error"] = "Введите никнейм"
         else:
-            request.session["nickname"] = nickname
-            context["nickname"] = nickname
+            request.session["niknem"] = niknem
+            context["niknem"] = niknem
 
-            nickname_item, created = nickname.objects.get_or_create(user=user)
-            nickname_item.nickname = nickname
-            nickname_item.save()
+            niknem_item, created = NIKNEM.objects.get_or_create(user=user)
+            niknem_item.niknem = niknem
+            niknem_item.save()
 
             context["good"] = "Никнейм успешно сохранен"
 
@@ -131,27 +132,15 @@ def api_v1_user_upload_avatar(request):
     if not user.is_authenticated:
         return HttpResponse(status=401)
 
-    try:
-        with BytesIO(uploaded_file.read()) as f:
-            image = Image.open(f)
-            image.verify()
+    Avatar.save_avatar(user, uploaded_file)
 
-            image = Image.open(f)
-
-            image = image.resize((256, 256), Image.Resampling.LANCZOS)
-
-            path = MEDIA_ROOT + "/avatars/" + str(user.id) + ".png"
-
-            image.save(path)
-        return HttpResponse(status=200)
-    except [UnidentifiedImageError, EOFError, DecompressionBombError]:
-        return HttpResponse(status=400)
-    except Exception:
-        return HttpResponse(status=500)
+    return HttpResponse(status=200)
 
 
 def account_page(request, username):
     """Module providing a function for account_page."""
+    friends_count = 0
+    posts_count = 0
     social_links = request.session.get("social_links", {})
     twitter_link = social_links.get("twitter_link")
     twitch_link = social_links.get("twitch_link")
@@ -159,20 +148,25 @@ def account_page(request, username):
     try:
         user = User.objects.filter(username=username).first()
         reviews = Reviews.objects.filter(id_commented=user.id)
+        # friends = Friend.objects.filter(current_user=user)
+        # friends_count = friends.count()
         friends = Friend.get_friends(current_user=user)
         friends_count = friends.count()
+        posts = Post1.objects.filter(author=user)
+        posts_count = posts.count()
         if not user:
             raise User.DoesNotExist
-        nickname = Nickname.objects.filter(user=user).first()
+        niknem = NIKNEM.objects.filter(user=user).first()
         context = {
             "twitter_link": twitter_link,
             "twitch_link": twitch_link,
             "codepen_link": codepen_link,
             "account": user,
-            "nickname": nickname.nickname if nickname is not None else "No NickName",
+            "niknem": niknem.niknem if niknem is not None else "No NickName",
             "is_owner_of_account": user == request.user,
             "reviews": reviews,
-            "friends_count": friends_count
+            "post_count": posts_count,
+            "friends_count": friends_count,
         }
         return render(request, "account_page.html", context)
 
@@ -190,14 +184,20 @@ def remember_password(request):
             username = form.cleaned_data.get("username")
             email = form.cleaned_data.get("email")
             password = form.cleaned_data.get("password")
-            user = User.objects.filter(username=username.lower(), email=email.lower()).first()
+            user = User.objects.filter(
+                username=username.lower(), email=email.lower()
+            ).first()
             if user:
                 user.set_password(password)
                 user.save()
                 messages.success(
-                    request, f"Password changed successfully for {user.username}!")
+                    request, f"Password changed successfully for user {user.username}!"
+                )
                 return redirect("login")
-            messages.error(request, "User not found with the provided username and email")
+            else:
+                messages.error(
+                    request, "User not found with the provided username and email"
+                )
 
     return render(request, "remember_password.html", {"form": form})
 
@@ -222,11 +222,12 @@ def find_users_page(request):
         query = request.GET.get("query", "")
         page = max(0, int(request.GET.get("page", 1)) - 1)
 
-    all_accounts_count = Nickname.objects.filter(nickname__contains=query).count()
+    all_accounts_count = NIKNEM.objects.filter(niknem__contains=query).count()
 
     current_user = request.user
-    accounts = Nickname.objects.filter(niknem__contains=query).exclude(
-        user=current_user)[page * 10: page * 10 + 10]
+    accounts = NIKNEM.objects.filter(niknem__contains=query).exclude(user=current_user)[
+        page * 10 : page * 10 + 10
+    ]
 
     context["page"] = page + 1
     context["accounts"] = accounts
@@ -249,9 +250,10 @@ def tournament_page(request):
         date = request.POST.get("Date")
         name = request.POST.get("Name")
         participants = request.POST.get("Participants")
-        placetowatch = request.POST.get("PlaceToWatch")
-        t = Turnir.objects.create(
-            date=date, name=name, participants=participants, placeToWatch=placetowatch)
+        placeToWatch = request.POST.get("PlaceToWatch")
+        turnir = Turnir.objects.create(
+            date=date, name=name, participants=participants, placeToWatch=placeToWatch
+        )
 
     context["turnirs"] = Turnir.objects
     return render(request, "tournament.html")
@@ -267,27 +269,42 @@ def reviews(request, user_id=None):
 
         if id_topic:
             id_table = Reviews(
-                id_commentator=current_user, id_topic_comm=id_topic,
-                text_id_comm=id_comm, id_commented=user1
+                id_commentator=current_user,
+                id_topic_comm=id_topic,
+                text_id_comm=id_comm,
+                id_commented=user1,
             )
             id_table.save()
             context = {"account": user1}
             return render(request, "reviews.html", context)
-        return render(request, "reviews.html", {"error_message": "id_topic is required"})
+        else:
+            return render(
+                request, "reviews.html", {"error_message": "id_topic is required"}
+            )
     except IntegrityError as e:
-        return render(request, "reviews.html", {"error_message": f"IntegrityError: {e}"})
+        return render(
+            request, "reviews.html", {"error_message": f"IntegrityError: {e}"}
+        )
 
 
 def settings_page(request, user_id=None):
     """Module providing a function for settings_page."""
     try:
         user = User.objects.get(id=user_id)
-        nickname = Nickname.objects.filter(user=user).first()
+        niknem = NIKNEM.objects.filter(user=user).first()
         reviews = Reviews.objects.filter(id_commented=user_id)
-        context = {"account": user,
-                   "nickname": nickname,
-                   "show_sett_acc_page": True,
-                   'reviews': reviews}
+        friends = Friend.get_friends(current_user=user)
+        friends_count = friends.count()
+        posts = Post1.objects.filter(author=user)
+        posts_count = posts.count()
+        context = {
+            "account": user,
+            "niknem": niknem,
+            "show_sett_acc_page": True,
+            "reviews": reviews,
+            "friends_count": friends_count,
+            "post_count": posts_count,
+        }
         return render(request, "account_page.html", context)
     except User.DoesNotExist:
         context = {"error": "Такого пользователя нет"}
@@ -313,13 +330,12 @@ def profile(request, username=None):
     """Module providing a function about profile."""
     friend_instance = Friend.objects.filter(current_user=request.user).first()
     friends_data = []
-
     if friend_instance:
         friends = friend_instance.users.all()
         for friend_obj in friends:
             friend_data = dict()
             friend_data["username"] = friend_obj.username
-            friend_data["nickname"] = Nickname.objects.filter(user=friend_obj).first()
+            friend_data["niknem"] = NIKNEM.objects.filter(user=friend_obj).first()
             friend_data["id"] = friend_obj.id
             friends_data.append(friend_data)
 
@@ -332,6 +348,12 @@ def profile(request, username=None):
         "post_owner": post_owner,
         "friends": friends_data,
     }
+
+    if request.method == "POST":
+        friend_id = request.POST.get("friend_id")
+        friend = get_object_or_404(User, id=friend_id)
+        Friend.lose_friend(request.user, friend)
+        return redirect('profile_pk' , username = username)
 
     return render(request, "profile.html", args)
 
@@ -367,43 +389,66 @@ def social_network(request):
 def charts(request):
     """Module providing a function for charts."""
     user_data_2023 = list(
-        User.objects.annotate(month=TruncMonth('date_joined')).filter(
-            date_joined__year=2023).values('month').annotate(
-            user_count=Count('id')).order_by('month'))
+        User.objects.annotate(month=TruncMonth("date_joined"))
+        .filter(date_joined__year=2023)
+        .values("month")
+        .annotate(user_count=Count("id"))
+        .order_by("month")
+    )
     user_data_2024 = list(
-        User.objects.annotate(month=TruncMonth('date_joined')).filter(
-            date_joined__year=2024).values('month').annotate(
-            user_count=Count('id')).order_by('month'))
-    return render(request, 'charts.html', {"user_data_2023": user_data_2023,
-                                           "user_data_2024": user_data_2024})
+        User.objects.annotate(month=TruncMonth("date_joined"))
+        .filter(date_joined__year=2024)
+        .values("month")
+        .annotate(user_count=Count("id"))
+        .order_by("month")
+    )
+    return render(
+        request,
+        "charts.html",
+        {"user_data_2023": user_data_2023, "user_data_2024": user_data_2024},
+    )
 
 
 def create_post(request):
     """Module providing a function for create_post page."""
     context = {}
     if request.method == "POST":
-        topic = request.POST.get('topic')
-        texts = request.POST.get('texts')
-        files_image = request.FILES.get('file_image')
+        topic = request.POST.get("topic")
+        texts = request.POST.get("texts")
+        files_image = request.FILES.get("file_image")
         post_author = Post1(
-            author=request.user, title=topic, text=texts, date=datetime.now(), image=files_image)
+            author=request.user,
+            title=topic,
+            text=texts,
+            date=datetime.now(),
+            image=files_image,
+        )
         post_author.save()
     return render(request, "create_post.html", context)
 
 
 def home_page(request):
     """Module providing a function for home_page."""
-    context = {
-        'account': request.user
-    }
+    if request.method == 'POST':
+        form = SearchUserForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            user = User.objects.get(username=username)
+            posts = Post1.objects.filter(author=user)
+            context = {"account": request.user, "posts": posts}
+            return render(request, "homePage.html", context)
+    else:
+        form = SearchUserForm()
+
+    context = {"account": request.user}
     posts = Post1.objects.filter(author=request.user)
     context["posts"] = posts
-
     friend_instance = Friend.objects.filter(current_user=request.user).first()
-
     if friend_instance:
         friends = friend_instance.users.all()
         friend_posts = Post1.objects.filter(author__in=friends)
         context["friend_posts"] = friend_posts
+    context["form"] = form
 
-    return render(request, 'homePage.html', context)
+    return render(request, "homePage.html", context)
+
