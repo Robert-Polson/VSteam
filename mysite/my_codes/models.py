@@ -87,7 +87,7 @@ class Comm:
 
 
 class Avatar(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="avatar")
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE, related_name="avatar")
     image = models.ImageField(upload_to="avatars", default="avatars/default.png")
 
     @staticmethod
@@ -117,3 +117,10 @@ class Avatar(models.Model):
                 avatar.user = user
                 avatar.image = image
                 avatar.save()
+
+class Message(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
+    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_messages')
+    text = models.CharField(max_length=4096)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
