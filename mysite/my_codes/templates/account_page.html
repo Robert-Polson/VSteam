@@ -164,13 +164,13 @@
         <button class="btn" type="button" onclick="addFilesToPost()">Upload files to post</button>
         <button class="btn" type="button"><a href="{% url 'create_post' %}" style="text-decoration: none; color: white;">Publish the post</a></button>
     {% endif %}
-
+    <button class="btn"><a href="{% url 'chat' account.username %}"  style="color: white; text-decoration: none;">Message</a></button>
+             <button class="btn" type="submit"><a href="{% url 'reviews' account.id %}" style="color: white; text-decoration: none;">Comment about person</a></button>
     {% if show_sett_acc_page == True %}
         <form method="post" action="{% url 'change_friends' operation='add' pk=account.id %}">
     {% csrf_token %}
-    <button class="btn" type="submit"><a href="{% url 'reviews' account.id %}" style="color: white; text-decoration: none;">Comment about person</a></button>
+
 </form>
-            <a href="{% url 'chat' account.username %}"><button class="btn">Message</button></a>
         <button class="btn" >Achievements</button>
     {% endif %}
 </form>
