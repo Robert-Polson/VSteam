@@ -17,7 +17,6 @@ from mysite.settings import MEDIA_ROOT
 from .forms import LoginForm, RegisterForm, RememberPassword, PostForm
 from .forms import SearchUserForm
 from .models import NIKNEM, Friend, Turnir, Reviews, Post1, Avatar
-import requests
 
 
 def register_page(request):
