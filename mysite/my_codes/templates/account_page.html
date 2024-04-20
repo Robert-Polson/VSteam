@@ -122,9 +122,7 @@
         <form method="post" enctype="multipart/form-data" id="avatarForm">
     {% csrf_token %}
     <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="previewImage(event)">
-    <label for="avatarInput">
-        <img id="avatarPreview" class="imgh" src="{% user_avatar account.id %}" alt="Добавьте аватар">
-    </label>
+    <img id="avatarPreview" class="imgh" src="{% user_avatar account.id %}" alt="Добавьте аватар">
     <div class="">
     <label>ИМЯ И ФАМИЛИЯ</label>:
     <p class="card__name">{{ c }}</p>
@@ -161,7 +159,6 @@
         <button class="btn"><a href="{% url 'social_network' %}" style="text-decoration: none; color: white;">About me</a></button>
         <button class="btn" type="button" onclick="dostiz();">Achievements</button>
         <button class="btn"><a href="{% url 'profile_pk' username=user.username %}" style="text-decoration: none; color: white;">My friends</a></button>
-        <button class="btn" type="button" onclick="addFilesToPost()">Upload files to post</button>
         <button class="btn" type="button"><a href="{% url 'create_post' %}" style="text-decoration: none; color: white;">Publish the post</a></button>
     {% else %}
         <button class="btn"><a href="{% url 'chat' account.username %}"  style="color: white; text-decoration: none;">Message</a></button>
@@ -191,15 +188,6 @@
 <script>
     function dostiz() {
     window.location.href="http://127.0.0.1:8000/achievements//"
-    }
-    function previewImage(event) {
-            const input = event.target;
-            const reader = new FileReader();
-            reader.onload = function() {
-                const img = document.getElementById('avatarPreview');
-                img.src = reader.result;
-            };
-            reader.readAsDataURL(input.files[0]);
     }
 
     function uploadAvatar(event) {
