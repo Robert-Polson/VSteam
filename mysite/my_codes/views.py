@@ -194,10 +194,9 @@ def remember_password(request):
                     request, f"Password changed successfully for user {user.username}!"
                 )
                 return redirect("login")
-            else:
-                messages.error(
-                    request, "User not found with the provided username and email"
-                )
+            messages.error(
+                request, "User not found with the provided username and email"
+            )
 
     return render(request, "remember_password.html", {"form": form})
 
@@ -226,7 +225,7 @@ def find_users_page(request):
 
     current_user = request.user
     accounts = NIKNEM.objects.filter(niknem__contains=query).exclude(user=current_user)[
-        page * 10 : page * 10 + 10
+        page * 10: page * 10 + 10
     ]
 
     context["page"] = page + 1
@@ -353,7 +352,7 @@ def profile(request, username=None):
         friend_id = request.POST.get("friend_id")
         friend = get_object_or_404(User, id=friend_id)
         Friend.lose_friend(request.user, friend)
-        return redirect('profile_pk' , username = username)
+        return redirect('profile_pk', username=username)
 
     return render(request, "profile.html", args)
 
@@ -451,4 +450,3 @@ def home_page(request):
     context["form"] = form
 
     return render(request, "homePage.html", context)
-
