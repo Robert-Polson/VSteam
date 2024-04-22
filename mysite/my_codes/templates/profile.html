@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Профиль пользователя</title>
-    <link href="{% static 'friends_profile_style.css' %}" rel="stylesheet">
+
 </head>
 <body>
+<div style="top:10px;">
+<a href="{% url 'homePage' %}" style="font-family: 'Rocher'; font-size: 40px; text-decoration: none; ">VSTeam</a>
+</div>
 {% if user == main_user %}
     <h2>Мои друзья:</h2>
     {% for friend in main_user.friends.all %}
@@ -55,7 +58,11 @@
 <style>
     @import "https://unpkg.com/open-props" layer(design.system);
     @import "https://unpkg.com/open-props/normalize.min.css" layer(demo.support);
-
+    @import url('https://fonts.cdnfonts.com/css/retron2000');
+        @font-face {
+            font-family: 'Rocher';
+            src: url(https://assets.codepen.io/9632/RocherColorGX.woff2);
+        }
     @layer demo {
         .rounded-border-green {
             inline-size: var(--size-content-1);
