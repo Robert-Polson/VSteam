@@ -7,9 +7,8 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
+<a href="{% url 'homePage' %}" style="font-family: 'Rocher'; text-decoration:none;">VSTeam</a>
     <header>
-    <a href="{% url 'homePage' %}"><button style="top:10px;">Вернутся обратно</button></a>
     {% for comment_data in comments_data %}
         <div>
             <p>Commentator: {{ comment_data.commentator_user.username }}</p>
@@ -20,11 +19,11 @@
     {% endfor %}
     </header>
     <div class="mains">
-        <h1>Comments</h1>
+        <h1 style="font-family: 'Rocher';">Comments</h1>
         <form method="post">
             {% csrf_token %}
-        <input type="text" placeholder="Enter the topic" name="id_topic">
-        <input type="text" placeholder="Enter the comment" name="id_comm">
+        <input type="text" placeholder="Enter the topic" name="id_topic" style="color:white;">
+        <input type="text" placeholder="Enter the comment" name="id_comm" style="color: white;">
         <button type="submit">Отправить</button>
         </form>
     </div>
@@ -46,7 +45,11 @@
     <div class="theme-btn-container"></div>
 
     <style>
-         @import url('https://fonts.cdnfonts.com/css/retron2000');
+        @import url('https://fonts.cdnfonts.com/css/retron2000');
+        @font-face {
+            font-family: 'Rocher';
+            src: url(https://assets.codepen.io/9632/RocherColorGX.woff2);
+        }
         body {
             font-family: 'Retron2000', sans-serif;
             margin: 0;
@@ -56,7 +59,7 @@
             align-items: center;
             height: 100vh;
             box-sizing: border-box;
-            background: var(--background);
+            background: black;
             color: var(--color);
             letter-spacing: 1px;
             transition: background 0.2s ease;

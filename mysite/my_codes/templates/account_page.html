@@ -42,13 +42,13 @@
             height: 40rem;
             max-width: 30rem;
             border-radius: 5px;
-            display: flex;
-            flex-direction: column;
+            left:20px;
+
             align-items: left;
             box-shadow: 0 10px 50px rgba(235, 25, 110, 1);
 
             padding: 20px;
-            margin-left:10px;
+            margin-left:5px;
         }
 
         .card__name {
@@ -136,7 +136,7 @@
     <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="previewImage(event)">
     <img id="avatarPreview" class="imgh" src="{% user_avatar account.id %}" alt="Добавьте аватар">
     <div class="">
-    <label>Name and second name:</label>:
+    <label>Name:</label>
     <p class="card__name">{{ account.username }}</p>
 </div>
 <label>nickname</label>:
@@ -190,10 +190,10 @@
     <div class="theme-btn-container"></div>
 {% for review in reviews %}
 <div class="reviewss">
-    <label>Комментатор: <p style="color: black">{{review.id_commentator}}</p></label>
-    <label>Тема: <p style="color: black"> {{review.id_topic_comm}} </p></label>
-    <label>Текст комментария: <p style="color: black"> {{review.text_id_comm}}</p></label>
-    <label>Получатель: <p style="color: black">{{review.id_commented}}</p></label>
+    <label>commentator: <p style="color: black">{{review.id_commentator}}</p></label>
+    <label>Topic: <p style="color: black"> {{review.id_topic_comm}} </p></label>
+    <label>comment text: <p style="color: black"> {{review.text_id_comm}}</p></label>
+    <label>Recipient: <p style="color: black">{{review.id_commented}}</p></label>
 </div>
 {% endfor %}
 
