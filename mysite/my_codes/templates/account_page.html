@@ -8,7 +8,15 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+Paaji+2:wght@400;500&display=swap">
     <style>
         @import url('https://fonts.cdnfonts.com/css/retron2000');
-
+        @font-face {
+            font-family: 'Rocher';
+            src: url(https://assets.codepen.io/9632/RocherColorGX.woff2);
+        }
+        :root {
+            --background: #1a1a2e;
+            --color: #ffffff;
+            --primary-color: #0f3460;
+        }
         body {
             font-family: 'Retron2000', sans-serif;
             margin: 0;
@@ -18,7 +26,8 @@
             align-items: center;
             height: 100vh;
             box-sizing: border-box;
-            background: var(--background);
+            font-family: 'Rocher';
+            background:var(--background);
             color: var(--color);
             letter-spacing: 1px;
             transition: background 0.2s ease;
@@ -35,7 +44,7 @@
             border-radius: 5px;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: left;
             box-shadow: 0 10px 50px rgba(235, 25, 110, 1);
 
             padding: 20px;
@@ -112,14 +121,17 @@
             border-radius: 20px;
             width: 10rem;
         }
+        header {
+            padding: 20px 0;
+        }
     </style>
 </head>
 <body>
 <header>
-    <a href="{% url 'homePage' %}"><button style="top:10px;">Вернутся обратно</button></a>
-    </header>
-    <div class="card">
-        <form method="post" enctype="multipart/form-data" id="avatarForm">
+    <a href="{% url 'homePage' %}" style="text-decoration: none; size: 20px;"><h1 style="font-family: 'Rocher';">VSTeam</h1></a>
+</header>
+<div class="card">
+    <form method="post" enctype="multipart/form-data" id="avatarForm">
     {% csrf_token %}
     <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="previewImage(event)">
     <img id="avatarPreview" class="imgh" src="{% user_avatar account.id %}" alt="Добавьте аватар">
@@ -127,11 +139,11 @@
     <label>ИМЯ И ФАМИЛИЯ</label>:
     <p class="card__name">{{ c }}</p>
 </div>
-<label>NIKNEM</label>:
-{% if niknem %}
-    <h1 class="card__name">{{ niknem }}</h1>
+<label>nickname</label>:
+{% if nickname %}
+    <h1 class="card__name">{{ nickname }}</h1>
 {% else %}
-    <p>No NickName</p>
+    <p>No nickname</p>
 {% endif %}
 <div class="grid-container">
     <div class="grid-child-posts">Posts: {{post_count}}</div>
