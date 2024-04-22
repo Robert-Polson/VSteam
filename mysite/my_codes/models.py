@@ -60,8 +60,7 @@ class Turnir(models.Model):
     objects = None
     date = models.DateField()
     name = models.CharField(max_length=50)
-    participants = models.IntegerField()
-    placeToWatch = models.CharField(max_length=50)
+    prize = models.CharField(max_length=50)
 
 
 class Reviews(models.Model):

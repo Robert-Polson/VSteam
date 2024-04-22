@@ -4,7 +4,9 @@
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/retron2000" rel="stylesheet">
    <style>
+   @import url('https://fonts.cdnfonts.com/css/retron2000');
        body {
            background-color: black;
            color: white;
@@ -78,6 +80,7 @@
             margin-top: 10px;
             display: flex;
             align-items: center;
+            font-family: 'Retron2000', sans-serif;
             justify-content: space-between; /* distribute the icon and text evenly inside the button */
             width: 100%; /* make the buttons take up the full width of the list items */
         }
@@ -115,19 +118,26 @@
             text-align: center; /* center the title */
             margin-top: 20px; /* add margin to the top of the title */
             margin-bottom: 500px; /* add margin to the bottom of the title */
-        }
+       }
+        .text-r {
+              font-family: 'Retron2000', sans-serif;
+          }
+        .text-rh {
+              font-family: 'Retron2000', sans-serif;
+              font-size: 2em;
+          }
    </style>
     <title>Tournaments</title>
-    <div class="header">
+    <div class="header text-rh">
        <div class="head_buttons">
                <form action="page/new.html" target="_blank" style="float: left; margin-right: 20px;margin-left: 40px">
-                    <button_head><font size="6" color="white" face="VT323">Главная</font></button_head>
+                    <button_head>Главная</button_head>
                </form>
                <form action="page/new.html" target="_blank" style="float: center left; margin-right: 20px;">
-                   <button_head><font size="6" color="white" face="VT323">Teamder</font></button_head>
+                   <button_head>Teamder</button_head>
                </form>
                <form action="page/new.html" target="_blank" style="float: center;">
-                   <button_head><font size="6" color="white" face="VT323">Активности</font></button_head>
+                   <button_head>Активности</button_head>
                </form>
        </div>
        <img src="profile-icon.png" alt="Profile Icon">
@@ -135,7 +145,7 @@
 </head>
 <body>
     <div class="main">
-        <div class="games-column" style="float: left;">
+        <div class="games-column text-r" style="float: left;">
             <h3>Games</h3>
             <ul>
                 <li><button class="game-button">Dota 2</button></li>
@@ -154,35 +164,23 @@
             </ul>
         </div>
     </div>
-        <h4>Game</h4>
-       <table class="games-table" style="float: centre;">
-
+    <center><h4 class="text-r">Game</h4></center>
+       <table class="games-table text-r" style="float: center;">
            <thead>
                <tr>
                    <th>Date</th>
                    <th>Next Tournaments</th>
-                   <th>Participants</th>
-                   <th>Where to Watch</th>
+                   <th>Prize</th>
                </tr>
            </thead>
            <tbody>
                {% for i in turnirs %}
                     <tr>
-                        <td>i.date</td>
-                        <td>i.name</td>
-                        <td>i.participants</td>
-                        <td>t.placeToWatch</td>
+                        <td>{{i.date}}</td>
+                        <td>{{i.name}}</td>
+                        <td>{{i.prize}}</td>
                     </tr>
                {% endfor %}
            </tbody>
-
        </table>
-        <button onclick="add_turnir()">Add Tournament</button>
 </body>
-<script>
-    function add_turnir() {
-        let div = document.createElement('div')
-        div.innerHTML = '<form method="post">{% csrf_token %}<p>Date: <input type="date" id="Date"></p><p>Name: <input type="text" id="Name"></p><p>Participants: <input type="number" id="Participants"></p><p>Place to watch: <input type="text" id="PlaceToWatch"></p><input type="submit" value="ADD!"></form>'
-        document.body.append(div)
-    }
-</script>

@@ -1,3 +1,5 @@
+import textwrap
+
 from datetime import datetime
 import json
 from io import BytesIO
@@ -19,6 +21,12 @@ from .forms import LoginForm, RegisterForm, RememberPassword, PostForm
 from .forms import SearchUserForm
 from .models import NIKNEM, Friend, Turnir, Reviews, Post1, Avatar, Message
 
+from .forms import LoginForm, RegisterForm, RememberPassword
+from django.contrib.auth import login, authenticate
+from django.contrib import messages
+from django.shortcuts import render, redirect
+import requests
+import datetime
 
 def register_page(request):
     if request.method == "GET":
@@ -204,17 +212,17 @@ def achievements(request):
 def find_users_page(request):
     context = {}
 
-    if request.method == "POST":
+    if request.method == 'POST':
         form = SearchUserForm(request.POST)
         if form.is_valid():
-            query = form.cleaned_data["query"]
+            query = form.cleaned_data['query']
             page = 0
         else:
-            query = ""
+            query = ''
             page = 0
     else:
-        query = request.GET.get("query", "")
-        page = max(0, int(request.GET.get("page", 1)) - 1)
+        query = request.GET.get('query', '')
+        page = max(0, int(request.GET.get('page', 1)) - 1)
 
     all_accounts_count = NIKNEM.objects.filter(niknem__contains=query).count()
 
@@ -373,6 +381,49 @@ def social_network(request):
     return render(request, "social_network.html", context)
 
 
+def turnir_page(request):
+    context = dict()
+    if request.method == "GET":
+        page = "https://www.cybersport.ru/tournaments?interval=future"
+        r = requests.get(page)
+        text = r.text
+        count = text.count('h3 class="title_hoDOT"')
+        latestfound = 0
+        lh3 = len('h3 class="title_hoDOT"')
+        ld = len('<div class="value_lJuD+">')
+        for i in range(count):
+            latestfound = text.find('h3 class="title_hoDOT"', latestfound+1)
+            pos = latestfound+lh3+1
+            name = ""
+            while text[pos] != '<':
+                name += text[pos]
+                pos += 1
+            print(name)
+            date = ""
+            datepos = text.find('<div class="value_lJuD+">', pos) + ld
+            while text[datepos] != '<':
+                date += text[datepos]
+                datepos += 1
+            date = date.split()[0]
+            if len(date) < 10:
+                continue
+            d = date.split('.')
+            day = int(d[0])
+            month = int(d[1])
+            year = int(d[2])
+            Date = datetime.date(year, month, day)
+            prize = ""
+            prizepos = text.find('<div class="value_lJuD+">', datepos) + ld
+            while text[prizepos] != '<':
+                prize += text[prizepos]
+                prizepos += 1
+            if prize[0] != '$':
+                prize = "-"
+            if Turnir.objects.filter(date=Date, name=name, prize=prize).count() == 0:
+                turnir = Turnir.objects.create(date=Date, name=name, prize=prize)
+                turnir.save()
+    context['turnirs'] = Turnir.objects.filter().all()
+    return render(request,'turnir_page.html', context)
 def charts(request):
     user_data_2023 = list(
         User.objects.annotate(month=TruncMonth("date_joined"))
