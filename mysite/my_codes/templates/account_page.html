@@ -124,12 +124,17 @@
         header {
             padding: 20px 0;
         }
+        .href_home {
+        position:absolute;
+        top: 15px;
+        left: 15px;
+        }
     </style>
 </head>
 <body>
-<header>
+<div class="href_home">
     <a href="{% url 'homePage' %}" style="text-decoration: none; size: 20px;"><h1 style="font-family: 'Rocher';">VSTeam</h1></a>
-</header>
+</div>
 <div class="card">
     <form method="post" enctype="multipart/form-data" id="avatarForm">
     {% csrf_token %}
