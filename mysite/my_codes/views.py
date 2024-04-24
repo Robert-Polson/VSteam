@@ -1,13 +1,7 @@
-import textwrap
 
-from datetime import datetime
-import json
-from io import BytesIO
 from sqlite3 import IntegrityError
 
-from PIL import Image, UnidentifiedImageError
-from PIL.Image import DecompressionBombError
-from django.contrib import messages
+
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from django.core import serializers
@@ -15,9 +9,9 @@ from django.db.models import Count, Q
 from django.db.models.functions import TruncMonth
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from mysite.settings import MEDIA_ROOT
 
-from .forms import LoginForm, RegisterForm, RememberPassword, PostForm
+
+
 from .forms import SearchUserForm
 from .models import NIKNEM, Friend, Turnir, Reviews, Post1, Avatar, Message
 
@@ -27,7 +21,7 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 import requests
 import datetime
-
+from datetime import datetime
 def register_page(request):
     if request.method == "GET":
         form = RegisterForm()
