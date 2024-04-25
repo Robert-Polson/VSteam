@@ -3,6 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        .message-container {
+            max-height: 300px;
+            overflow-y: scroll;
+        }
+
+        .message {
+            margin: 5px;
+            padding: 5px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .mess_styles {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 5px;
+            margin-right: 10px;
+        }
+
+        button.mess_styles {
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
     <div class="message-container">
@@ -12,8 +47,9 @@
     </div>
     {% csrf_token %}
     <input type="text" id="message">
-    <button onclick="sendMessage()">Отправить сообщение</button>
+    <button onclick="sendMessage()" class="mess_styles">Отправить сообщение</button>
 </body>
+
 <script>
     {% with last_message=messages|last %}
     let lastMessage = "{{ last_message.id }}";
@@ -88,4 +124,10 @@
     setInterval(updateChat, 1000);
 
 </script>
+<style>
+    .mess_styles {
+    bottom: 20px;
+    position:flex;
+    }
+</style>
 </html>
