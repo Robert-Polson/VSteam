@@ -172,9 +172,9 @@
     <div class="grid-child-friends" >Friends: {{friends_count}}</div>
 </div>
 <div class="social-icons">
-<a href="https://vk.com/" target="_blank"><img src="{% static 'VK_Compact_Logo_(2021-present).svg.png' %}" alt="VK"></a>
-    <a href="https://www.youtube.com" target="_blank"><img src="{% static '636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png' %}" alt="DISCORD"></a>
-    <a href="https://youtube.com/" target="_blank"><img src="{% static 'png-transparent-youtube-logo-youtube-text-trademark-logo.png' %}" alt="YOUTUBE"></a>
+<a href="https://vk.com/{{ vk_link }}" target="_blank"><img src="{% static 'VK_Compact_Logo_(2021-present).svg.png' %}" alt="VK"></a>
+    <a href="https://www.youtube.com/{{youtube_link}}" target="_blank"><img src="{% static 'png-transparent-youtube-logo-youtube-text-trademark-logo.png' %}" alt="DISCORD"></a>
+    <a href="https://discord.com/{{discord_link}}" target="_blank"><img src="{% static '636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png' %}" alt="YOUTUBE"></a>
 </div>
 
     <input type="file" name="avatarInput" style="display: none;" onchange="previewImage(event)">

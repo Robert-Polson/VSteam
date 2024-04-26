@@ -137,35 +137,31 @@ def api_v1_user_upload_avatar(request):
 def account_page(request, username):
     friends_count = 0
     posts_count = 0
-    social_links = request.session.get("social_links", {})
-    instagram_link = social_links.get("instagram_link")
-    twitter_link = social_links.get("twitter_link")
-    twitch_link = social_links.get("twitch_link")
-    codepen_link = social_links.get("codepen_link")
     try:
         user = User.objects.filter(username=username).first()
         reviews = Reviews.objects.filter(id_commented=user.id)
-        # friends = Friend.objects.filter(current_user=user)
-        # friends_count = friends.count()
         friends = Friend.get_friends(current_user=user)
         friends_count = friends.count()
         posts = Post1.objects.filter(author=user)
         posts_count = posts.count()
-        if not user:
-            raise User.DoesNotExist
+        vk_link = Socials.objects.filter(link_vk=user.id).first()
+        youtube_link = Socials.objects.filter(link_youtube=user.id).first()
+        discord_link = Socials.objects.filter(link_discord=user.id).first()
+
         niknem = NIKNEM.objects.filter(user=user).first()
+
         context = {
-            "instagram_link": instagram_link,
-            "twitter_link": twitter_link,
-            "twitch_link": twitch_link,
-            "codepen_link": codepen_link,
+            "vk_link": vk_link.link_vk if vk_link else "",
+            "youtube_link": youtube_link.link_youtube if youtube_link else "",
+            "discord_link": discord_link.link_discord if discord_link else "",
             "account": user,
-            "niknem": niknem.niknem if niknem is not None else "No NickName",
+            "niknem": niknem.niknem if niknem else "No NickName",
             "is_owner_of_account": user == request.user,
             "reviews": reviews,
             "post_count": posts_count,
             "friends_count": friends_count,
         }
+
         return render(request, "account_page.html", context)
 
     except User.DoesNotExist:
