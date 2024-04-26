@@ -13,7 +13,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 
 from .forms import SearchUserForm
-from .models import NIKNEM, Friend, Turnir, Reviews, Post1, Avatar, Message
+from .models import NIKNEM, Friend, Turnir, Reviews, Post1, Avatar, Message, Socials
 
 from .forms import LoginForm, RegisterForm, RememberPassword
 from django.contrib.auth import login, authenticate
@@ -357,6 +357,14 @@ def change_friends(request, operation, pk):
 
 
 def social_network(request):
+    if request.POST:
+        vk_name = request.POST.get('vk_name')
+        youtube_name = request.POST.get('youtube_name')
+        discord_name = request.POST.get('discord_name')
+    else:
+        return render(request, "social_network.html")
+    social_table = Socials(author = request.user , link_vk = vk_name , link_youtube = youtube_name,link_discord=discord_name)
+    social_table.save()
     return render(request, "social_network.html")
 
 

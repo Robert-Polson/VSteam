@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from PIL import UnidentifiedImageError, Image
 
+
 # Create your models here.
 
 
@@ -131,9 +132,16 @@ class Avatar(models.Model):
                 avatar.image = image
                 avatar.save()
 
+
 class Message(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
     recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_messages')
     text = models.CharField(max_length=4096)
     timestamp = models.DateTimeField(auto_now_add=True)
 
+
+class Socials(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    link_vk = models.CharField(max_length=100, null=True)
+    link_youtube = models.CharField(max_length=100, null=True)
+    link_discord = models.CharField(max_length=100, null=True)

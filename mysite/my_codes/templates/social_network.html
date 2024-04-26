@@ -34,9 +34,17 @@
     <a href="{% url 'homePage' %}" style="font-family:'Rocher'; font-size: 40px; text-decoration:none;">VSTeam</a>
 </header>
 <h1>You can share your achievements and your network connections here to find friends.</h1>
-
-
+<form method="post">
+    {% csrf_token %}
+<div class="main_link">
+<input type="text" placeholder="Enter your link for your VK account" class="enter_socialname" name="vk_name">
+<input type="text" placeholder="Enter your link for your YOUTUBE account" class="enter_socialname" name="youtube_name">
+<input type="text" placeholder="Enter your link for your DISCORD account" class="enter_socialname" name="discord_name">
+    <button type="submit" class="button_okey">Подтвердить</button>
+</div>
+</form>
 <style>
+
     body {
     background-color: #3a32a8;
     }
@@ -49,6 +57,18 @@
     font-family: 'Rocher';
     font-size:25px;
     text-align:center;
+    }
+    .main_link {
+    display: flex;
+    flex-flow: column wrap;
+    }
+    .enter_socialname {
+    margin: 5px;
+    width: 30%;
+    border-radius: 20px;
+    }
+    .button_okey{
+    width: 30%;
     }
 </style>
 </body>
