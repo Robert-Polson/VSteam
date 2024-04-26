@@ -357,22 +357,7 @@ def change_friends(request, operation, pk):
 
 
 def social_network(request):
-    context = {}
-    if request.method == "POST":
-        instagram_link = request.POST.get("instagram_link")
-        twitter_link = request.POST.get("twitter_link")
-        twitch_link = request.POST.get("twitch_link")
-        codepen_link = request.POST.get("codepen_link")
-
-        social_links = {
-            "instagram_link": instagram_link,
-            "twitter_link": twitter_link,
-            "twitch_link": twitch_link,
-            "codepen_link": codepen_link,
-        }
-        request.session["social_links"] = social_links
-        context = social_links
-    return render(request, "social_network.html", context)
+    return render(request, "social_network.html")
 
 
 def turnir_page(request):
