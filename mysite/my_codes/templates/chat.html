@@ -4,17 +4,24 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <style>
+
+        @import url('https://fonts.cdnfonts.com/css/retron2000');
+        @font-face {
+            font-family: 'Rocher';
+            src: url(https://assets.codepen.io/9632/RocherColorGX.woff2);
+        }
         .message-container {
             max-height: 300px;
             overflow-y: scroll;
         }
 
         .message {
-            margin: 5px;
+            margin: 25px;
             padding: 5px;
             background-color: #f9f9f9;
-            border: 1px solid #ccc;
             border-radius: 5px;
+            font-family:'Rocher';
+                    background-color: rgb(103, 22, 253);
         }
 
         .mess_styles {
@@ -25,29 +32,46 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-
+            height:40px;
+            font-family:'Rocher';
         }
 
         input[type="text"] {
             width: 80%;
             padding: 5px;
             margin-right: 10px;
+            font-family: 'Rocher';
+
         }
 
         button.mess_styles {
             margin-top: 10px;
         }
+        .message_mess {
+        position:absolute;
+        bottom: 10px;
+        display:flex;
+        font-family:'Rocher';
+        }
+        body{
+        background-color: rgb(103, 22, 253);
+        }
     </style>
 </head>
 <body>
+<header>
+    <a href="{% url 'homePage' %}" style="font-family:'Rocher'; font-size: 25px; text-decoration:none;">VSTeam</a>
+</header>
     <div class="message-container">
         {% for message in messages %}
         <div class="message">{{ message.timestamp }} {{ message.author }}: {{ message.text }}</div>
         {% endfor %}
     </div>
     {% csrf_token %}
+    <div class="message_mess">
     <input type="text" id="message">
     <button onclick="sendMessage()" class="mess_styles">Отправить сообщение</button>
+    </div>
 </body>
 
 <script>
