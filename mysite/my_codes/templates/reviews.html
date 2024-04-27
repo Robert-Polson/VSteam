@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<a href="{% url 'homePage' %}" style="font-family: 'Rocher'; text-decoration:none;">VSTeam</a>
+<a href="{% url 'homePage' %}" style="font-family: 'Rocher'; text-decoration:none;" class="topic_pos">VSTeam</a>
     <header>
     {% for comment_data in comments_data %}
         <div>
@@ -23,7 +23,7 @@
         <form method="post">
             {% csrf_token %}
         <input type="text" placeholder="Enter the topic" name="id_topic" style="color:white;">
-        <input type="text" placeholder="Enter the comment" name="id_comm" style="color: white;">
+        <input type="text" placeholder="Enter the comment" name="id_comm" style="color: white; font-family:'Rocher';">
         <button type="submit">Отправить</button>
         </form>
     </div>
@@ -49,6 +49,12 @@
         @font-face {
             font-family: 'Rocher';
             src: url(https://assets.codepen.io/9632/RocherColorGX.woff2);
+        }
+        .topic_pos{
+        position:absolute;
+        top:20px;
+        left:30px;
+        font-size:40px;
         }
         body {
             font-family: 'Retron2000', sans-serif;
@@ -79,6 +85,7 @@
             margin-top: 8px;
             font-size: 14px;
             font-weight: 300;
+            font-family:'Rocher';
         }
         ::placeholder{
             color: #e5e5e5;

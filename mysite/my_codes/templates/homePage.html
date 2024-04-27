@@ -118,7 +118,7 @@
     <div style="text-align: center;">
       <form method="post" action="{% url 'homePage' %}">
           {% csrf_token %}
-          <input type="search" name="username" class="dark-rounded-input" placeholder="Search by Username" style="color: green;">
+          <input type="search" name="username" class="dark-rounded-input" placeholder="Search by Username" style="color: green;  font-family'Rocher';">
           <button type="submit">Search</button>
       </form>
   </div>
@@ -278,12 +278,13 @@
   font-weight: 400;
   color: #fff;
   transition: all 0.4s ease;
-  font-family: 'Retron2000', sans-serif;
+  font-family: 'Rocher', sans-serif;
   color: green;
 }
 .sidebar.close .nav-links li a .link_name{
   opacity: 0;
   pointer-events: none;
+  font-family:'Rocher';
 
 }
 .sidebar .nav-links li .sub-menu{
@@ -326,11 +327,14 @@
 }
 .sidebar .nav-links li .sub-menu .link_name{
   display: none;
+  font-family:'Rocher';
 }
 .sidebar.close .nav-links li .sub-menu .link_name{
   font-size: 18px;
   opacity: 1;
   display: block;
+    font-family:none;
+
 }
 .sidebar .nav-links li .sub-menu.blank{
   opacity: 1;
