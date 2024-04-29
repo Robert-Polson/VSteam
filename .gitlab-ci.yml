@@ -1,0 +1,24 @@
+image: python:3.12-alphine
+
+before_script:
+    - pip install -r requirements.txt
+stages:
+    - test
+    - style
+unittest:
+    stage: test
+    script: 
+        - python -m unittest main.py
+    artifacts:
+        untracked: false
+        when: on_success
+        expire_in: 30 days
+
+pylint:
+    stage: style
+    script: 
+        - pycodestyle main.py
+    artifacts:
+        untracked: false
+        when: on_success
+        expire_in: 30 days
