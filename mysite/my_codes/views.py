@@ -9,7 +9,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import SearchUserForm
-from .models import NIKNEM, Friend, Turnir, Reviews, Post1, Avatar, Message, Socials
+from .models import NIKNEM, Friend, Turnir, Reviews, Post1, Avatar, Message, Socials, PostFile
 
 from .forms import LoginForm, RegisterForm, RememberPassword
 from django.contrib.auth import login, authenticate
@@ -432,16 +432,56 @@ def create_post(request):
     if request.method == "POST":
         topic = request.POST.get("topic")
         texts = request.POST.get("texts")
-        files_image = request.FILES.get("file_image")
+        # files_image = request.FILES.get("file_image")
         post_author = Post1(
             author=request.user,
             title=topic,
             text=texts,
             date=datetime.now(),
-            image=files_image,
+           # image=files_image,
         )
         post_author.save()
     return render(request, "create_post.html", context)
+
+
+def api_v1_user_publish_post(request):
+    if request.method != "POST":
+        return HttpResponse(status=405)
+
+    user = request.user
+
+    if not user.is_authenticated:
+        return HttpResponse(status=401)
+
+    title = request.POST.get('title', None)
+    text = request.POST.get('text', None)
+
+    print(request.FILES)
+
+    if title is None or text is None:
+        return HttpResponse(status=400)
+
+    if len(request.FILES) > 10:
+        return HttpResponse(status=413)
+
+    post = Post1(
+        author=user,
+        title=title,
+        text=text,
+        date=datetime.now()
+    )
+
+    post.save()
+
+    for file_key in request.FILES:
+        file = request.FILES[file_key]
+        if file.size > 10 * 1024 * 1024:
+            continue
+
+        PostFile.save_file(post, file)
+
+    return HttpResponse(status=200)
+
 
 
 def home_page(request):

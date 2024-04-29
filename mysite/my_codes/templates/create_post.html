@@ -30,13 +30,17 @@
 		<form method="post" action="{% url 'create_post' %}" enctype="multipart/form-data">
 			{% csrf_token %}
 		<label>WRITE INFORMATION ABOUT YOUR POST</label>
-		<input type="text" name="topic" placeholder="write a topic...">
+		<input type="text" id="post-title" name="topic" placeholder="write a topic...">
 		<br>
 		<br>
-		<input type="text" name="texts" placeholder="write a text...">
+		<input type="text" id="post-text" name="texts" placeholder="write a text...">
 		<h2 class="modal-title">Upload IMAGE or VIDEO</h2>
 		<p class="modal-description">Attach the file below</p>
-		<button class="upload-area">
+		<div id="error-message" color="red"></div>
+		<div id="files">
+
+		</div>
+		<button class="upload-area" onclick="addFilesToPost()" type="button">
 			<span class="upload-area-icon">
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="340.531" height="419.116" viewBox="0 0 340.531 419.116">
   <g id="files-new" clip-path="url(#clip-files-new)">
@@ -51,11 +55,83 @@
 
 	<div class="modal-footer">
 		<button class="btn-secondary">Cancel</button>
-		<button type="submit" class="btn-primary">Upload File</button>
+		<button type="button" class="btn-primary" onclick="publishPost()">Publish post</button>
 	</div>
 		</form>
 	  </div>
 </div>
+<script>
+let postFormData = new FormData();
+let postFiles = Array();
+function addFilesToPost(event) {
+	console.log('1231231');
+
+	let input = document.createElement('input');
+	input.type = 'file';
+	input.click();
+
+	console.log('123');
+
+	input.onchange = function(event) {
+		event.preventDefault();
+
+		console.log('start');
+
+		
+
+		Array.from(input.files).forEach(file => {
+
+			console.log('456');
+
+			if(file.size > 10*1024*1024) {
+				document.getElementById('error-message').innerHTML += 'File ' + file.name + ' cannot be more than 10MB<br>';
+				return;
+			}
+
+			if(postFiles.length >= 10) {
+				document.getElementById('error-message').innerHTML += 'There cannot be more than 10 files<br>';
+				return;
+			}
+
+			console.log('123');
+			
+			let filesContainer = document.getElementById("files"); 
+			let fileDiv = document.createElement("div"); 
+			fileDiv.classList.add("file");
+			fileDiv.innerHTML = file.name;
+			filesContainer.appendChild(fileDiv);
+
+			postFiles.push(file);
+		});
+	}
+}
+function publishPost(event) {
+	let csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+	postFormData.append('title', document.getElementById('post-title').value);
+	postFormData.append('text', document.getElementById('post-text').value);
+
+	Array.from(postFiles).forEach((file, index) => {
+		postFormData.append('file_' + new Text(index), file);
+	});
+
+	fetch('/api/v1/user/publish_post/', {
+			method: 'POST',
+			body: postFormData,
+			headers: {
+				'X-CSRFToken': csrftoken
+			}
+		})
+		.then(response => {
+			if (response.ok) {
+				alert('почему');
+				location.reload();
+			} else {
+				alert('Ошибка');
+			}
+		})
+		.catch(error => console.error(error));
+}
+</script>
 <style>
 	@import url('https://fonts.cdnfonts.com/css/retron2000');
         @font-face {

@@ -65,4 +65,5 @@ urlpatterns = [
     path("chat/<str:username>", views.chat_page, name="chat"),
     path("api/v1/user/send_message/", views.api_v1_user_send_message),
     path("api/v1/user/update_chat/", views.api_v1_user_update_chat),
+    path("api/v1/user/publish_post/", views.api_v1_user_publish_post)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -82,10 +82,29 @@ class Post1(models.Model):
     title = models.CharField(max_length=65)
     text = models.CharField(max_length=150)
     date = models.DateField(blank="true", auto_now_add=True)
-    image = models.ImageField(upload_to="images/", blank=True, null=True)
 
     def __str__(self):
         return self.title
+
+
+class PostFile(models.Model):
+    post = models.ForeignKey(Post1, on_delete=models.CASCADE)
+    name = models.CharField(max_length=256)
+    file = models.FileField(upload_to="post_files")
+    @staticmethod
+    def save_file(post: Post1, file):
+        name = file.name
+        with BytesIO(file.read()) as f:
+
+            f.name = str(uuid.uuid4())
+
+            post_model = PostFile(
+                post=post,
+                name=name,
+                file=f
+            )
+
+            post_model.save()
 
 
 class Likes:
@@ -106,7 +125,6 @@ class Avatar(models.Model):
 
     @staticmethod
     def save_avatar(user: User, image):
-
         with BytesIO(image.read()) as f:
             image_handle = Image.open(f)
             image_handle.verify()

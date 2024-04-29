@@ -44,17 +44,3 @@ class RegisterForm(UserCreationForm):
         if password1 and password2 and password1 != password2:
             self.add_error("password2", ("The two password fields didn’t match."))
         return password2
-
-
-class PostForm(forms.ModelForm):
-    """Class to post form"""
-    class Meta:
-        """Class for Meta"""
-        model = Post1
-        fields = ["title", "text", "image"]
-        labels = {
-            "title": "Write a topic",
-            "text": "Write a text",
-            "image": "Load a picture/video",
-        }
-
