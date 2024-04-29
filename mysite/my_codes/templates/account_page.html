@@ -173,14 +173,17 @@
 </div>
 <div class="social-icons">
     {% if author%}
-        <a href="https://vk.com/{{ author.link_vk }}" target="_blank"><img src="{% static 'VK_Compact_Logo_(2021-present).svg.png' %}" alt="VK"></a>
 
-        <a href="https://www.youtube.com/{{ author.link_youtube }}" target="_blank"><img src="{% static 'png-transparent-youtube-logo-youtube-text-trademark-logo.png' %}" alt="YOUTUBE"></a>
+            <a href="https://vk.com/{{ author.link_vk }}" target="_blank"><img src="{% static 'VK_Compact_Logo_(2021-present).svg.png' %}" alt="VK"></a>
 
-        <a href="https://discord.com/{{ author.link_discord }}" target="_blank"><img src="{% static '636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png' %}" alt="DISCORD"></a>
-    {% else %}
-    <p>Don't have some social_networks</p>
+            <a href="https://www.youtube.com/{{ author.link_youtube }}" target="_blank"><img src="{% static 'png-transparent-youtube-logo-youtube-text-trademark-logo.png' %}" alt="YOUTUBE"></a>
+
+            <a href="https://discord.com/{{ author.link_discord }}" target="_blank"><img src="{% static '636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png' %}" alt="DISCORD"></a>
+        {% else %}
+            <p>Don't have some social_networks</p>
+
     {% endif %}
+
 
 </div>
     <input type="file" name="avatarInput" style="display: none;" onchange="previewImage(event)">

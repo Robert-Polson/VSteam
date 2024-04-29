@@ -279,9 +279,11 @@ def settings_page(request, user_id=None):
         friends = Friend.get_friends(current_user=user)
         friends_count = friends.count()
         posts = Post1.objects.filter(author=user)
+        author = Socials.objects.filter(author = user.id).last()
         posts_count = posts.count()
         context = {
             "account": user,
+            "author":author,
             "niknem": niknem,
             "show_sett_acc_page": True,
             "reviews": reviews,
