@@ -351,9 +351,8 @@ const word = "Welcome to VSTeam";
 
     function displayLetter() {
       if (!isReversed) {
-        if (word[index] !== undefined) {
-          document.getElementById('output').innerText += " " + word[index] + "  ";
-        }
+        let text = word.slice(0, index)
+        document.getElementById('output').innerText = text;
         index++;
         if (index === word.length) {
           isReversed = true;
@@ -363,6 +362,7 @@ const word = "Welcome to VSTeam";
         index--;
         if (index === -1) {
           isReversed = false;
+          index = 0;
         }
       }
       setTimeout(displayLetter, 500);
@@ -373,9 +373,8 @@ const word = "Welcome to VSTeam";
 <form id="myForm" method="post" onsubmit="return redirectUser()" style="float: center">
     {% csrf_token %}
     <div>
-        <button style="--clr:#39FF14" id="registerButton" class="glow-on-hover"><span>REGISTER</span><i></i></button>
-        <button style="--clr:#0FF0FC" id="loginButton" class="glow-on-hover"><span>LOGIN</span><i></i></button>
-        <button style="--clr:#8A2BE2" id="continueButton" class="glow-on-hover"><span>Button</span><i></i></button>
+        <button style="--clr:#39FF14;" id="registerButton" class="glow-on-hover"><span>REGISTER</span><i></i></button>
+        <button style="--clr:#0FF0FC;" id="loginButton" class="glow-on-hover"><span>LOGIN</span><i></i></button>
     </div>
 </form>
 <form1 style="float: right;">
@@ -407,9 +406,6 @@ const word = "Welcome to VSTeam";
                 return false;
             } else if (loginButton === event.submitter) {
                 window.location.href = '/login_pages';
-                return false;
-            } else if (continueButton === event.submitter) {
-                window.location.href = '/mainsss';
                 return false;
             }
             return true;
