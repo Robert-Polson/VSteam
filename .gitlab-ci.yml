@@ -17,6 +17,14 @@ unittest:
 pylint:
     stage: style
     script: 
+        - pylint --fail-under=7 main.py
+    artifacts:
+        untracked: false
+        when: on_success
+        expire_in: 30 days
+pycodestyle:
+    stage: style
+    script: 
         - pycodestyle main.py
     artifacts:
         untracked: false
