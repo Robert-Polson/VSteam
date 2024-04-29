@@ -1,6 +1,4 @@
-
 from sqlite3 import IntegrityError
-
 
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
@@ -9,8 +7,6 @@ from django.db.models import Count, Q
 from django.db.models.functions import TruncMonth
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-
-
 
 from .forms import SearchUserForm
 from .models import NIKNEM, Friend, Turnir, Reviews, Post1, Avatar, Message, Socials
@@ -22,6 +18,8 @@ from django.shortcuts import render, redirect
 import requests
 import datetime
 from datetime import datetime
+
+
 def register_page(request):
     if request.method == "GET":
         form = RegisterForm()
@@ -144,17 +142,12 @@ def account_page(request, username):
         friends_count = friends.count()
         posts = Post1.objects.filter(author=user)
         posts_count = posts.count()
-        vk_link = Socials.objects.filter(link_vk=user.id).first()
-        youtube_link = Socials.objects.filter(link_youtube=user.id).first()
-        discord_link = Socials.objects.filter(link_discord=user.id).first()
-
+        author = Socials.objects.filter(author = user.id).last()
         niknem = NIKNEM.objects.filter(user=user).first()
 
         context = {
-            "vk_link": vk_link.link_vk if vk_link else "",
-            "youtube_link": youtube_link.link_youtube if youtube_link else "",
-            "discord_link": discord_link.link_discord if discord_link else "",
             "account": user,
+            "author": author,
             "niknem": niknem.niknem if niknem else "No NickName",
             "is_owner_of_account": user == request.user,
             "reviews": reviews,
@@ -353,14 +346,15 @@ def change_friends(request, operation, pk):
 
 
 def social_network(request):
-    if request.POST:
+    if request.method == "POST":
         vk_name = request.POST.get('vk_name')
         youtube_name = request.POST.get('youtube_name')
         discord_name = request.POST.get('discord_name')
+        social_table = Socials(author=request.user, link_vk=vk_name, link_youtube=youtube_name,
+                               link_discord=discord_name)
+        social_table.save()
     else:
-        return render(request, "social_network.html")
-    social_table = Socials(author = request.user , link_vk = vk_name , link_youtube = youtube_name,link_discord=discord_name)
-    social_table.save()
+        messages.error(request, "Please, you need to do a login")
     return render(request, "social_network.html")
 
 
@@ -375,8 +369,8 @@ def turnir_page(request):
         lh3 = len('h3 class="title_hoDOT"')
         ld = len('<div class="value_lJuD+">')
         for i in range(count):
-            latestfound = text.find('h3 class="title_hoDOT"', latestfound+1)
-            pos = latestfound+lh3+1
+            latestfound = text.find('h3 class="title_hoDOT"', latestfound + 1)
+            pos = latestfound + lh3 + 1
             name = ""
             while text[pos] != '<':
                 name += text[pos]
@@ -406,7 +400,9 @@ def turnir_page(request):
                 turnir = Turnir.objects.create(date=Date, name=name, prize=prize)
                 turnir.save()
     context['turnirs'] = Turnir.objects.filter().all()
-    return render(request,'turnir_page.html', context)
+    return render(request, 'turnir_page.html', context)
+
+
 def charts(request):
     user_data_2023 = list(
         User.objects.annotate(month=TruncMonth("date_joined"))
@@ -512,8 +508,9 @@ def api_v1_user_update_chat(request):
 
     recipient = User.objects.filter(username=recipient).first()
 
-    messages_list = Message.objects.filter(Q(author=user, recipient=recipient) | Q(author=recipient, recipient=user)).filter(id__gt=last_message).order_by(
-            'timestamp')
+    messages_list = Message.objects.filter(
+        Q(author=user, recipient=recipient) | Q(author=recipient, recipient=user)).filter(id__gt=last_message).order_by(
+        'timestamp')
 
     messages = []
     for message in messages_list:
