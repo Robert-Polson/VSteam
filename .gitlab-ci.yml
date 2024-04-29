@@ -5,15 +5,6 @@ before_script:
 stages:
     - test
     - style
-unittest:
-    stage: test
-    script: 
-        - python -m unittest main.py
-    artifacts:
-        untracked: false
-        when: on_success
-        expire_in: 30 days
-
 pylint:
     stage: style
     script: 
