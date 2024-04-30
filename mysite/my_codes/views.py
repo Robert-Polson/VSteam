@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.core import serializers
 from django.db.models import Count, Q
 from django.db.models.functions import TruncMonth
+from django.forms import model_to_dict
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -497,8 +498,23 @@ def home_page(request):
         form = SearchUserForm()
 
     context = {"account": request.user}
+
     posts = Post1.objects.filter(author=request.user)
-    context["posts"] = posts
+
+    context['posts'] = []
+
+    for post in posts:
+        post_files = PostFile.objects.filter(post=post)
+        post = model_to_dict(post)
+        post['files'] = []
+        for file in post_files:
+            file_dict = {'url': file.file.url, 'name': file.name}
+            post['files'].append(file_dict)
+
+        context['posts'].append(post)
+
+    print(context['posts'])
+
     friend_instance = Friend.objects.filter(current_user=request.user).first()
     if friend_instance:
         friends = friend_instance.users.all()

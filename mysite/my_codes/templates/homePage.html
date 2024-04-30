@@ -128,7 +128,9 @@
                 <h1 style="color:white;">{{post.author}}</h1>
                 <h2 style="color:white">{{ post.title }}</h2>
                 <p style="color:white;">{{ post.text }}</p>
-              <input type="image">
+              {% for file in post.files %}
+                {{ file.name }} - <a href="{{ file.url }}">Скачать</a>
+              {% endfor %}
             </div>
         {% endfor %}
 

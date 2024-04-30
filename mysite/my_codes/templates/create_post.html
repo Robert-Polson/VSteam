@@ -111,7 +111,7 @@ function publishPost(event) {
 	postFormData.append('text', document.getElementById('post-text').value);
 
 	Array.from(postFiles).forEach((file, index) => {
-		postFormData.append('file_' + new Text(index), file);
+		postFormData.append('file_' + index, file);
 	});
 
 	fetch('/api/v1/user/publish_post/', {
