@@ -143,7 +143,7 @@ def account_page(request, username):
         friends_count = friends.count()
         posts = Post1.objects.filter(author=user)
         posts_count = posts.count()
-        author = Socials.objects.filter(author = user.id).last()
+        author = Socials.objects.filter(author=user.id).last()
         niknem = NIKNEM.objects.filter(user=user).first()
 
         context = {
@@ -280,11 +280,11 @@ def settings_page(request, user_id=None):
         friends = Friend.get_friends(current_user=user)
         friends_count = friends.count()
         posts = Post1.objects.filter(author=user)
-        author = Socials.objects.filter(author = user.id).last()
+        author = Socials.objects.filter(author=user.id).last()
         posts_count = posts.count()
         context = {
             "account": user,
-            "author":author,
+            "author": author,
             "niknem": niknem,
             "show_sett_acc_page": True,
             "reviews": reviews,
@@ -353,9 +353,23 @@ def social_network(request):
         vk_name = request.POST.get('vk_name')
         youtube_name = request.POST.get('youtube_name')
         discord_name = request.POST.get('discord_name')
-        social_table = Socials(author=request.user, link_vk=vk_name, link_youtube=youtube_name,
-                               link_discord=discord_name)
-        social_table.save()
+        items = Socials.objects.filter(author=request.user.id)
+        if len(items) == 0:
+            social_table = Socials(author=request.user, link_vk=vk_name, link_youtube=youtube_name,
+                                   link_discord=discord_name)
+            social_table.save()
+        else:
+            item = items[0]
+            if vk_name != '':
+                item.link_vk = vk_name
+
+                item.save(update_fields = ['link_vk'])
+            if youtube_name != '':
+                item.link_youtube = youtube_name
+                item.save(update_fields = ['link_youtube'])
+            if discord_name != '':
+                item.link_discord = discord_name
+                item.save(update_fields = ['link_discord'])
     else:
         messages.error(request, "Please, you need to do a login")
     return render(request, "social_network.html")
@@ -439,7 +453,7 @@ def create_post(request):
             title=topic,
             text=texts,
             date=datetime.now(),
-           # image=files_image,
+            # image=files_image,
         )
         post_author.save()
     return render(request, "create_post.html", context)
@@ -482,7 +496,6 @@ def api_v1_user_publish_post(request):
         PostFile.save_file(post, file)
 
     return HttpResponse(status=200)
-
 
 
 def home_page(request):
