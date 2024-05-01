@@ -17,8 +17,9 @@ from django.contrib.auth import login, authenticate
 from django.contrib import messages
 from django.shortcuts import render, redirect
 import requests
-import datetime
-from datetime import datetime
+#import datetime
+from datetime import datetime , date as datetime_date
+
 
 
 def register_page(request):
@@ -229,19 +230,19 @@ def find_users_page(request):
     return render(request, "find_users.html", context)
 
 
-def tournament_page(request):
-    context = {}
-    if request.method == "POST":
-        date = request.POST.get("Date")
-        name = request.POST.get("Name")
-        participants = request.POST.get("Participants")
-        placeToWatch = request.POST.get("PlaceToWatch")
-        turnir = Turnir.objects.create(
-            date=date, name=name, participants=participants, placeToWatch=placeToWatch
-        )
-
-    context["turnirs"] = Turnir.objects
-    return render(request, "tournament.html")
+# def tournament_page(request):
+#     context = {}
+#     if request.method == "POST":
+#         date = request.POST.get("Date")
+#         name = request.POST.get("Name")
+#         participants = request.POST.get("Participants")
+#         placeToWatch = request.POST.get("PlaceToWatch")
+#         turnir = Turnir.objects.create(
+#             date=date, name=name, participants=participants, placeToWatch=placeToWatch
+#         )
+#
+#     context["turnirs"] = Turnir.objects
+#     return render(request, "tournament.html")
 
 
 def reviews(request, user_id=None):
@@ -405,7 +406,7 @@ def turnir_page(request):
             day = int(d[0])
             month = int(d[1])
             year = int(d[2])
-            Date = datetime.date(year, month, day)
+            Date = datetime_date(year, month, day)
             prize = ""
             prizepos = text.find('<div class="value_lJuD+">', datepos) + ld
             while text[prizepos] != '<':
@@ -417,7 +418,7 @@ def turnir_page(request):
                 turnir = Turnir.objects.create(date=Date, name=name, prize=prize)
                 turnir.save()
     context['turnirs'] = Turnir.objects.filter().all()
-    return render(request, 'turnir_page.html', context)
+    return render(request, 'tournament.html', context)
 
 
 def charts(request):
