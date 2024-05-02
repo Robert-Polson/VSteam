@@ -40,7 +40,7 @@
 <input type="text" placeholder="Enter your id for your VK account" class="enter_socialname" name="vk_name">
 <input type="text" placeholder="Enter your id for your YOUTUBE account" class="enter_socialname" name="youtube_name">
 <input type="text" placeholder="Enter your id for your DISCORD account" class="enter_socialname" name="discord_name">
-    <button type="submit" class="button_okey">Подтвердить</button>
+    <button type="submit" class="button_okey">Submit</button>
 </div>
 </form>
 <style>
@@ -68,8 +68,45 @@
     border-radius: 20px;
     }
     .button_okey{
-    width: 30%;
+    width: 20%;
+    font-family:'Rocher';
     }
+    .main_link {
+    background-color: #1a1a1a;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.enter_socialname {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 40%;
+  font-family: 'Rocher';
+}
+.enter_socialname::placeholder {
+    color: #ccc;
+}
+
+.enter_socialname:hover {
+    background-color: #555;
+}
+
+.button_okey {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.button_okey:hover {
+    background-color: #45a049;
+}
 </style>
 </body>
 </html>
