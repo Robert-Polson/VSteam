@@ -43,6 +43,15 @@
     <button type="submit" class="button_okey">Submit</button>
 </div>
 </form>
+<div class="achievements">
+    <form method="post">
+        {% csrf_token %}
+    <h3 style="font-family:'Rocher';">If you have experience, you can tell about it:</h3>
+    <input type="text" class="enter_socialname" name="achievement_text" style="height: 150px; width: 45%; vertical-align: top; font-family: 'Rocher'; font-size:15px;">
+        <button type="submit" class="button_submit">Submit</button>
+    </form>
+</div>
+
 <style>
 
     body {
@@ -61,6 +70,20 @@
     .main_link {
     display: flex;
     flex-flow: column wrap;
+    }
+    .button_submit{
+    position: absolute;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-family: 'Rocher';
+    top: 75%;
+    left: 2%;
+    width: 200px;
+    font-size: 15px;
     }
     .enter_socialname {
     margin: 5px;

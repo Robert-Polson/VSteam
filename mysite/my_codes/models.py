@@ -159,3 +159,8 @@ class Socials(models.Model):
     link_vk = models.CharField(max_length=100, null=True)
     link_youtube = models.CharField(max_length=100, null=True)
     link_discord = models.CharField(max_length=100, null=True)
+
+
+class Achievement(models.Model):
+    author_achievement = models.ForeignKey(User , on_delete=models.CASCADE)
+    achievements = models.CharField(max_length=100 , null=True)

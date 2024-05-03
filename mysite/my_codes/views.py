@@ -10,7 +10,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import SearchUserForm
-from .models import NIKNEM, Friend, Turnir, Reviews, Post1, Avatar, Message, Socials, PostFile
+from .models import NIKNEM, Friend, Turnir, Reviews, Post1, Avatar, Message, Socials, PostFile, Achievement
 
 from .forms import LoginForm, RegisterForm, RememberPassword
 from django.contrib.auth import login, authenticate
@@ -354,6 +354,7 @@ def social_network(request):
         vk_name = request.POST.get('vk_name')
         youtube_name = request.POST.get('youtube_name')
         discord_name = request.POST.get('discord_name')
+        achievement_text = request.POST.get('achievement_text')
         items = Socials.objects.filter(author=request.user.id)
         if len(items) == 0:
             social_table = Socials(author=request.user, link_vk=vk_name, link_youtube=youtube_name,
@@ -371,8 +372,15 @@ def social_network(request):
             if discord_name != '':
                 item.link_discord = discord_name
                 item.save(update_fields = ['link_discord'])
+
+        if len(achievement_text)>10:
+            achievement_table = Achievement(author_achievement = request.user , achievements = achievement_text)
+            achievement_table.save()
+        else:
+            messages.error(request, "Please , you need write more 10 symbol")
     else:
         messages.error(request, "Please, you need to do a login")
+
     return render(request, "social_network.html")
 
 
