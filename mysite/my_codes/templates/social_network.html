@@ -6,130 +6,142 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Social Media Icons</title>
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="{% static 'styles.css' %}">
 </head>
 <body>
-<!--<div class="social-icons">-->
-<!--<a href="https://vk.com/" target="_blank"><img src="{% static 'VK_Compact_Logo_(2021-present).svg.png' %}" alt="VK"></a>-->
-<!--    <a href="https://www.youtube.com" target="_blank"><img src="{% static '636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png' %}" alt="DISCORD"></a>-->
-<!--    <a href="https://youtube.com/" target="_blank"><img src="{% static 'png-transparent-youtube-logo-youtube-text-trademark-logo.png' %}" alt="YOUTUBE"></a>-->
-<!--&lt;!&ndash;</div>&ndash;&gt;-->
-<!-- <style>-->
-<!--     .social-icons {-->
-<!--    display: flex;-->
-<!--    justify-content: center;-->
-<!--    margin-top: 20px;-->
-<!--}-->
-
-<!--.social-icons a {-->
-<!--    margin: 0 10px;-->
-<!--}-->
-
-<!--.social-icons img {-->
-<!--    width: 50px;-->
-<!--    height: 50px;-->
-<!--}-->
-<!-- </style>-->
 <header>
     <a href="{% url 'homePage' %}" style="font-family:'Rocher'; font-size: 40px; text-decoration:none;">VSTeam</a>
 </header>
 <h1>You can share your achievements and your network connections here to find friends.</h1>
-<form method="post">
+<form method="post" id="socialForm">
     {% csrf_token %}
-<div class="main_link">
-<input type="text" placeholder="Enter your id for your VK account" class="enter_socialname" name="vk_name">
-<input type="text" placeholder="Enter your id for your YOUTUBE account" class="enter_socialname" name="youtube_name">
-<input type="text" placeholder="Enter your id for your DISCORD account" class="enter_socialname" name="discord_name">
-    <button type="submit" class="button_okey">Submit</button>
-</div>
+    <div class="main_link">
+        <input type="text" placeholder="Enter your id for your VK account" class="enter_socialname" name="vk_name">
+        <input type="text" placeholder="Enter your id for your YOUTUBE account" class="enter_socialname" name="youtube_name">
+        <input type="text" placeholder="Enter your id for your DISCORD account" class="enter_socialname" name="discord_name">
+        <button type="submit" class="button_okey">Submit</button>
+    </div>
 </form>
 <div class="achievements">
-    <form method="post">
+    <form method="post" id="achievementForm">
         {% csrf_token %}
-    <h3 style="font-family:'Rocher';">If you have experience, you can tell about it:</h3>
-    <input type="text" class="enter_socialname" name="achievement_text" style="height: 150px; width: 45%; vertical-align: top; font-family: 'Rocher'; font-size:15px;">
+        <h3 style="font-family:'Rocher';">If you have experience, you can tell about it:</h3>
+        <input type="text" class="enter_socialname" name="achievement_text" style="height: 150px; width: 45%; vertical-align: top; font-family: 'Rocher'; font-size:15px;">
         <button type="submit" class="button_submit">Submit</button>
     </form>
 </div>
 
 <style>
-
     body {
-    background-color: #1f048a;
+        background-color: #1f048a;
     }
     @import url('https://fonts.cdnfonts.com/css/retron2000');
-        @font-face {
-            font-family: 'Rocher';
-            src: url(https://assets.codepen.io/9632/RocherColorGX.woff2);
-        }
+    @font-face {
+        font-family: 'Rocher';
+        src: url(https://assets.codepen.io/9632/RocherColorGX.woff2);
+    }
     h1 {
-    font-family: 'Rocher';
-    font-size:25px;
-    text-align:center;
+        font-family: 'Rocher';
+        font-size: 25px;
+        text-align: center;
     }
     .main_link {
-    display: flex;
-    flex-flow: column wrap;
+        display: flex;
+        flex-flow: column wrap;
+        background-color: #1a1a1a;
+        padding: 20px;
+        border-radius: 10px;
     }
-    .button_submit{
-    position: absolute;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-family: 'Rocher';
-    top: 75%;
-    left: 2%;
-    width: 200px;
-    font-size: 15px;
+    .button_submit {
+        position: absolute;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-family: 'Rocher';
+        top: 75%;
+        left: 2%;
+        width: 200px;
+        font-size: 15px;
     }
     .enter_socialname {
-    margin: 5px;
-    width: 30%;
-    border-radius: 20px;
+        margin: 5px;
+        width: 30%;
+        border-radius: 20px;
+        background-color: #333;
+        color: #fff;
+        border: none;
+        padding: 10px;
+        margin-bottom: 10px;
+        width: 40%;
+        font-family: 'Rocher';
     }
-    .button_okey{
-    width: 20%;
-    font-family:'Rocher';
+    .enter_socialname::placeholder {
+        color: #ccc;
     }
-    .main_link {
-    background-color: #1a1a1a;
-    padding: 20px;
-    border-radius: 10px;
-}
-
-.enter_socialname {
-    background-color: #333;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 10px;
-    width: 40%;
-  font-family: 'Rocher';
-}
-.enter_socialname::placeholder {
-    color: #ccc;
-}
-
-.enter_socialname:hover {
-    background-color: #555;
-}
-
-.button_okey {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-}
-
-.button_okey:hover {
-    background-color: #45a049;
-}
+    .enter_socialname:hover {
+        background-color: #555;
+    }
+    .button_okey {
+        width: 20%;
+        font-family:'Rocher';
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        cursor: pointer;
+    }
+    .button_okey:hover {
+        background-color: #45a049;
+    }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var socialForm = document.getElementById('socialForm');
+        socialForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            var formData = new FormData(socialForm);
+            
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'social_network/', true);
+            xhr.onload = function() {
+                if (xhr.status >= 200 && xhr.status < 400) {
+
+                } else {
+
+                }
+            };
+            xhr.onerror = function() {
+
+            };
+            xhr.send(formData);
+        });
+
+        var achievementForm = document.getElementById('achievementForm');
+        achievementForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            var formData = new FormData(achievementForm);
+            
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'social_network/', true);
+            xhr.onload = function() {
+                if (xhr.status >= 200 && xhr.status < 400) {
+
+                } else {
+
+                }
+            };
+            xhr.onerror = function() {
+
+            };
+            xhr.send(formData);
+        });
+    });
+</script>
+
 </body>
 </html>

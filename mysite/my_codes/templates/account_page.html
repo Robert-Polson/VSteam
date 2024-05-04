@@ -64,7 +64,9 @@
             box-shadow: 0 10px 50px rgba(235, 25, 110, 1);
 
             padding: 20px;
-            margin-left:5px;
+            margin-left:150px;
+            position: absolute;
+
         }
 
         .card__name {
@@ -145,6 +147,14 @@
         top: 15px;
         left: 15px;
         }
+        .achievement {
+        position: absolute;
+        top: 80%;
+        right: 20%;
+        }
+        .reviewss{
+        margin-left:100px;
+        }
     </style>
 </head>
 <body>
@@ -218,10 +228,16 @@
     <label>commentator: <p style="color: black">{{review.id_commentator}}</p></label>
     <label>Topic: <p style="color: black"> {{review.id_topic_comm}} </p></label>
     <label>comment text: <p style="color: black"> {{review.text_id_comm}}</p></label>
-    <label>Recipient: <p style="color: black">{{review.id_commented}}</p></label>
 </div>
 {% endfor %}
 
+<div class="achievement">
+    {% if achievement__text %}
+    <p>{{achievement_text}}</p>
+    {% else %}
+    <p></p>
+    {% endif %}
+</div>
 <script>
     function dostiz() {
     window.location.href="http://127.0.0.1:8000/achievements//"

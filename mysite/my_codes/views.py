@@ -146,7 +146,7 @@ def account_page(request, username):
         posts_count = posts.count()
         author = Socials.objects.filter(author=user.id).last()
         niknem = NIKNEM.objects.filter(user=user).first()
-
+        achievement_text = Achievement.objects.filter(author_achievement = user)
         context = {
             "account": user,
             "author": author,
@@ -155,6 +155,7 @@ def account_page(request, username):
             "reviews": reviews,
             "post_count": posts_count,
             "friends_count": friends_count,
+            "achievement__text": achievement_text,
         }
 
         return render(request, "account_page.html", context)
@@ -373,7 +374,7 @@ def social_network(request):
                 item.link_discord = discord_name
                 item.save(update_fields = ['link_discord'])
 
-        if len(achievement_text)>10:
+        if  achievement_text and len(achievement_text)>10:
             achievement_table = Achievement(author_achievement = request.user , achievements = achievement_text)
             achievement_table.save()
         else:
