@@ -508,7 +508,7 @@ def home_page(request):
         post = model_to_dict(post)
         post['files'] = []
         for file in post_files:
-            file_dict = {'url': file.file.url, 'name': file.name}
+            file_dict = {'url': file.file.url, 'name': file.name, 'is_image': file.is_image}
             post['files'].append(file_dict)
 
         context['posts'].append(post)

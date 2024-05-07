@@ -91,16 +91,26 @@ class PostFile(models.Model):
     post = models.ForeignKey(Post1, on_delete=models.CASCADE)
     name = models.CharField(max_length=256)
     file = models.FileField(upload_to="post_files")
+    is_image = models.BooleanField(default=False)
 
     @staticmethod
     def save_file(post: Post1, file):
         name = file.name
         file.name = str(uuid.uuid4())
 
+        try:
+            with BytesIO(file.read()) as f:
+                image_handle = Image.open(f)
+                image_handle.verify()
+                is_image = True
+        except Exception:
+            is_image = False
+
         post_model = PostFile(
             post=post,
             name=name,
-            file=file
+            file=file,
+            is_image=is_image
         )
 
         post_model.save()
