@@ -105,7 +105,7 @@
         socialForm.addEventListener('submit', function(event) {
             event.preventDefault();
             var formData = new FormData(socialForm);
-            
+
             var xhr = new XMLHttpRequest();
             xhr.open('POST', 'social_network/', true);
             xhr.onload = function() {
@@ -125,7 +125,7 @@
         achievementForm.addEventListener('submit', function(event) {
             event.preventDefault();
             var formData = new FormData(achievementForm);
-            
+
             var xhr = new XMLHttpRequest();
             xhr.open('POST', 'social_network/', true);
             xhr.onload = function() {
