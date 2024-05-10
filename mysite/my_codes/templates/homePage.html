@@ -129,7 +129,7 @@
                 <p style="color:white;">{{ post.text }}</p>
               {% for file in post.files %}
                 {% if file.is_image %}
-                  <img src="{{ file.url }}">aaaaa
+                  <img src="{{ file.url }}" style="background-size: cover; width: 150px;">
                 {% endif %}
                 {{ file.name }} - <a href="{{ file.url }}">Скачать</a>
               {% endfor %}

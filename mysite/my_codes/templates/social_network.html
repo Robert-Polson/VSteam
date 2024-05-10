@@ -19,7 +19,7 @@
         <input type="text" placeholder="Enter your id for your VK account" class="enter_socialname" name="vk_name">
         <input type="text" placeholder="Enter your id for your YOUTUBE account" class="enter_socialname" name="youtube_name">
         <input type="text" placeholder="Enter your id for your DISCORD account" class="enter_socialname" name="discord_name">
-        <button type="submit" class="button_okey">Submit</button>
+        <button type="button" onclick="load_data_socials()" class="button_okey">Submit</button>
     </div>
 </form>
 <div class="achievements">
@@ -100,47 +100,15 @@
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var socialForm = document.getElementById('socialForm');
-        socialForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-            var formData = new FormData(socialForm);
-
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', 'social_network/', true);
-            xhr.onload = function() {
-                if (xhr.status >= 200 && xhr.status < 400) {
-
-                } else {
-
-                }
-            };
-            xhr.onerror = function() {
-
-            };
-            xhr.send(formData);
-        });
-
-        var achievementForm = document.getElementById('achievementForm');
-        achievementForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-            var formData = new FormData(achievementForm);
-
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', 'social_network/', true);
-            xhr.onload = function() {
-                if (xhr.status >= 200 && xhr.status < 400) {
-
-                } else {
-
-                }
-            };
-            xhr.onerror = function() {
-
-            };
-            xhr.send(formData);
-        });
-    });
+    function load_data_socials() {
+    let request = new XMLHttpRequest()
+    request.open(
+        method="POST",
+        url="socials_network/",
+        async=true
+    )
+    request.send()
+    }
 </script>
 
 </body>

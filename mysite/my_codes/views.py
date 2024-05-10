@@ -457,9 +457,10 @@ def create_post(request):
     if request.method == "POST":
         topic = request.POST.get("topic")
         texts = request.POST.get("texts")
-        # files_image = request.FILES.get("file_image")
+
         post_author = Post1(
             author=request.user,
+            author_name = request.username,
             title=topic,
             text=texts,
             date=datetime.now(),

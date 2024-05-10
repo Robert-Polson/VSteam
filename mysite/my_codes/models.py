@@ -79,6 +79,7 @@ class Post1(models.Model):
     """Class that work with posts"""
     objects = None
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+
     title = models.CharField(max_length=65)
     text = models.CharField(max_length=150)
     date = models.DateField(blank="true", auto_now_add=True)
