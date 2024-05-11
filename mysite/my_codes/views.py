@@ -460,12 +460,12 @@ def charts(request):
 
 def create_post(request):
     context = {}
+    print(request.user.username)
     if request.method == "POST":
         topic = request.POST.get("topic")
         texts = request.POST.get("texts")
         post_author = Post1(
             author=request.user.username,
-            author_name = request.username,
             title=topic,
             text=texts,
             date=datetime.now(),

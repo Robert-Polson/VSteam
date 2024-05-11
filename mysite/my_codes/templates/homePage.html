@@ -12,9 +12,6 @@
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
    </head>
 <body>
-
-
-
   <div class="sidebar close">
     <div class="logo-details">
       <img class="imgh" src="{% user_avatar account.id %}" width="64px" height="64px">
@@ -123,7 +120,7 @@
   </div>
     <div style="display: flex;">
         {% for post in posts %}
-            <div style="padding:30px; border: 1px solid black;">
+            <div style="padding:30px; border: 1px solid black; width:20px; height: 10px;">
                 <h1 style="color:white;">{{post.author}}</h1>
                 <h2 style="color:white">{{ post.title }}</h2>
                 <p style="color:white;">{{ post.text }}</p>
@@ -131,7 +128,7 @@
                 {% if file.is_image %}
                   <img src="{{ file.url }}" style="background-size: cover; width: 150px;">
                 {% endif %}
-                {{ file.name }} - <a href="{{ file.url }}">Скачать</a>
+                 <a href="{{ file.url }}">Скачать</a>
               {% endfor %}
             </div>
         {% endfor %}
