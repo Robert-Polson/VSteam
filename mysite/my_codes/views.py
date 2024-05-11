@@ -433,6 +433,7 @@ def turnir_page(request):
                 turnir = Turnir.objects.create(date=Date, name=name, prize=prize)
                 turnir.save()
     context['turnirs'] = Turnir.objects.filter().all()
+    context['account'] = request.user
     return render(request, 'tournament.html', context)
 
 
@@ -515,9 +516,27 @@ def api_v1_user_publish_post(request):
 
 
 def home_page(request):
+    context = {"account": request.user}
+
     if request.method == 'POST':
         form = SearchUserForm(request.POST)
         if form.is_valid():
+            posts = Post1.objects.filter(author=User.objects.filter(username=form.cleaned_data['']))
+
+            context['posts'] = []
+
+            for post in posts:
+                post_files = PostFile.objects.filter(post=post)
+                post_username = post.author.username
+                post = model_to_dict(post)
+                post['files'] = []
+                post['username'] = post_username
+                for file in post_files:
+                    file_dict = {'url': file.file.url, 'name': file.name, 'is_image': file.is_image}
+                    post['files'].append(file_dict)
+
+            context['posts'].append(post)
+
             username = form.cleaned_data['username']
             user = User.objects.get(username=username)
             posts = Post1.objects.filter(author=user)
@@ -526,16 +545,16 @@ def home_page(request):
     else:
         form = SearchUserForm()
 
-    context = {"account": request.user}
-
     posts = Post1.objects.filter(author=request.user)
 
     context['posts'] = []
 
     for post in posts:
         post_files = PostFile.objects.filter(post=post)
+        post_username = post.author.username
         post = model_to_dict(post)
         post['files'] = []
+        post['username'] = post_username
         for file in post_files:
             file_dict = {'url': file.file.url, 'name': file.name, 'is_image': file.is_image}
             post['files'].append(file_dict)

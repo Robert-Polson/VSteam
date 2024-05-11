@@ -121,8 +121,8 @@
     <div style="display: flex;">
         {% for post in posts %}
             <div style=" padding:90px; border: 1px solid black; width:20px; height: 10px;">
-                <h1 style="color:white;">{{post.author}}</h1>
-                <h2 style="color:white">{{ post.title }}</h2>
+                <h1 style="color:white;">{{ post.username }}</h1>
+                <h2 style="color:white;">{{ post.title }}</h2>
                 <p style="color:white;">{{ post.text }}</p>
               {% for file in post.files %}
                 {% if file.is_image %}
