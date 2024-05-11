@@ -1,3 +1,4 @@
+""" file views.py """
 from sqlite3 import IntegrityError
 
 from django.contrib.auth import login, authenticate, logout
@@ -21,8 +22,8 @@ import requests
 from datetime import datetime , date as datetime_date
 
 
-
 def register_page(request):
+    """Code for register page"""
     if request.method == "GET":
         form = RegisterForm()
         return render(request, "register.html", {"form": form})
@@ -48,6 +49,7 @@ def register_page(request):
 
 
 def niknem_page(request):
+    """Code for nikname page"""
     username = request.session.get("username")
     email = request.session.get("email")
     print(request.user.username)
@@ -79,6 +81,7 @@ def niknem_page(request):
 
 
 def login_page(request):
+    """Code for login page"""
     form = LoginForm()
     if request.method == "POST":
         form = LoginForm(request.POST)
@@ -98,7 +101,7 @@ def login_page(request):
 
 
 def open_page(request):
-    print(request.user.username)
+    """Code for open page"""
     if request.user.is_authenticated:
         return redirect("homePage")
     context = {}
@@ -113,6 +116,7 @@ def open_page(request):
 
 
 def api_v1_user_upload_avatar(request):
+    """Code for avatar page"""
     if request.method != "POST":
         return HttpResponse(status=405)
 
@@ -135,6 +139,7 @@ def api_v1_user_upload_avatar(request):
 
 
 def account_page(request, username):
+    """Code for account page"""
     friends_count = 0
     posts_count = 0
     try:
@@ -166,6 +171,7 @@ def account_page(request, username):
 
 
 def remember_password(request):
+    """Code for remember page"""
     form = RememberPassword()
     if request.method == "POST":
         form = RememberPassword(request.POST)
@@ -192,10 +198,12 @@ def remember_password(request):
 
 
 def achievements(request):
+    """Code for achivements page"""
     return render(request, "Achievements.html")
 
 
 def find_users_page(request):
+    """Code for find users page"""
     context = {}
 
     if request.method == 'POST':
@@ -247,6 +255,7 @@ def find_users_page(request):
 
 
 def reviews(request, user_id=None):
+    """Code for reviews page"""
     bad_words = [""]
     try:
         user1 = User.objects.get(id=user_id)
@@ -275,6 +284,7 @@ def reviews(request, user_id=None):
 
 
 def settings_page(request, user_id=None):
+    """Code for settings page"""
     try:
         user = User.objects.get(id=user_id)
         niknem = NIKNEM.objects.filter(user=user).first()
@@ -300,6 +310,7 @@ def settings_page(request, user_id=None):
 
 
 def my_profile(request):
+    """Code for my_profile page"""
     print("123")
     user = request.user
     if user.is_authenticated:
@@ -308,11 +319,13 @@ def my_profile(request):
 
 
 def logout_page(request):
+    """Code for logout page"""
     logout(request)
     return redirect("login")
 
 
 def profile(request, username=None):
+    """Code for profile page"""
     friend_instance = Friend.objects.filter(current_user=request.user).first()
     friends_data = []
     if friend_instance:
@@ -344,6 +357,7 @@ def profile(request, username=None):
 
 
 def change_friends(request, operation, pk):
+    """Code for change friends page"""
     friend = get_object_or_404(User, pk=pk)
     if operation == "add":
         Friend.make_friend(request.user, friend)
@@ -351,13 +365,13 @@ def change_friends(request, operation, pk):
 
 
 def social_network(request):
+    """Code for social_network page"""
     if request.method == "POST":
         vk_name = request.POST.get('vk_name')
         youtube_name = request.POST.get('youtube_name')
         discord_name = request.POST.get('discord_name')
         achievement_text = request.POST.get('achievement_text')
         items = Socials.objects.filter(author=request.user.id)
-
 
         if len(items) == 0:
             social_table = Socials(author=request.user, link_vk=vk_name, link_youtube=youtube_name,
@@ -392,6 +406,7 @@ def social_network(request):
 
 
 def turnir_page(request):
+    """Code for turnir page"""
     context = dict()
     if request.method == "GET":
         page = "https://www.cybersport.ru/tournaments?interval=future"
@@ -437,6 +452,7 @@ def turnir_page(request):
 
 
 def charts(request):
+    """Code for chat page"""
     user_data_2023 = list(
         User.objects.annotate(month=TruncMonth("date_joined"))
         .filter(date_joined__year=2023)
@@ -459,6 +475,7 @@ def charts(request):
 
 
 def create_post(request):
+    """Code for create post page"""
     context = {}
     if request.method == "POST":
         topic = request.POST.get("topic")
@@ -476,6 +493,7 @@ def create_post(request):
 
 
 def api_v1_user_publish_post(request):
+    """Code for api page"""
     if request.method != "POST":
         return HttpResponse(status=405)
 
@@ -515,6 +533,7 @@ def api_v1_user_publish_post(request):
 
 
 def home_page(request):
+    """Code for home page"""
     if request.method == 'POST':
         form = SearchUserForm(request.POST)
         if form.is_valid():
@@ -555,6 +574,7 @@ def home_page(request):
 
 
 def api_v1_user_send_message(request):
+    """Code for api page"""
     if request.method != "POST":
         return HttpResponse(status=405)
 
@@ -579,6 +599,7 @@ def api_v1_user_send_message(request):
 
 
 def api_v1_user_update_chat(request):
+    """Code for api page"""
     if request.method != "GET":
         return HttpResponse(status=405)
 
@@ -613,6 +634,7 @@ def api_v1_user_update_chat(request):
 
 
 def chat_page(request, username):
+    """Code for chat page"""
     user = request.user
 
     context = {}

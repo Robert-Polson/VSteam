@@ -1,7 +1,9 @@
+"""utils"""
 from django.http import JsonResponse
 
 
 class ApiHttpResponse(JsonResponse):
+    """Class that work with api http response"""
     def __init__(self, *, status, error_message=None, body=None):
         is_error_status = False if 200 <= status <= 299 else True
 
@@ -24,5 +26,6 @@ class ApiHttpResponse(JsonResponse):
 
 
 def create_post(user, text, files):
+    """function that work with posts"""
     return False
     return True

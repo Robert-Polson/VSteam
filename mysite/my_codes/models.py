@@ -88,6 +88,7 @@ class Post1(models.Model):
 
 
 class PostFile(models.Model):
+    """Class that work with postfile"""
     post = models.ForeignKey(Post1, on_delete=models.CASCADE)
     name = models.CharField(max_length=256)
     file = models.FileField(upload_to="post_files")
@@ -95,6 +96,7 @@ class PostFile(models.Model):
 
     @staticmethod
     def save_file(post: Post1, file):
+        """Function that work with save"""
         name = file.name
         file.name = str(uuid.uuid4())
 
@@ -158,6 +160,7 @@ class Avatar(models.Model):
 
 
 class Message(models.Model):
+    """Class that work with messages"""
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
     recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_messages')
     text = models.CharField(max_length=4096)
@@ -165,6 +168,7 @@ class Message(models.Model):
 
 
 class Socials(models.Model):
+    """Class that work with socials"""
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     link_vk = models.CharField(max_length=100, null=True)
     link_youtube = models.CharField(max_length=100, null=True)
@@ -172,5 +176,6 @@ class Socials(models.Model):
 
 
 class Achievement(models.Model):
-    author_achievement = models.ForeignKey(User , on_delete=models.CASCADE)
-    achievements = models.CharField(max_length=100 , null=True)
+    """Class that work with achivement"""
+    author_achievement = models.ForeignKey(User, on_delete=models.CASCADE)
+    achievements = models.CharField(max_length=100, null=True)
