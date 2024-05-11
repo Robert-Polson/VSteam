@@ -16,9 +16,12 @@
 <form method="post" id="socialForm">
     {% csrf_token %}
     <div class="main_link">
-        <input type="text" placeholder="Enter your id for your VK account" class="enter_socialname" name="vk_name">
-        <input type="text" placeholder="Enter your id for your YOUTUBE account" class="enter_socialname" name="youtube_name">
-        <input type="text" placeholder="Enter your id for your DISCORD account" class="enter_socialname" name="discord_name">
+        <input type="text" placeholder="Enter your id for your VK account" class="enter_socialname"
+               id="vk_name">
+        <input type="text" placeholder="Enter your id for your YOUTUBE account" class="enter_socialname"
+               id="youtube_name">
+        <input type="text" placeholder="Enter your id for your DISCORD account" class="enter_socialname"
+               id="discord_name">
         <button type="button" onclick="load_data_socials()" class="button_okey">Submit</button>
     </div>
 </form>
@@ -26,8 +29,8 @@
     <form method="post" id="achievementForm">
         {% csrf_token %}
         <h3 style="font-family:'Rocher';">If you have experience, you can tell about it:</h3>
-        <input type="text" class="enter_socialname" name="achievement_text" style="height: 150px; width: 45%; vertical-align: top; font-family: 'Rocher'; font-size:15px;">
-        <button type="submit" class="button_submit">Submit</button>
+        <input type="text" class="enter_socialname" id="achievement_name" style="height: 150px; width: 45%; vertical-align: top; font-family: 'Rocher'; font-size:15px;">
+        <button type="submit" onclick="load_data_achievement"  class="button_submit">Submit</button>
     </form>
 </div>
 
@@ -100,15 +103,53 @@
 </style>
 
 <script>
-    function load_data_socials() {
-    let request = new XMLHttpRequest()
-    request.open(
-        method="POST",
-        url="socials_network/",
-        async=true
-    )
-    request.send()
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
     }
+        function load_data_socials() {
+
+        const csrftoken = getCookie('csrftoken');
+
+        let vk_name = document.getElementById("vk_name").value;
+        let youtube_name = document.getElementById("youtube_name").value;
+        let discord_name = document.getElementById("discord_name").value;
+        let data = new FormData();
+        data.append("vk_name", vk_name);
+        data.append("youtube_name", youtube_name);
+        data.append("discord_name", discord_name);
+
+        let response = fetch("/social_network/", {
+    method: 'POST',
+    body: data,
+    headers: {
+        "X-CSRFToken": csrftoken },
+})
+      .then(response => {
+            if (!response.ok) {
+                alert('Ошибка');
+            }
+        })
+        .catch(error => console.error(error));
+
+        }
+
+<!--    load_data_achievement() {-->
+<!--    let achievement_text = document.getElementById("achievement_name").value;-->
+<!--    let data = new FormData();-->
+<!--    data.append("achievement_name", achievement_name);-->
+<!--    }-->
 </script>
 
 </body>

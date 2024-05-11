@@ -379,6 +379,8 @@ def social_network(request):
             achievement_table.save()
         else:
             messages.error(request, "Please , you need write more 10 symbol")
+        data = {"message": "Data saved successfully"}
+        return JsonResponse(data)
     else:
         messages.error(request, "Please, you need to do a login")
 
@@ -457,9 +459,8 @@ def create_post(request):
     if request.method == "POST":
         topic = request.POST.get("topic")
         texts = request.POST.get("texts")
-
         post_author = Post1(
-            author=request.user,
+            author=request.user.username,
             author_name = request.username,
             title=topic,
             text=texts,
