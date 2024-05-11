@@ -155,6 +155,19 @@
         .reviewss{
         margin-left:100px;
         }
+        .achievement_main{
+            position: absolute;
+            right: 400px;
+            bottom: 40px;
+            font-size: 30px;
+
+        }
+        .achievement_main h3{
+            font-size: 30px;
+        }
+        .achievement_main p{
+            font-size: 20px;
+        }
     </style>
 </head>
 <body>
@@ -231,13 +244,15 @@
 </div>
 {% endfor %}
 
-<div class="achievement">
-    {% if achievement__text %}
-    <p>{{achievement_text}}</p>
+<div class="achievement_main">
+    <h3>Experience:</h3>
+    {% if achievement_text %}
+        <p>{{ achievement_text.achievements }}</p>
     {% else %}
-    <p></p>
+        <p>No achievement text available</p>
     {% endif %}
 </div>
+
 <script>
     function dostiz() {
     window.location.href="http://127.0.0.1:8000/achievements//"
