@@ -357,6 +357,8 @@ def social_network(request):
         discord_name = request.POST.get('discord_name')
         achievement_text = request.POST.get('achievement_text')
         items = Socials.objects.filter(author=request.user.id)
+
+
         if len(items) == 0:
             social_table = Socials(author=request.user, link_vk=vk_name, link_youtube=youtube_name,
                                    link_discord=discord_name)
@@ -379,8 +381,10 @@ def social_network(request):
             achievement_table.save()
         else:
             messages.error(request, "Please , you need write more 10 symbol")
+
         data = {"message": "Data saved successfully"}
         return JsonResponse(data)
+
     else:
         messages.error(request, "Please, you need to do a login")
 
