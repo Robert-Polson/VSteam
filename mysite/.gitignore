@@ -2,3 +2,4 @@ my_codes/migrations/*
 *__pycache__*
 venv/*
 .idea/*
+idea/*
