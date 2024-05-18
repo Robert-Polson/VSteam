@@ -114,8 +114,8 @@
     </div>
     <div style="text-align: center;">
       <form action="" class="form">
-        <input type="search" name="username" class="input" placeholder="Search by Username" style="font-family:'Rocher';">
-        <i class="fa fa-search"><span class="material-symbols-outlined" style="font-family:'Rocher';">search</span></i>
+        <input id="query" type="search" name="username" class="input" placeholder="Search by Username" style="font-family:'Rocher';">
+        <i class="fa fa-search"><button type="button" class="material-symbols-outlined" style="font-family:'Rocher';" onclick="searchButtonListener();">search</button></i>
       </form>
   </div>
     <div style="display: flex;">
@@ -159,6 +159,10 @@
   sidebarBtn.addEventListener("click", ()=>{
     sidebar.classList.toggle("close");
   });
+
+  function searchButtonListener() {
+    window.location.href = '/home_pages?author=' + query.value;
+  }
   </script>
   <style>
 @font-face {

@@ -18,9 +18,8 @@ from django.contrib.auth import login, authenticate
 from django.contrib import messages
 from django.shortcuts import render, redirect
 import requests
-#import datetime
-from datetime import datetime , date as datetime_date
-
+# import datetime
+from datetime import datetime, date as datetime_date
 
 
 def register_page(request):
@@ -153,7 +152,7 @@ def account_page(request, username):
         posts_count = posts.count()
         author = Socials.objects.filter(author=user.id).last()
         niknem = NIKNEM.objects.filter(user=user).first()
-        achievement_text = Achievement.objects.filter(author_achievement = user.id).last()
+        achievement_text = Achievement.objects.filter(author_achievement=user.id).last()
         context = {
             "account": user,
             "author": author,
@@ -377,7 +376,6 @@ def social_network(request):
         achievement_text = request.POST.get('achievement_text')
         items = Socials.objects.filter(author=request.user.id)
 
-
         if len(items) == 0:
             social_table = Socials(author=request.user, link_vk=vk_name, link_youtube=youtube_name,
                                    link_discord=discord_name)
@@ -387,16 +385,16 @@ def social_network(request):
             if vk_name != '':
                 item.link_vk = vk_name
 
-                item.save(update_fields = ['link_vk'])
+                item.save(update_fields=['link_vk'])
             if youtube_name != '':
                 item.link_youtube = youtube_name
-                item.save(update_fields = ['link_youtube'])
+                item.save(update_fields=['link_youtube'])
             if discord_name != '':
                 item.link_discord = discord_name
-                item.save(update_fields = ['link_discord'])
+                item.save(update_fields=['link_discord'])
 
-        if  achievement_text and len(achievement_text)>2:
-            achievement_table = Achievement(author_achievement = request.user , achievements = achievement_text)
+        if achievement_text and len(achievement_text) > 2:
+            achievement_table = Achievement(author_achievement=request.user, achievements=achievement_text)
             achievement_table.save()
         else:
             messages.error(request, "Please , you need write more 10 symbol")
@@ -568,7 +566,20 @@ def home_page(request):
     else:
         form = SearchUserForm()
 
-    posts = Post1.objects.filter(author=request.user)
+    query = request.GET.get('author', None)
+
+    if query is None or query == '':
+        friend_instance = Friend.objects.filter(current_user=request.user).first()
+        if friend_instance:
+            friends = friend_instance.users.all()
+            posts = Post1.objects.filter(Q(author__in=friends) | Q(author=request.user)).order_by('date')
+        else:
+            posts = Post1.objects.filter(author=request.user)
+    else:
+        try:
+            posts = Post1.objects.filter(author=User.objects.get(username=query))
+        except (Post1.DoesNotExist, User.DoesNotExist):
+            posts = Post1.objects.none()
 
     context['posts'] = []
 
@@ -586,11 +597,11 @@ def home_page(request):
 
     print(context['posts'])
 
-    friend_instance = Friend.objects.filter(current_user=request.user).first()
-    if friend_instance:
-        friends = friend_instance.users.all()
+    """
+    
         friend_posts = Post1.objects.filter(author__in=friends)
         context["friend_posts"] = friend_posts
+        print(context["friend_posts"])"""
     context["form"] = form
 
     return render(request, "homePage.html", context)

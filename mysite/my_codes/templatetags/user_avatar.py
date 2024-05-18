@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from mysite.settings import MEDIA_URL, MEDIA_ROOT
 from my_codes.models import Avatar
 
+
 register = template.Library()
 
 
