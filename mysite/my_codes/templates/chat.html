@@ -1,3 +1,5 @@
+{% load tz %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -64,9 +66,16 @@
     <a href="{% url 'homePage' %}" style="font-family:'Rocher'; font-size: 25px; text-decoration:none;">VSTeam</a>
 </header>
     <div class="message-container">
+        {% timezone "Europe/Moscow" %}
         {% for message in messages %}
-        <div class="message">{{ message.timestamp }} {{ message.author }}: {{ message.text }}</div>
+        {% get_current_timezone as TIME_ZONE %}
+        <div class="message">{{ message.timestamp|date:"Y-m-d H:i:s" }} {{ message.author }}: {{ message.text }}</div>
+
+        
+        
+
         {% endfor %}
+        {% endtimezone %}
     </div>
     {% csrf_token %}
     <div class="message_mess">
@@ -135,8 +144,20 @@
                 data.forEach(function(message) {
                     let message_div = document.createElement('div');
                     message_div.className = "message";
-                    let date = new Date(message.timestamp * 1000);
-                    message_div.textContent = date.toString() + ' ' + message.author  + ': '  + message.text;
+                    let date = new Date(message.timestamp * 1000);;
+  
+                    // Get the year, month, day, hours, minutes, and seconds from the date object
+                    let year = date.getFullYear();
+                    let month = ('0' + (date.getMonth() + 1)).slice(-2);
+                    let day = ('0' + date.getDate()).slice(-2);
+                    let hours = ('0' + date.getHours()).slice(-2);
+                    let minutes = ('0' + date.getMinutes()).slice(-2);
+                    let seconds = ('0' + date.getSeconds()).slice(-2);
+
+                    date = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+
+
+                    message_div.textContent = date + ' ' + message.author  + ': '  + message.text;
                     messageContainer.appendChild(message_div);
                 });
 
