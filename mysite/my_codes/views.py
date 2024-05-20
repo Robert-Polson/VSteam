@@ -685,3 +685,7 @@ def chat_page(request, username):
     context['messages'] = messages_list
 
     return render(request, 'chat.html', context)
+
+def contacts_page(request):
+    context={}
+    return render(request,'contacts.html',context)

@@ -46,6 +46,7 @@ urlpatterns = [
     path("logout/", views.logout_page, name="logout"),
     path("profile/<str:username>/", views.profile, name="profile_pk"),
     path("api/v1/user/change_avatar/", views.api_v1_user_upload_avatar),
+    path('contacts//',views.contacts_page, name='contacts'),
     path(
         "connect/<str:operation>/<int:pk>/", views.change_friends, name="change_friends"
     ),
