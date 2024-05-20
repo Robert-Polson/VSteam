@@ -1,5 +1,5 @@
 {% load user_avatar %}
-
+{% load static%}
 <html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8">
@@ -110,20 +110,24 @@
         <i class="fa fa-search"><button type="button" class="material-symbols-outlined" style="font-family:'Rocher';" onclick="searchButtonListener();">search</button></i>
       </form>
   </div>
-    <div style="display: flex;">
-        {% for post in posts %}
-            <div style=" padding:90px; border: 1px solid black; width:40px; height: 10px;">
-                <h1 style="color:white;">{{ post.username }}</h1>
-                <h2 style="color:white;">{{ post.title }}</h2>
-                <p style="color:white; width:40px;">{{ post.text }}</p>
-              {% for file in post.files %}
-                {% if file.is_image %}
-                  <img src="{{ file.url }}" style="background-size: cover; width: 150px;">
-                {% endif %}
-                 <a href="{{ file.url }}">Скачать</a>
-              {% endfor %}
-            </div>
-        {% endfor %}
+    <!-- Add a container for the posts -->
+<div class="post-container">
+  {% for post in posts %}
+    <!-- Define a post layout -->
+    <div class="post">
+      <h2>{{ post.username }}</h2>
+      <h3>{{ post.title }}</h3>
+      <p>{{ post.text }}</p>
+      {% for file in post.files %}
+        {% if file.is_image %}
+          <img src="{{ file.url }}" alt="{{ file.name }}">
+        {% endif %}
+        <a href="{{ file.url }}">Download</a>
+      {% endfor %}
+      <button type="button" class="like_is">Like</button>
+    </div>
+  {% endfor %}
+</div>
 
     {% for friends in friend_posts %}
     <div style="display:flex; padding: 10px; border: 1px solid black;">
@@ -134,6 +138,7 @@
 
     </div>
     {% endfor %}
+    </div>
     </div>
   </section>
 
@@ -157,6 +162,76 @@
   }
   </script>
   <style>
+    .post-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: grid; /* Add grid layout */
+  grid-template-columns: repeat(2, 1fr); /* Add two columns */
+}
+
+.post {
+  margin-bottom: 20px;
+  padding: 20px;
+  border-bottom: 1px solid #ccc;
+}
+
+.post h2 {
+  color:white;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.post h3 {
+  color: white;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.post p {
+  font-size: 14px;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.post img {
+  width: 20%;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.post button.like_is {
+  background-color: #4CAF50;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 10px;
+}
+
+.post button.like_is:hover {
+  background-color: #3e8e41;
+}
+
+/* Add media queries for responsive design */
+@media (max-width: 768px) {
+  .post-container {
+    grid-template-columns: repeat(1, 1fr);
+    max-width: calc(100% - 20px);
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+}
+
+
+    .like_is{
+    font-size: 150px;
+    background-color: red;
+    }
 @font-face {
   font-family: 'Rocher';
   src: url(https://assets.codepen.io/9632/RocherColorGX.woff2);
