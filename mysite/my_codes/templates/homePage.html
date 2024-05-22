@@ -105,11 +105,15 @@
 
     </div>
     <div style="text-align: center;">
-      <form action="" class="form">
-        <input id="query" type="search" name="username" class="input" placeholder="Search by Username" style="font-family:'Rocher';">
-        <i class="fa fa-search"><button type="button" class="material-symbols-outlined" style="font-family:'Rocher';" onclick="searchButtonListener();">search</button></i>
-      </form>
-  </div>
+  <form action="" class="form">
+    <input id="query" type="search" name="username" class="input" placeholder="Search by Username" style="font-family:'Rocher';">
+    <i class="fa fa-search">
+      <button type="button" class="material-symbols-outlined" style="background-color: transparent; border: none; padding: 0px; cursor: pointer;" onclick="searchButtonListener();">
+        <img src="{% static 'lajk.png' %}" style="height: 15px; margin: 5px; font-size: 0px; cursor: pointer;">
+      </button>
+    </i>
+  </form>
+</div>
     <!-- Add a container for the posts -->
 <div class="post-container">
   {% for post in posts %}
