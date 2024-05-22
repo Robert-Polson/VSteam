@@ -211,7 +211,7 @@
             <p></p>
     {% endif %}
     {% if author.link_steam %}
-            <a href="https://steamcommunity.com/profiles/{{ author.link_steam }}" target="_blank"><img src="{% static 'img.png' %}" alt="STEAM"></a>
+            <a href="https://steamcommunity.com/id/{{ author.link_steam }}" target="_blank"><img src="{% static 'img.png' %}" alt="STEAM"></a>
     {% else %}
             <p></p>
     {% endif %}
@@ -222,7 +222,6 @@
     {% if is_owner_of_account == True %}
         <button class="btn" type="button" onclick="uploadAvatar()">Change Avatar</button>
         <button class="btn"><a href="{% url 'social_network' %}" style="text-decoration: none; color: white;">About me</a></button>
-        <button class="btn" type="button" onclick="dostiz();">Achievements</button>
         <button class="btn"><a href="{% url 'profile_pk' username=user.username %}" style="text-decoration: none; color: white;">My friends</a></button>
         <button class="btn" type="button"><a href="{% url 'create_post' %}" style="text-decoration: none; color: white;">Publish the post</a></button>
     {% else %}

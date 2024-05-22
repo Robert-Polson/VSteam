@@ -198,11 +198,6 @@ def remember_password(request):
     return render(request, "remember_password.html", {"form": form})
 
 
-def achievements(request):
-    """Code for achivements page"""
-    return render(request, "Achievements.html")
-
-
 def find_users_page(request):
     """Code for find users page"""
     context = {}
