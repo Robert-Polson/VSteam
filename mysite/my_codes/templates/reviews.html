@@ -24,7 +24,7 @@
             {% csrf_token %}
         <input type="text" placeholder="Enter the topic" name="id_topic" style="color:white;">
         <input type="text" placeholder="Enter the comment" name="id_comm" style="color: white; font-family:'Rocher';">
-        <button type="submit">Отправить</button>
+        <button type="submit" class="btn">Отправить</button>
         </form>
     </div>
 
@@ -45,6 +45,24 @@
     <div class="theme-btn-container"></div>
 
     <style>
+        .btn {
+            background-color: #58cdd1;
+            border: none;
+            cursor: pointer;
+            line-height: 1.5;
+            font-weight: bold;
+            padding: 0.75em 2em;
+            letter-spacing: 0.05rem;
+            margin: 1em;
+            width: 13rem;
+            color: #fff;
+            border-radius: 5px;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .btn:hover {
+            background-color: #eb196e;
+        }
         @import url('https://fonts.cdnfonts.com/css/retron2000');
         @font-face {
             font-family: 'Rocher';

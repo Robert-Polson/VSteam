@@ -5,7 +5,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from django.core import serializers
 from django.db.models import Count, Q
-from django.db.models.functions import TruncMonth
+from django.db.models.functions import TruncMonth, TruncDate
 from django.forms import model_to_dict
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -458,18 +458,18 @@ def turnir_page(request):
 def charts(request):
     """Code for chat page"""
     user_data_2023 = list(
-        User.objects.annotate(month=TruncMonth("date_joined"))
+        User.objects.annotate(date=TruncDate("date_joined"))
         .filter(date_joined__year=2023)
-        .values("month")
+        .values("date")
         .annotate(user_count=Count("id"))
-        .order_by("month")
+        .order_by("date")
     )
     user_data_2024 = list(
-        User.objects.annotate(month=TruncMonth("date_joined"))
+        User.objects.annotate(date=TruncDate("date_joined"))
         .filter(date_joined__year=2024)
-        .values("month")
+        .values("date")
         .annotate(user_count=Count("id"))
-        .order_by("month")
+        .order_by("date")
     )
     return render(
         request,

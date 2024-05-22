@@ -1,4 +1,3 @@
-<!-- index.html -->
 {% load static %}
 <html>
 <head>
@@ -19,7 +18,7 @@ window.onload = function () {
             text: "VSTeam user"
         },
         axisX: {
-            valueFormatString: "MMM"
+            valueFormatString: "yyyy-MM-dd"
         },
         axisY: {
             title: "User Count"
@@ -38,20 +37,20 @@ window.onload = function () {
             showInLegend: true,
             yValueFormatString: "#,##0",
             dataPoints: [
-    {% for data_point in user_data_2023 %}
-        { x: new Date("{{ data_point.month|date:'Y-m-01' }}"), y: {{ data_point.user_count }} },
-    {% endfor %}
-]
+                {% for data_point in user_data_2023 %}
+                    { x: new Date("{{ data_point.date|date:'Y-m-d' }}"), y: {{ data_point.user_count }} },
+                {% endfor %}
+            ]
         },{
             type: "line",
             name: "2024",
             showInLegend: true,
             yValueFormatString: "#,##0",
             dataPoints: [
-    {% for data_point in user_data_2024 %}
-        { x: new Date("{{ data_point.month|date:'Y-m-01' }}"), y: {{ data_point.user_count }} },
-    {% endfor %}
-]
+                {% for data_point in user_data_2024 %}
+                    { x: new Date("{{ data_point.date|date:'Y-m-d' }}"), y: {{ data_point.user_count }} },
+                {% endfor %}
+            ]
         }]
     });
     chart.render();
