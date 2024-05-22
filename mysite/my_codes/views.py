@@ -373,12 +373,13 @@ def social_network(request):
         vk_name = request.POST.get('vk_name')
         youtube_name = request.POST.get('youtube_name')
         discord_name = request.POST.get('discord_name')
+        steam_name = request.POST.get('steam_name')
         achievement_text = request.POST.get('achievement_text')
         items = Socials.objects.filter(author=request.user.id)
 
         if len(items) == 0:
             social_table = Socials(author=request.user, link_vk=vk_name, link_youtube=youtube_name,
-                                   link_discord=discord_name)
+                                   link_discord=discord_name, link_steam=steam_name)
             social_table.save()
         else:
             item = items[0]
@@ -392,6 +393,9 @@ def social_network(request):
             if discord_name != '':
                 item.link_discord = discord_name
                 item.save(update_fields=['link_discord'])
+            if steam_name != '':
+                item.link_steam = steam_name
+                item.save(update_fields=['link_steam'])
 
         if achievement_text and len(achievement_text) > 2:
             achievement_table = Achievement(author_achievement=request.user, achievements=achievement_text)

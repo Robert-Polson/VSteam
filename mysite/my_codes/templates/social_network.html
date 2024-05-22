@@ -22,6 +22,8 @@
                id="youtube_name">
         <input type="text" placeholder="Enter your id for your DISCORD account" class="enter_socialname"
                id="discord_name">
+        <input type="text" placeholder="Enter your id for your STEAM account" class="enter_socialname"
+               id="steam_name">
         <button type="button" onclick="load_data_socials()" class="button_okey">Submit</button>
     </div>
 </form>
@@ -33,7 +35,6 @@
         <button type="submit" onclick="load_data_achievement(event)" class="button_submit">Submit</button>
     </form>
 </div>
-
 <style>
     body {
         background-color: #1f048a;
@@ -125,11 +126,13 @@
         let vk_name = document.getElementById("vk_name").value;
         let youtube_name = document.getElementById("youtube_name").value;
         let discord_name = document.getElementById("discord_name").value;
+        let steam_name = document.getElementById("steam_name").value;
 
         let data = new FormData();
         data.append("vk_name", vk_name);
         data.append("youtube_name", youtube_name);
         data.append("discord_name", discord_name);
+        data.append("steam_name", steam_name);
 
         let response = fetch("/social_network/", {
             method: 'POST',

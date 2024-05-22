@@ -173,6 +173,7 @@ class Socials(models.Model):
     link_vk = models.CharField(max_length=100, null=True)
     link_youtube = models.CharField(max_length=100, null=True)
     link_discord = models.CharField(max_length=100, null=True)
+    link_steam = models.CharField(max_length=100, null=True)
 
 
 class Achievement(models.Model):
