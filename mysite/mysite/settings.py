@@ -130,7 +130,7 @@ MEDIA_URL = "/media/"
 STATIC_URL = "static/"
 
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
+    BASE_DIR / "my_codes/static",
 ]
 
 # Default primary key field type
