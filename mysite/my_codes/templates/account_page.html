@@ -210,6 +210,11 @@
     {% else %}
             <p></p>
     {% endif %}
+    {% if author.link_steam %}
+            <a href="https://steamcommunity.com/profiles/{{ author.link_steam }}" target="_blank"><img src="{% static 'img.png' %}" alt="STEAM"></a>
+    {% else %}
+            <p></p>
+    {% endif %}
 
 
 </div>
