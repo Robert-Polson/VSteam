@@ -119,10 +119,13 @@ class PostFile(models.Model):
         post_model.save()
 
 
-class Likes:
+from django.db import models
+
+class Likes(models.Model):
     """Class that work with likes for user"""
-    other_user_id_likes = models.ForeignKey(User, on_delete=models.CASCADE)
-    likes = models.IntegerField(blank=True, default="0")
+    post = models.ForeignKey(Post1, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    likes = models.IntegerField(blank=True, default=0)
 
 
 class Comm:
@@ -178,6 +181,6 @@ class Socials(models.Model):
 
 
 class Achievement(models.Model):
-    """Class that work with achivement"""
+    """Class that work with achievement"""
     author_achievement = models.ForeignKey(User, on_delete=models.CASCADE)
     achievements = models.CharField(max_length=100, null=True)

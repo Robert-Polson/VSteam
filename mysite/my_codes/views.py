@@ -144,6 +144,7 @@ def account_page(request, username):
     """Code for account page"""
     friends_count = 0
     posts_count = 0
+    posts_liked = 0
     try:
         user = User.objects.filter(username=username).first()
         reviews = Reviews.objects.filter(id_commented=user.id)
@@ -151,9 +152,12 @@ def account_page(request, username):
         friends_count = friends.count()
         posts = Post1.objects.filter(author=user)
         posts_count = posts.count()
+        for post in posts:
+            posts_liked += post.liked.all().count()
         author = Socials.objects.filter(author=user.id).last()
         niknem = NIKNEM.objects.filter(user=user).first()
         achievement_text = Achievement.objects.filter(author_achievement=user.id).last()
+
         context = {
             "account": user,
             "author": author,
@@ -162,6 +166,7 @@ def account_page(request, username):
             "reviews": reviews,
             "post_count": posts_count,
             "friends_count": friends_count,
+            "posts_liked": posts_liked,
             "achievement_text": achievement_text,
         }
 
