@@ -1,0 +1,25 @@
+
+{% load tz %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="conversation">
+    {% timezone "Europe/Moscow" %}
+{% for conv in conversations %}
+
+    {% get_current_timezone as TIME_ZONE %}
+    <h3>{{ conv.user }}</h3>
+    <p>{{ conv.timestamp |date:"Y-m-d H:i:s" }} - {{ conv.last_message }}</p>
+    <a href="/chat/{{ conv.user }}">Перейти</a>
+
+{% endfor %}
+    {% endtimezone %}
+</div>
+
+
+</body>
+</html>

@@ -1,17 +1,18 @@
 """ file views.py """
+from collections import OrderedDict
 from sqlite3 import IntegrityError
 
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from django.core import serializers
-from django.db.models import Count, Q
+from django.db.models import Count, Q, Max
 from django.db.models.functions import TruncMonth, TruncDate
 from django.forms import model_to_dict
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import SearchUserForm
-from .models import NIKNEM, Friend, Turnir, Reviews, Post1, Avatar, Message, Socials, PostFile, Achievement
+from .models import NIKNEM, Friend, Turnir, Reviews, Post1, Avatar, Message, Socials, PostFile, Achievement, Likes
 
 from .forms import LoginForm, RegisterForm, RememberPassword
 from django.contrib.auth import login, authenticate
@@ -551,9 +552,13 @@ def home_page(request):
                 post = model_to_dict(post)
                 post['files'] = []
                 post['username'] = post_username
+                post['is_liked'] = True if request.user in post['liked'] else False
+                post['likes'] = len(post['liked'])
                 for file in post_files:
                     file_dict = {'url': file.file.url, 'name': file.name, 'is_image': file.is_image}
                     post['files'].append(file_dict)
+
+                print(post)
 
             context['posts'].append(post)
 
@@ -588,6 +593,8 @@ def home_page(request):
         post = model_to_dict(post)
         post['files'] = []
         post['username'] = post_username
+        post['is_liked'] = True if request.user in post['liked'] else False
+        post['likes'] = len(post['liked'])
         for file in post_files:
             file_dict = {'url': file.file.url, 'name': file.name, 'is_image': file.is_image}
             post['files'].append(file_dict)
@@ -688,3 +695,69 @@ def chat_page(request, username):
 def contacts_page(request):
     context={}
     return render(request,'contacts.html',context)
+
+
+def messenger_page(request):
+    request_user = request.user
+
+    conversations = {}
+
+    # Get all unique pairs of users with whom request_user has exchanged messages
+    recipients = Message.objects.filter(author=request_user).values_list('recipient', flat=True).distinct()
+    senders = Message.objects.filter(recipient=request_user).values_list('author', flat=True).distinct()
+    all_participants = set(list(recipients) + list(senders))
+
+    # Loop through all unique pairs of users and get the latest message for each conversation
+    for recipient_id in all_participants:
+        conversation_partner = User.objects.get(id=recipient_id)
+        latest_message = Message.objects.filter(
+            (Q(author=request_user) & Q(recipient=conversation_partner)) |
+            (Q(author=conversation_partner) & Q(recipient=request_user))
+        ).latest('timestamp')
+
+        conversations[conversation_partner] = latest_message
+
+    sorted_conversations = OrderedDict(sorted(conversations.items(), key=lambda x: x[1].timestamp, reverse=True))
+
+    print(sorted_conversations)
+
+    context = {}
+
+    context['conversations'] = []
+
+    for conv, msg in sorted_conversations.items():
+        convs = {'user': conv.username, 'last_message': msg.text, 'timestamp': msg.timestamp}
+        context['conversations'].append(convs)
+
+    return render(request, "messenger.html", context)
+
+
+def api_v1_user_toggle_like(request):
+    """Code for avatar page"""
+    if request.method != "POST":
+        return HttpResponse(status=405)
+
+    uploaded_file = request.FILES.get("avatar", None)
+
+    if request.POST.get('post', None) is None:
+        return HttpResponse(status=400)
+
+    user = request.user
+
+    if not user.is_authenticated:
+        return HttpResponse(status=401)
+
+    post = Post1.objects.get(id=request.POST['post'])
+
+    print(post.liked.all(), request.user)
+
+    if post.liked.filter(id=user.id).exists():
+        post.liked.remove(user)
+    else:
+        post.liked.add(user)
+    print(post.liked.all(), request.user)
+    post.save()
+
+    print(post.liked.all(), request.user)
+
+    return HttpResponse(status=200)

@@ -80,7 +80,7 @@
     {% csrf_token %}
     <div class="message_mess">
     <input type="text" id="message">
-    <button onclick="sendMessage()" class="mess_styles">Отправить сообщение</button>
+    <button onclick="sendMessage();" class="mess_styles">Отправить сообщение</button>
     </div>
 </body>
 
@@ -167,7 +167,7 @@
         catch(error => console.error(error));
     }
 
-    setInterval(updateChat, 1000);
+    setInterval(updateChat, 100);
 
 </script>
 <style>

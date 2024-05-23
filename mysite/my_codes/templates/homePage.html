@@ -122,13 +122,14 @@
       <h2>{{ post.username }}</h2>
       <h3>{{ post.title }}</h3>
       <p>{{ post.text }}</p>
+      <p>Лайки - {{ post.likes }}</p>
       {% for file in post.files %}
         {% if file.is_image %}
           <img src="{{ file.url }}" alt="{{ file.name }}">
         {% endif %}
         <a href="{{ file.url }}" style="text-decoration:none; margin-right: 10px;">Download</a>
       {% endfor %}
-      <button type="button" class="like_is">Like</button>
+      <button type="button" class="like_is" onclick="toggleLike(event);" id="{{ post.id }}">{% if post.is_liked %}Unlike{% else %}Like{% endif %}</button>
     </div>
   {% endfor %}
 </div>
@@ -145,6 +146,8 @@
 
 
   </section>
+
+  {% csrf_token %}
 
   <script>
   let arrow = document.querySelectorAll(".arrow");
@@ -163,6 +166,28 @@
 
   function searchButtonListener() {
     window.location.href = '/home_pages?author=' + query.value;
+  }
+
+  function toggleLike(event) {
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    let formData = new FormData();
+    formData.append('post', event.target.id);
+
+    fetch('/api/v1/user/toggle_like/', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': csrftoken
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            alert('Ошибка');
+        } else {
+        }
+    })
+    .catch(error => console.error(error));
   }
   </script>
   <style>
