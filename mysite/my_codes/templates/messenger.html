@@ -7,19 +7,50 @@
     <title>Title</title>
 </head>
 <body>
+<header>
+    <a href="{% url 'homePage' %}" style="font-family:'Rocher'; text-decoration: none; font-size: 40px;">VSTeam</a>
+</header>
 <div class="conversation">
     {% timezone "Europe/Moscow" %}
 {% for conv in conversations %}
 
     {% get_current_timezone as TIME_ZONE %}
-    <h3>{{ conv.user }}</h3>
+    <h1>{{ conv.user }}</h1>
     <p>{{ conv.timestamp |date:"Y-m-d H:i:s" }} - {{ conv.last_message }}</p>
-    <a href="/chat/{{ conv.user }}">Перейти</a>
+    <a href="/chat/{{ conv.user }}" style="text-decoration: none;">Перейти</a>
 
 {% endfor %}
     {% endtimezone %}
 </div>
+<style>
+    @import url('https://fonts.cdnfonts.com/css/retron2000');
+        @font-face {
+            font-family: 'Rocher';
+            src: url(https://assets.codepen.io/9632/RocherColorGX.woff2);
+        }
+    body {
+            font-family: 'Retron2000', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            background-color: black;
+            height: 100vh;
+            box-sizing: border-box;
+            font-family: 'Rocher';
 
+
+            letter-spacing: 1px;
+            transition: background 0.2s ease;
+            -webkit-transition: background 0.2s ease;
+            -moz-transition: background 0.2s ease;
+            -ms-transition: background 0.2s ease;
+            -o-transition: background 0.2s ease;
+        }
+    .conversation {
+    margin: 40px;
+    margin-left: 2px;
+    }
+</style>
 
 </body>
 </html>

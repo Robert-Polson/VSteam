@@ -67,6 +67,6 @@ urlpatterns = [
     path("api/v1/user/send_message/", views.api_v1_user_send_message),
     path("api/v1/user/update_chat/", views.api_v1_user_update_chat),
     path("api/v1/user/publish_post/", views.api_v1_user_publish_post),
-    path("messenger/", views.messenger_page),
+    path("messenger/", views.messenger_page, name="messenger"),
     path("api/v1/user/toggle_like/", views.api_v1_user_toggle_like)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
