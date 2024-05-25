@@ -287,7 +287,9 @@ def reviews(request, user_id=None):
 
 def settings_page(request, user_id=None):
     """Code for settings page"""
+    posts_liked = 0
     try:
+
         user = User.objects.get(id=user_id)
         niknem = NIKNEM.objects.filter(user=user).first()
         reviews = Reviews.objects.filter(id_commented=user_id)
@@ -297,6 +299,8 @@ def settings_page(request, user_id=None):
         author = Socials.objects.filter(author=user.id).last()
         achievement_text = Achievement.objects.filter(author_achievement=user.id).last()
         posts_count = posts.count()
+        for post in posts:
+            posts_liked += post.liked.all().count()
         context = {
             "account": user,
             "author": author,
@@ -306,6 +310,7 @@ def settings_page(request, user_id=None):
             "friends_count": friends_count,
             "post_count": posts_count,
             "achievement_text": achievement_text,
+            "posts_liked": posts_liked
         }
         return render(request, "account_page.html", context)
     except User.DoesNotExist:
